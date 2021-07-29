@@ -1,6 +1,6 @@
 = APPUiO Public for System Engineers
 
-image::appuio_logo.png[APPUiO,256,link=https://www.appuio.ch]
+image::appuio.svg[APPUiO,256,link=https://www.appuio.ch]
 
 Welcome to the APPUiO Public for System Engineers documentation site.
 
