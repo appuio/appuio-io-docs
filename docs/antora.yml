@@ -1,0 +1,6 @@
+name: appuio-public
+title: APPUiO Public for System Engineers
+version: master
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/partials/nav.adoc
