@@ -1,0 +1,24 @@
+= System idea
+:apub2: APPUiO Public 2.0
+
+[TIP]
+====
+The system idea displays a high-level architecture of {apub2}.
+====
+
+.{apub2} system idea
+image::system/systemidea.drawio.svg[]
+
+* An instance of Keycloak is responsible for authoritatively store data on:
+** Organizations
+** Teams
+** Users
+
+* We make use of https://kyverno.io/[Kyverno] to enforce policies that go beyond the capabilities of RBAC.
+  In the case Kyverno is not suitable, we will create a custom admission/mutating admission webhook for exactly that use case.
+
+* In cases where data needs to be copied to other locations, we will only do so in one direction.
+
+* Data owned by Keycloak will be cached on each Zone.
+  This is required for Kyverno to work.
+  It also makes the cluster more resilient against connectivity issues between Keycloak and the Zone.

@@ -1,5 +1,6 @@
 * System
 ** xref:explanation/system/context.adoc[System context]
+** xref:explanation/system/idea.adoc[System idea]
 
 * Decisions
 ** xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
