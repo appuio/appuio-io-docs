@@ -1,0 +1,28 @@
+= Keycloak as IDP
+:apub2: APPUiO Public 2.0
+
+Problem::
+We need to store user (including passwords), team memberships and organizations.
+
+//Relevant requirements::
+//* tbd, links to requirement page(s)
+
+Alternatives::
+* LDAP via control.vshn.net.
+  We can use the existing infrastructure to manage users and organizations.
+
+* VSHN-owned Keycloak.
+  There is id.vshn.net which we could integrate APPUiO Public 2.0 customers.
+
+* APPUiO-owned Keycloak.
+  Each APPUiO instance brings its own Keycloak.
+  This still leaves doors open for federation scenarios or other social logins like GitHub or Google.
+
+Decision::
+APPUiO-owned Keycloak
+
+Rationale::
+Keycloak is a well-known Identity Provider that provides SSO.
+To ease integrations between zones, each APPUiO instance brings its own managed Keycloak.
++
+There are also plans to make {apub2} resellable, meaning that nothing should really depend on VSHN infrastructure.
