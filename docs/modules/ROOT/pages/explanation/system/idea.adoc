@@ -1,0 +1,31 @@
+= System idea
+:apub2: APPUiO Public 2.0
+
+The system idea displays a high-level architecture of {apub2}.
+
+.{apub2} system idea
+image::system/systemidea.drawio.svg[]
+
+* An instance of Keycloak is responsible for authoritatively store data on:
+** Organizations
+** Teams
+** Users
+
+* Data owned by Keycloak will be replicated to each Zone.
+  It makes the cluster more resilient against connectivity issues between Keycloak and the Zone.
+
+* The policy engine https://kyverno.io/[Kyverno], installed on each Zone, is there to enforce policies that go beyond the capabilities of Kubernetes RBAC.
+  In the cases where Kyverno is not suitable, custom admission/mutating https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[webhooks] will be engineered.
+
+* A controller instance on each Zone will further process the the local cache of entities coming from the Keycloak adapter.
+  It will be used to configure Kyverno for instance.
+
+* "APPUiO global" serves as control plane and is responsible for synchronizing mentioned entities to all APPUiO Zones.
+  It will run on one of the selected Zones only.
+
+// TODO: define better name for control plane
+
+See also xref:references/glossary.adoc[Glossary]
+
+🔗 Decision references::
+* xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
