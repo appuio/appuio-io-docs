@@ -1,0 +1,20 @@
+= Design prinziples
+
+* A instance of Keycloak will be responsible for authoriatively store data on:
+** Organizations
+** Teams
+** Users
+
+* We will make use of Kyverno to enforce policies that go beyond the capabilities of RBAC.
+  In the case Kyverno is not suitable, we will create a custom admission/modifying web hook for exactly that use case.
+
+* In cases where data needs to be copied to other locations, we will only do so in one direction.
+  
+
+* Data owned by Keycloak will be cached on each Zone.
+  This for once is requried for Kyverno to work.
+  It also makes the cluster more resilient against network issues between Keycloak and the Zone.
+
+* We will enforce quota and limits on Zone level.
+  As it is our main goal is to protect the *cluster* from abuse.
+
