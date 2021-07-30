@@ -1,0 +1,5 @@
+* System
+** xref:explanation/system/context.adoc[System context]
+
+* Decisions
+** xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
