@@ -1,0 +1,38 @@
+= Glossary
+
+User::
+A human that interacts with APPUiO Public.
+
+Developer::
+A user which interacts with APPUiO Public (the Kubernetes API) in a specified namespace.
+
+Organization Owner::
+A user which interacts with APPUiO Public (the Kubernetes API).
+
+Organization::
+A unit that groups together Users, Teams and Namespaces.
+It's the entity that owns the associated resources and the business connection.
+Billing is done on this level.
+
+Team::
+A group of users. 
+Always belongs to exactly one organization.
+
+Role::
+A collection of permissions a subject has within an object (subjects would be User and Team, objects would be Organization, Team and Namespace) 
+
+Namespace::
+A Kubernetes namespace (in OpenShift also an object type "Project")
+
+Zone::
+A single OpenShift cluster that is part of an APPUiO public offering in a particular cloud-providers zone.
+
+
+Admin::
+Role
+
+Editor::
+Role
+
+Viewer::
+Role
