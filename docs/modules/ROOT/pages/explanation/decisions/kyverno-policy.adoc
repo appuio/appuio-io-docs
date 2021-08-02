@@ -1,0 +1,30 @@
+= Kyverno as policy engine
+:apub2: APPUiO Public 2.0
+
+Problem::
+Kubernetes RBAC rules are not suitable to validate certain properties of resources.
+They can only allow or deny operations of the whole resource.
+On {apub2} however, we require fine-grained control of certain properties, such as labels or annotations on Namespaces.
+
+//Relevant requirements::
+//* tbd, links to requirement page(s)
+
+Relevant decisions::
+* xref:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator]
+
+Alternatives::
+* https://www.openpolicyagent.org/[OPA].
+  Open Policy Agent is a policy engine written for cloud native environments.
+  Policies are written in Rego, which is declarative query language suited for writing policies.
+
+* https://kyverno.io/[Kyverno].
+  Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
+
+Decision::
+Kyverno
+
+Rationale::
+Kyverno doesn't require learning a declarative language compared to OPA.
+Especially writing mutating policies is subjectively easier in Kyverno than with OPA/Rego.
++
+NOTE: Choosing Kyverno as policy engine and resource generator reduces complexity.

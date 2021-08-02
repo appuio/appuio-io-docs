@@ -4,3 +4,5 @@
 
 * Decisions
 ** xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+** xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+** xref:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]

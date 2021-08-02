@@ -1,0 +1,34 @@
+= Kyverno as resource generator
+:apub2: APPUiO Public 2.0
+
+Problem::
+Each APPUiO namespace requires user-immutable resources, such as `ResourceQuota` or `LimitRanges`.
+A solution is needed that creates and maintains such resources immediately upon creating Namespaces.
+All generated resources are generally the same, but the solution must be able to deviate from the default for selected Namespaces.
+
+//Relevant requirements::
+//* tbd, links to requirement page(s)
+
+Relevant decisions::
+* xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+
+Alternatives::
+* APPUiO Operator.
+  A custom controller or operator that watches Namespaces resources and generates resources from a template.
+
+* https://github.com/vshn/espejo[Espejo].
+  An operator designed to generate resources in every selected Namespace.
+  The feature for deviating from defaults resp. the cleanup after changing the default must yet be implemented.
+
+* https://kyverno.io/[Kyverno].
+  Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
+  It also supports "generating" policies, e.g. depending on configurable conditions, arbitrary resources can be created.
+
+Decision::
+Kyverno
+
+Rationale::
+Both Espejo and a potential APPUiO operator need programming effort for features that don't yet exist.
+Kyverno supports the given use case already, thus writing such generator policies is considered to be a lower effort.
++
+NOTE: Choosing Kyverno as policy engine and resource generator reduces complexity.
