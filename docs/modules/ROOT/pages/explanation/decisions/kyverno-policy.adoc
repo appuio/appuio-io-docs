@@ -9,6 +9,9 @@ On {apub2} however, we require fine-grained control of certain properties, such 
 //Relevant requirements::
 //* tbd, links to requirement page(s)
 
+Relevant decisions::
+* xref:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator]
+
 Alternatives::
 * https://www.openpolicyagent.org/[OPA].
   Open Policy Agent is a policy engine written for cloud native environments.
@@ -23,3 +26,5 @@ Kyverno
 Rationale::
 Kyverno doesn't require learning a declarative language compared to OPA.
 Especially writing mutating policies is subjectively easier in Kyverno than with OPA/Rego.
++
+NOTE: Choosing Kyverno as policy engine and resource generator reduces complexity.

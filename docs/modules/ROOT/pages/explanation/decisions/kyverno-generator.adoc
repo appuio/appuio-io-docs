@@ -9,6 +9,9 @@ All generated resources are generally the same, but the solution must be able to
 //Relevant requirements::
 //* tbd, links to requirement page(s)
 
+Relevant decisions::
+* xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+
 Alternatives::
 * APPUiO Operator.
   A custom controller or operator that watches Namespaces resources and generates resources from a template.
@@ -27,3 +30,5 @@ Kyverno
 Rationale::
 Both Espejo and a potential APPUiO operator need programming effort for features that don't yet exist.
 Kyverno supports the given use case already, thus writing such generator policies is considered to be a lower effort.
++
+NOTE: Choosing Kyverno as policy engine and resource generator reduces complexity.
