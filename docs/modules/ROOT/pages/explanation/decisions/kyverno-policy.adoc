@@ -6,8 +6,9 @@ Kubernetes RBAC rules are not suitable to validate certain properties of resourc
 They can only allow or deny operations of the whole resource.
 On {apub2} however, we require fine-grained control of certain properties, such as labels or annotations on Namespaces.
 
-//Relevant requirements::
-//* tbd, links to requirement page(s)
+Relevant requirements::
+* xref:references/quality-requirements/reliability/ns-validation-resilience.adoc[Namespace validation resilience]
+* xref:references/quality-requirements/usability/ns-arbitrary-name.adoc[Arbitrary Namespace name]
 
 Relevant decisions::
 * xref:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator]
