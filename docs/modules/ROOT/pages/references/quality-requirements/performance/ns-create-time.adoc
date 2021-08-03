@@ -1,0 +1,23 @@
+= Time to create Namespaces
+
+Source::
+Developer
+
+Stimulus::
+Creates new Kubernetes namespace
+
+Environment::
+Any APPUiO Zone
+
+Artifact::
+kubectl
+
+Response::
+Namespace created
+
+Response measure::
+Within 2 seconds in 95% of the cases
+
+Rationale::
+Namespace creation requires input validation.
+This validation should be fast enough to not let developers become frustrated.
