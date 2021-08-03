@@ -1,0 +1,23 @@
+= Arbitrary Namespace name
+
+Source::
+Developer
+
+Stimulus::
+Creates new Kubernetes namespace with arbitrary name
+
+Environment::
+Any APPUiO Zone
+
+Artifact::
+kubectl
+
+Response::
+Namespace created
+
+Response measure::
+Namespace name is granted
+
+Rationale::
+To enable a Kubernetes native experience.
+Developers should be able to invoke `kubectl create namespace foo` as if they're on their own Kubernetes cluster.
