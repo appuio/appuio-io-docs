@@ -1,1 +1,1 @@
-* xref:references/glossary.adoc[Glossary]
+* xref:appuio-public:ROOT:references/glossary.adoc[Glossary]
