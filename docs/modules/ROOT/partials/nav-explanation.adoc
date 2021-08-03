@@ -1,8 +1,8 @@
 * System
-** xref:explanation/system/context.adoc[System context]
-** xref:explanation/system/idea.adoc[System idea]
+** xref:appuio-pubic:ROOT:explanation/system/context.adoc[System context]
+** xref:appuio-pubic:ROOT:explanation/system/idea.adoc[System idea]
 
 * Decisions
-** xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
-** xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
-** xref:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]
+** xref:appuio-pubic:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+** xref:appuio-pubic:ROOT:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+** xref:appuio-pubic:ROOT:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]
