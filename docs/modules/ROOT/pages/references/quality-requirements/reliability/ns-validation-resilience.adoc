@@ -1,0 +1,23 @@
+= Namespace validation resilience
+
+Source::
+Input validation system user
+
+Stimulus::
+Validate input values when creating Namespaces
+
+Environment::
+Any APPUiO Zone
+
+Artifact::
+Input validation system
+
+Response::
+Namespace validated
+
+Response measure::
+With only accessing internal Kubernetes API
+
+Rationale::
+This increases resilience to network failures and keeps a low response time when validating.
+The validation process should not be dependant on external APIs that are running outside of the cluster.

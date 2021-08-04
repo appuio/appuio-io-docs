@@ -1,0 +1,52 @@
+// According to ISO 25010 (https://iso25000.com/index.php/en/iso-25000-standards/iso-25010)
+// Resource utilization and capacity are in the Performance category.
+= Resource limit per Namespace
+
+Source::
+Developer
+
+Stimulus::
+Deploys new workload in a Namespace
+
+Environment::
+Any APPUiO Zone
+
+Artifact::
+kubectl
+
+Response::
+Workloads are denied if they exceed the resource limit.
+Workloads are the following Kubernetes resources:
+* Pods
+* ConfigMaps
+* Secrets
+* PersistentVolumeClaims
+* Services
+* ImageStreams
+* ImageStreamTags
+
+Response measure::
+The workload is denied if they exceed one of the following Kubernetes resources:
+* CPU (all containers in all Pods)
+** Requests: 2000m
+** Limits: 4000m
+* Memory (all containers in all Pods)
+** Requests: 3 GiB
+** Limits: 6 GiB
+* Storage:
+** Request: 50 GiB (total)
+** PersistentVolumeClaims: 10
+* ConfigMaps: 150
+* Secrets: 150
+* Services: 20
+* Images
+** ImageStream Tags: 50 (per ImageStream)
+** ImageStreams: 20
+
+Rationale::
+* The APPUiO zone shall be protected from abusive resource usage.
+* A quota prevents a developer (or a system account) from creating potentially billable workload (accidental or purposefully) that could lead to surprizes in the bill.
+* Quotas slow down resource consumption on a cluster level and that gives time for cluster admins to do capacity planning, e.g. scale up a nearly-full APPUiO Zone.
+
+See also::
+* xref:references/quality-requirements/performance/ns-quota.adoc[Namespace quota per Zone]
