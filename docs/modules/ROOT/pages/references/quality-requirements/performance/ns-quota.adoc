@@ -1,0 +1,28 @@
+// According to ISO 25010 (https://iso25000.com/index.php/en/iso-25000-standards/iso-25010)
+// Resource utilization and capacity are in the Performance category.
+= Namespace quota per Zone
+
+Source::
+Developer
+
+Stimulus::
+Creates new Namespace in a Zone for the same organization
+
+Environment::
+Any APPUiO Zone
+
+Artifact::
+kubectl
+
+Response::
+Namespace creation fails with error message
+
+Response measure::
+Maximum 10 Namespaces are allowed
+
+Rationale::
+* The APPUiO zone shall be protected from abusive resource usage.
+* Having a limit of the amount of Namespaces that can be created per organization per Zone slows down resource consumption that allows better capacity planning.
+
+See also::
+* xref:references/quality-requirements/performance/resource-quota.adoc[Resource limit per Namespace]
