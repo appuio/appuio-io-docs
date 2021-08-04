@@ -1,7 +1,7 @@
 = Namespace validation resilience
 
 Source::
-Input validation system
+Input validation system user
 
 Stimulus::
 Validate input values when creating Namespaces
@@ -10,7 +10,7 @@ Environment::
 Any APPUiO Zone
 
 Artifact::
-Kyverno
+Input validation system
 
 Response::
 Namespace validated
