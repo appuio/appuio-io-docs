@@ -1,0 +1,123 @@
+= Install Keycloak on APPUiO Zone
+
+This guide describes the steps required to install the APPUiO IDP onto one of the APPUiO Zones (clusters).
+
+NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+
+== Prerequisites
+
+* `oc` version 4.7 or above
+* working Commodore setup
+* SMTP server for sending out emails from Keycloak
+
+== Configure component-keycloak
+
+. Login to the cluster as cluster admin with `oc`
+
+. Add component configuration to Project Syn cluster catalog
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  appuio_keycloak_test:
+    namespace: appuio-keycloak-test
+    fqdn: id.dev.appuio.cloud
+    helm_values:
+      image:
+        tag: 15.0.0
+      ingress:
+        servicePort: http
+      podSecurityContext: null
+      securityContext: null
+      pgchecker:
+        securityContext: null
+      postgresql:
+        securityContext:
+          enabled: false
+        volumePermissions:
+          securityContext:
+            runAsUser: auto
+          shmVolume:
+            chmod:
+              enabled: false
+----
+
+. Compile and push the cluster catalog
+. Wait for Keycloak to start up and visit https://id.dev.appuio.cloud.
+
+== Configure Keycloak
+
+. Extract the password from the `keycloak-admin-user` secret.
++
+[source,bash]
+----
+oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o jsonpath='{.data.KEYCLOAK_PASSWORD}' | base64 -d; echo
+----
+
+. Login to Keycloak as user `admin` with the password printed before
+
+. Create a new Realm called `appuio-public`
+
+. Create a new Keycloak Client with the following settings (leave the others at default value)
++
+[source]
+----
+Client ID = appuio-dev-idp
+Access Type = confidential
+Valid Redirect URIs = https://oauth-openshift.apps.lpg1.ocp4-poc.appuio-beta.ch/oauth2callback/Appuio-Dev
+Base URL = https://console.apps.lpg1.ocp4-poc.appuio-beta.ch/
+----
+
+. Configure outgoing email settings in the realm
++
+[source]
+----
+Host = mxout1.corp.vshn.net
+Port = 25
+From Display Name = APPUiO Public
+From = noreply@id.dev.appuio.cloud
+Envelope From = tech@vshn.net
+Enable StartTLS = true
+----
+
+. Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
+
+== Configure openshift4-authentication
+
+. Create the client secret
++
+[source,bash]
+----
+secret="" <1>
+oc --as cluster-admin -n openshift-config create secret generic appuio-keycloak-dev-client-secret --from-literal clientSecret=${secret}
+----
+<1> The client secret as displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  openshift4_authentication:
+    identityProviders:
+      appuio_keycloak_test:
+        name: Appuio-Dev
+        type: OpenID
+        mappingMethod: add
+        openID:
+          issuer: https://id.dev.appuio.cloud/auth/realms/appuio-public
+          clientID: c-old-fire-5788
+          clientSecret:
+            name: appuio-keycloak-dev-client-secret
+          claims: <1>
+            preferredUsername:
+              - preferred_username
+            name:
+              - name
+            email:
+              - email
+----
+<1> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+
+. Compile and push the cluster catalog
+. Wait for Argo CD to sync the config
