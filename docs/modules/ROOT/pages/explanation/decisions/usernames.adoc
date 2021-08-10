@@ -1,0 +1,57 @@
+= `User` object names in the OpenShift cluster
+
+Problem::
+We need to define an identifier which we use to name users which are synchronized from Keycloak to the OpenShift cluster.
++
+The identifier should have the following properties:
++
+* It should be stable for the lifetime of the user in Keycloak.
+* It must be suitable for use as an OpenShift resource name (namely for the OpenShift `User` resource)
+* It must be used to configure OpenShift `Group` membership when synchronizing groups from Keycloak.
+
++
+In the implementation, this identifier is selected by providing an appropriate attribute name for the OpenID claim `preferred_username` in the OpenShift OpenID Connect identity provider configuration.
+
+
+Alternatives::
+* Use the `Username` property of Keycloak user objects.
++
+With this approach we can use the existing https://github.com/redhat-cop/group-sync-operator[redhat-cop/group-sync-operator] as it uses the Keycloak `Username` property to populate the user list in the OpenShift `Group` objects it creates.
+Additionally, `oc whoami` provides users with the `Username` they chose when registering their user.
+However, Users can't change their `Username` after registration, as the OpenShift `User` and `Identity` objects, which are created when the users first logs in, aren't updated when the user changes their `Username` in Keycloak.
+
+* Use the `ID` property of Keycloak user objects.
++
+With this approach, users can freely change their `Username` in Keycloak.
++
+However, their `Username` doesn't appear anywhere in the OpenShift cluster with this approach and the output of `oc whoami` is the Keycloak user's `ID`.
+Additionally, group synchronization from Keycloak to OpenShift will require a custom implementation to create `Group` objects which are populated with the group members' `ID` properties, as the group-sync operator currently only supports using the Keycloak user's `Username` field when creating `Group` objects.
+
+* Use the `Email` property of Keycloak user objects.
++
+With this approach, users can't change their E-Mail address after signing up, for the same reasons as they can't change their `Username` property when using that property (see first alternative).
+
+
+Decision::
+* We use the `Username` property of Keycloak user objects as the name for the resulting OpenShift `User` objects
+* We allow users to freely choose their `Username` when signing up
+* We disallow users to change their `Username` after creation of the user in Keycloak
+
+Rationale::
+
+Regardless of the choice of identifier to determine how the OpenShift `User` object is named, the user's identity in the OpenShift cluster is always tied to their Keycloak user's `ID` property.
+This is because Openshift's OpenID Connect identity provider uses the OpenID claim `sub` to establish the user's identity, see the https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-oidc-identity-provider.html[OpenShift documentation].
+The OpenID claim `sub` is mapped to the Keycloak user's `ID` by default.
++
+For all described alternatives, Keycloak can be configured to require that the property must be unique per realm.
+Therefore, we don't risk having OpenShift `User` objects which are associated with multiple Keycloak users with any of the described alternatives.
++
+First, we decide to use the `Username` property as the identifier used for the OpenShift `User` object.
+This choice provides the best trade-off in our eyes, as it allows users to change their E-Mail address at any time and it shows users a human-verifiable output when running `oc whoami`.
++
+Second, we decide to allow users to freely choose their `Username` when signing up.
++
+Third, we decide to disallow users to change their `Username` after creation of the user in Keycloak.
+If a user needs to change their `Username`, we recommend that they register a new user with the desired `Username` and add the new user to the appropriate organizations.
+In the future, we may decide find a solution to allow users to change the `Username` property of their user without having to register a new user.
+One potential approach for such a solution could be to implement extra tooling which fully synchronizes changes to a Keycloak user into the user's associated OpenShift `Identity` and `User` objects.
