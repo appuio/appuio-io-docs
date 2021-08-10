@@ -1,0 +1,24 @@
+= User name choice on sign-up
+
+Problem::
+Users need a user name (unique identifier) in APPUiO Public.
++
+This identifier should have the following properties:
+
+* It should be stable for the lifetime of the user in Keycloak.
+* Users should be able to xref:references/quality-requirements/usability/user-arbitrary-name.adoc[choose it freely].
+
+Alternatives::
+* Use the user's email address as their unique identifier.
+* Let users choose an arbitrary user name.
+* Generate a unique identifier (for example `u-blue-sound-7239`) when the user signs up.
+
+Decision::
+We allow users to freely choose their user name when signing up
+
+Rationale::
+Allowing users to freely choose their user name when signing up increases user experience since they can choose a memorable name they like.
++
+Using the user's email address as their unique identifier becomes problematic quickly, as a user's email address may change at any time.
++
+A generated identifier would be an elegant solution from a technical perspective, but generated names are usually not very memorable.

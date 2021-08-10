@@ -31,9 +31,7 @@ With this approach, users can't change their E-Mail address after signing up, fo
 
 
 Decision::
-* We use the `Username` property of Keycloak user objects as the name for the resulting OpenShift `User` objects
-* We allow users to freely choose their `Username` when signing up
-* We disallow users to change their `Username` after creation of the user in Keycloak
+We use the `Username` property of Keycloak user objects as the name for the resulting OpenShift `User` objects
 
 Rationale::
 
@@ -44,10 +42,5 @@ The OpenID claim `sub` is mapped to the Keycloak user's `ID` by default.
 For all described alternatives, Keycloak can be configured to require that the property must be unique per realm.
 Therefore, we don't risk having OpenShift `User` objects which are associated with multiple Keycloak users with any of the described alternatives.
 +
-First, we decide to use the `Username` property as the identifier used for the OpenShift `User` object.
+We decide to use the `Username` property as the identifier used for the OpenShift `User` object.
 This choice provides the best trade-off in our eyes, as it allows users to change their E-Mail address at any time and it shows users a human-verifiable output when running `oc whoami`.
-+
-Second, allowing users to freely choose their `Username` when signing up increases user experience since they can choose a memorable name they like.
-+
-Third, we decide to disallow users to change their `Username` after creation of the user in Keycloak.
-If a user needs to change their `Username`, we recommend that they register a new user with the desired `Username` and add the new user to the appropriate organizations.
