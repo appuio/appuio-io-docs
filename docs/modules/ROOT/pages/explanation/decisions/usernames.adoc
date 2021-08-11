@@ -1,4 +1,4 @@
-= `User` object names in the OpenShift cluster
+= User object names in the OpenShift cluster
 
 Problem::
 We need to define an identifier which we use to name users which are synchronized from Keycloak to the OpenShift cluster.
