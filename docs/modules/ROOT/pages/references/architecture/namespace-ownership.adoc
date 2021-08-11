@@ -1,0 +1,25 @@
+= Namespace ownership
+
+:apub: APPUiO Public 2.0
+
+To ensure {apub} users can create namespaces for their organizations, a Kyverno policy which validates namespace creation requests is deployed in each {apub} zone.
+With this policy in place, an {apub} user who is part of organization `purple-fox` can create namespaces in organization `purple-fox` by simply executing
+
+```bash
+kubectl create namespace -f- <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tall-grass
+  labels:
+    appuio.io/organization: purple-fox
+EOF
+```
+
+== Related decisions
+
+* xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+
+== Related requirements
+
+* xref:references/quality-requirements/usability/ns-arbitrary-name.adoc[Arbitrary Namespace name]

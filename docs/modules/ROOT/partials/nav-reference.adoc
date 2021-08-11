@@ -1,6 +1,13 @@
 * xref:appuio-public:ROOT:references/glossary.adoc[Glossary]
 * xref:appuio-public:ROOT:references/document-requirements.adoc[How to read and document requirements]
 
+* Architecture
+
+** xref:appuio-public:ROOT:references/architecture/keycloak-data-model.adoc[Keycloak data model]
+** xref:appuio-public:ROOT:references/architecture/openshift-authentication.adoc[Authentication on OpenShift clusters]
+** xref:appuio-public:ROOT:references/architecture/openshift-idp-data-model.adoc[IDP data model on OpenShift clusters]
+** xref:appuio-public:ROOT:references/architecture/namespace-ownership.adoc[Namespace ownership]
+
 * Quality Requirements
 
 ** Performance

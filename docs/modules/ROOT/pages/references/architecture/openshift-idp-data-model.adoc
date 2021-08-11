@@ -1,0 +1,14 @@
+= IDP data model on OpenShift clusters
+
+:apub: APPUiO Public 2.0
+:zone: {apub} zone
+
+{apub} users are represented as a pair of `User` and `Identity` objects in each {zone}.
+These objects are created when a user first logs in on a {zone}.
+The user's Keycloak property `Username` is used to name the `User` object in each {zone}.
+
+{apub} organizations are represented as `Group` objects in each {zone}.
+The `Groups` are synchronized from Keycloak to all {zone}s in regular intervals.
+The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[`group-sync-operator`].
+
+Organization memberships are represented in each {zone} by adding the user's `User` object name to the organization's `Group` object.
