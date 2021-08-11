@@ -1,0 +1,23 @@
+= Arbitrary user name
+
+Source::
+Developer
+
+Stimulus::
+Creates their APPUiO user with arbitrary name
+
+Environment::
+All APPUiO Zones
+
+Artifact::
+IDP (Keycloak)
+
+Response::
+User created
+
+Response measure::
+User name is granted
+
+Rationale::
+To enable a user-friendly experience.
+Developers should be able to choose their user name on APPUiO freely.
