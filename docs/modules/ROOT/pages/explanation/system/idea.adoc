@@ -29,4 +29,4 @@ See also xref:references/glossary.adoc[Glossary]
 
 🔗 Decision references::
 * xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
-* xref:explanation/decisions/kyverno.adoc[Kyverno as policy engine]
+* xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
