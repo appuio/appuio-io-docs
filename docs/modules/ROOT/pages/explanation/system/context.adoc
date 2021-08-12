@@ -1,5 +1,4 @@
 = System context
-:apub2: APPUiO Public 2.0
 
 [TIP]
 ====

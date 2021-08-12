@@ -1,5 +1,4 @@
 = Kyverno as policy engine
-:apub2: APPUiO Public 2.0
 
 Problem::
 Kubernetes RBAC rules are not suitable to validate certain properties of resources.
