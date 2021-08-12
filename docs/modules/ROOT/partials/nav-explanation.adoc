@@ -1,6 +1,7 @@
 * System
 ** xref:appuio-public:ROOT:explanation/system/context.adoc[System context]
 ** xref:appuio-public:ROOT:explanation/system/idea.adoc[System idea]
+** xref:appuio-public:ROOT:explanation/system/data-model.adoc[Data model]
 
 * Decisions
 ** xref:appuio-public:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IDP]
