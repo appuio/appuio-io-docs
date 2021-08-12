@@ -1,5 +1,4 @@
 = Kyverno as resource generator
-:apub2: APPUiO Public 2.0
 
 Problem::
 Each APPUiO namespace requires user-immutable resources, such as `ResourceQuota` or `LimitRanges`.

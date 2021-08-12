@@ -1,5 +1,4 @@
 = Keycloak as IDP
-:apub2: APPUiO Public 2.0
 
 Problem::
 We need to store user (including passwords), team memberships and organizations.

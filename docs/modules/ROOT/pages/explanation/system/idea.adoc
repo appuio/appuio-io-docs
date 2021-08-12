@@ -1,5 +1,4 @@
 = System idea
-:apub2: APPUiO Public 2.0
 
 The system idea displays a high-level architecture of {apub2}.
 
