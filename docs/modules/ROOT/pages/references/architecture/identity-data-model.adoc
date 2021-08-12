@@ -2,21 +2,22 @@
 
 :zone: {apub2} zone
 
-image::system/data-model.drawio.svg[]
+[TIP]
+====
+The identity data model shows how Users and Organizations are implemented in Keycloak and OpenShift.
+Please see xref:explanation/system/data-model.adoc[Data model] for the full abstract data model.
+====
+
+.Data model focusing implementation with Keycloak and OpenShift
+image::system/keycloak-model.drawio.svg[]
 
 == Data model in Keycloak
 
-=== Users
-
+Users::
 Each {apub2} user is represented by a user object in Keycloak.
 
-=== Organizations
-
+Organizations::
 Each {apub2} organization is represented by a group object in Keycloak.
-
-=== Teams
-
-NOTE: Not defined yet
 
 == Data model in OpenShift
 
@@ -26,6 +27,6 @@ The user's Keycloak property `Username` is used to name the `User` object in eac
 
 {apub2} organizations are represented as `Group` objects in each OpenShift cluster.
 The `Groups` are synchronized from Keycloak to all OpenShift clusters in regular intervals.
-The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[`group-sync-operator`].
+The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[group-sync-operator].
 
 Organization memberships are represented in each {zone} by adding the user's `User` object name to the organization's `Group` object.
