@@ -1,4 +1,5 @@
 * xref:appuio-public:ROOT:references/glossary.adoc[Glossary]
+* xref:appuio-public:ROOT:references/document-requirements.adoc[How to read and document requirements]
 
 * Quality Requirements
 

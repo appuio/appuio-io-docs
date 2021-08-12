@@ -1,0 +1,42 @@
+= How to read and document requirements
+
+Requirements follow the SMART principle.
+SMART is an acronym that aims to make requirements clear and testable.
+
+* **S** (Specific)
+* **M** (Measurable)
+* **A** (Attainable or Achievable)
+* **R** (Realizable)
+* **T** (Time-bound, Traceable or Testable, literature differs here)
+
+== Non-functional requirements
+
+To document SMART non-functional or quality requirements, we describe them in scenarios that follow a certain structure.
+
+Source::
+Who (user or system) triggers an event?
+
+Stimulus::
+What happens, what is the event?
+
+Environment::
+Where does it happen?
+
+Artifact::
+What system component is involved?
+
+Response::
+What is the response from the system?
+
+Response measure::
+How is the response measured?
+It should be a number, but a clear `yes` or `no` is also acceptable.
+
+Quality requirements are categorized into eight different characteristics as standardized in https://iso25000.com/index.php/en/iso-25000-standards/iso-25010[ISO 25010].
+
+[TIP]
+====
+Imagine yourself being a tester of APPUiO Public 2.0 and you would like to do a quality examination.
+How would you test and verify the requirements?
+Writing down those requirements in form of scenarios help to make them measurable or verifiable.
+====
