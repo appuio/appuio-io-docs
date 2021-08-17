@@ -13,8 +13,8 @@ Alternatives::
 * Implement extra tooling to work around the limitations in OpenShift and allow `Username` changes.
 
 Decision::
-We disallow users to change their `Username` after creation of the user in {apub2}.
+We disallow users to change their `Username` after creation of the user in {product}.
 
 Rationale::
-We decide to disallow users to change their `Username` after creation of the user in {apub2}.
+We decide to disallow users to change their `Username` after creation of the user in {product}.
 If a user needs to change their `Username`, they can register a new user with the desired `Username` and add the new user to the appropriate organizations.

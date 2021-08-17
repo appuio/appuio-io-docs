@@ -1,6 +1,6 @@
 = Identity data model
 
-:zone: {apub2} zone
+:zone: {product} zone
 
 [TIP]
 ====
@@ -14,18 +14,18 @@ image::system/keycloak-model.drawio.svg[]
 == Data model in Keycloak
 
 Users::
-Each {apub2} user is represented by a user object in Keycloak.
+Each {product} user is represented by a user object in Keycloak.
 
 Organizations::
-Each {apub2} organization is represented by a group object in Keycloak.
+Each {product} organization is represented by a group object in Keycloak.
 
 == Data model in OpenShift
 
-{apub2} users are represented as a pair of `User` and `Identity` objects in each OpenShift cluster ({zone}).
+{product} users are represented as a pair of `User` and `Identity` objects in each OpenShift cluster ({zone}).
 These objects are created when a user first logs in on a OpenShift cluster.
 The user's Keycloak property `Username` is used to name the `User` object in each OpenShift cluster.
 
-{apub2} organizations are represented as `Group` objects in each OpenShift cluster.
+{product} organizations are represented as `Group` objects in each OpenShift cluster.
 The `Groups` are synchronized from Keycloak to all OpenShift clusters in regular intervals.
 The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[group-sync-operator].
 

@@ -11,7 +11,7 @@ Alternatives::
   We can use the existing infrastructure to manage users and organizations.
 
 * VSHN-owned Keycloak.
-  There is id.vshn.net which we could integrate {apub2} customers.
+  There is id.vshn.net which we could integrate {product} customers.
 
 * APPUiO-owned Keycloak.
   Each APPUiO instance brings its own Keycloak.
@@ -24,4 +24,4 @@ Rationale::
 Keycloak is a well-known Identity Provider that provides SSO.
 To ease integrations between zones, each APPUiO instance brings its own managed Keycloak.
 +
-There are also plans to make {apub2} resellable, meaning that nothing should really depend on VSHN infrastructure.
+There are also plans to make {product} resellable, meaning that nothing should really depend on VSHN infrastructure.

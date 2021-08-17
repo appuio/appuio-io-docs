@@ -1,4 +1,4 @@
-= {apub2} Documentation for System Engineers
+= {product} Documentation for System Engineers
 
 This repository contains all the content hosted at https://kb.vshn.ch/appuio-cloud/.
 

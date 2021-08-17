@@ -6,5 +6,5 @@ The data model shows entities, their most important attributes and also the rela
 It is abstract and it is being implemented or stored with various technologies that are left out of this view.
 ====
 
-.{apub2} abstract data model
+.{product} abstract data model
 image::system/data-model.drawio.svg[]

@@ -36,7 +36,7 @@ Quality requirements are categorized into eight different characteristics as sta
 
 [TIP]
 ====
-Imagine yourself being a tester of {apub2} and you would like to do a quality examination.
+Imagine yourself being a tester of {product} and you would like to do a quality examination.
 How would you test and verify the requirements?
 Writing down those requirements in form of scenarios help to make them measurable or verifiable.
 ====
