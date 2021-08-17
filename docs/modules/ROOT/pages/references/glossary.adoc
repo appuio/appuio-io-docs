@@ -1,13 +1,13 @@
 = Glossary
 
 User::
-A human that interacts with APPUiO Public.
+A human that interacts with {apub2}.
 
 Developer::
-A user which interacts with APPUiO Public (the Kubernetes API) in a specified namespace.
+A user which interacts with {apub2} (the Kubernetes API) in a specified namespace.
 
 Organization Owner::
-A user which interacts with APPUiO Public (the Kubernetes API).
+A user which interacts with {apub2} (the Kubernetes API).
 
 Organization::
 A unit that groups together Users, Teams and Namespaces.
@@ -25,7 +25,7 @@ Namespace::
 A Kubernetes namespace (in OpenShift also an object type "Project")
 
 Zone::
-A single OpenShift cluster that is part of an APPUiO public offering.
+A single OpenShift cluster that is part of an {apub2} offering.
 
 
 Admin::

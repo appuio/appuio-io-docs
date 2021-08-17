@@ -19,7 +19,7 @@ The OpenID claim `sub` is mapped to the Keycloak user's `ID` by default.
 Alternatives::
 * Use the `Username` property of Keycloak user objects.
 +
-With this approach, `oc whoami` shows users the `Username` they chose when registering their APPUiO Public user.
+With this approach, `oc whoami` shows users the `Username` they chose when registering their {apub2} user.
 However, Users can't change their `Username` after registration, as the OpenShift `User` and `Identity` objects (which are created when the users first logs in) aren't updated when users change their `Username` in Keycloak.
 
 * Use the `ID` property of Keycloak user objects.

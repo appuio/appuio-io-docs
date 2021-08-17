@@ -11,7 +11,7 @@ Alternatives::
   We can use the existing infrastructure to manage users and organizations.
 
 * VSHN-owned Keycloak.
-  There is id.vshn.net which we could integrate APPUiO Public 2.0 customers.
+  There is id.vshn.net which we could integrate {apub2} customers.
 
 * APPUiO-owned Keycloak.
   Each APPUiO instance brings its own Keycloak.

@@ -1,12 +1,12 @@
 * System
-** xref:appuio-public:ROOT:explanation/system/context.adoc[System context]
-** xref:appuio-public:ROOT:explanation/system/idea.adoc[System idea]
-** xref:appuio-public:ROOT:explanation/system/data-model.adoc[Data model]
+** xref:appuio-cloud:ROOT:explanation/system/context.adoc[System context]
+** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[System idea]
+** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[Data model]
 
 * Decisions
-** xref:appuio-public:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IDP]
-** xref:appuio-public:ROOT:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
-** xref:appuio-public:ROOT:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]
-** xref:appuio-public:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
-** xref:appuio-public:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
-** xref:appuio-public:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
+** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]
+** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
+** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]

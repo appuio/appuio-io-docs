@@ -1,9 +1,9 @@
-name: appuio-public
-title: APPUiO Public for System Engineers
+name: appuio-cloud
+title: APPUiO Cloud for System Engineers
 version: master
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/partials/nav.adoc
 asciidoc:
   attributes:
-    apub2: APPUiO Public 2.0
+    apub2: APPUiO Cloud
