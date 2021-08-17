@@ -1,7 +1,7 @@
 = User name choice on sign-up
 
 Problem::
-Users need a user name (unique identifier) in APPUiO Public.
+Users need a user name (unique identifier) in {product}.
 +
 This identifier should have the following properties:
 

@@ -6,15 +6,15 @@ In the decision regarding xref:explanation/decisions/usernames.adoc[`User` objec
 Due to some technical limitations in OpenShift, this choice requires that the user's `Username` remains stable for the lifetime of the user.
 
 Relevant decisions::
-* xref:appuio-public:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+* xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 
 Alternatives::
 * Disallow `Username` changes
 * Implement extra tooling to work around the limitations in OpenShift and allow `Username` changes.
 
 Decision::
-We disallow users to change their `Username` after creation of the user in APPUiO Public.
+We disallow users to change their `Username` after creation of the user in {product}.
 
 Rationale::
-We decide to disallow users to change their `Username` after creation of the user in APPUiO Public.
+We decide to disallow users to change their `Username` after creation of the user in {product}.
 If a user needs to change their `Username`, they can register a new user with the desired `Username` and add the new user to the appropriate organizations.

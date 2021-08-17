@@ -1,5 +1,5 @@
 = Authentication on OpenShift clusters
 
-{apub2} users can authenticate on each zone using their user configured in Keycloak.
+{product} users can authenticate on each zone using their user configured in Keycloak.
 
 Authentication is configured in OpenShift using the https://docs.openshift.com/container-platform/latest/authentication/identity_providers/configuring-oidc-identity-provider.html[OpenShift OpenID connect IDP].

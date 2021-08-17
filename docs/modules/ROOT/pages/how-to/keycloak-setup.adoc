@@ -56,7 +56,7 @@ oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o 
 
 . Login to Keycloak as user `admin` with the password printed before
 
-. Create a new Realm called `appuio-public`
+. Create a new Realm called `appuio-cloud`
 
 . Create a new Keycloak Client with the following settings (leave the others at default value)
 +
@@ -74,7 +74,7 @@ Base URL = https://console.apps.lpg1.ocp4-poc.appuio-beta.ch/
 ----
 Host = mxout1.corp.vshn.net
 Port = 25
-From Display Name = APPUiO Public
+From Display Name = APPUiO Cloud
 From = noreply@id.dev.appuio.cloud
 Envelope From = tech@vshn.net
 Enable StartTLS = true
@@ -105,7 +105,7 @@ parameters:
         type: OpenID
         mappingMethod: add
         openID:
-          issuer: https://id.dev.appuio.cloud/auth/realms/appuio-public
+          issuer: https://id.dev.appuio.cloud/auth/realms/appuio-cloud
           clientID: c-old-fire-5788
           clientSecret:
             name: appuio-keycloak-dev-client-secret

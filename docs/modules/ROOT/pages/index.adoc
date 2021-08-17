@@ -1,8 +1,8 @@
-= APPUiO Public for System Engineers
+= {product} for System Engineers
 
 image::appuio.svg[APPUiO,256,link=https://www.appuio.ch]
 
-Welcome to the APPUiO Public for System Engineers documentation site.
+Welcome to the {product} for System Engineers documentation site.
 
 Use the search field at the top of this page, navigate through topics with the tree on the left or see the links below.
 

@@ -3,7 +3,7 @@
 Problem::
 Kubernetes RBAC rules are not suitable to validate certain properties of resources.
 They can only allow or deny operations of the whole resource.
-On {apub2} however, we require fine-grained control of certain properties, such as labels or annotations on Namespaces.
+On {product} however, we require fine-grained control of certain properties, such as labels or annotations on Namespaces.
 
 Relevant requirements::
 * xref:references/quality-requirements/reliability/ns-validation-resilience.adoc[Namespace validation resilience]

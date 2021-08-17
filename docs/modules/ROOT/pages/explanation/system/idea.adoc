@@ -1,8 +1,8 @@
 = System idea
 
-The system idea displays a high-level architecture of {apub2}.
+The system idea displays a high-level architecture of {product}.
 
-.{apub2} system idea
+.{product} system idea
 image::system/systemidea.drawio.svg[]
 
 * An instance of Keycloak is responsible for authoritatively store data on:
