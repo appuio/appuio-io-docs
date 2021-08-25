@@ -1,2 +1,39 @@
 = DNS nameing scheme
 
+Problem::
+{product} is a web based service offering.
+As such it is accessible through several domains.
+We need a common understanding how we name things and what domains to use for making it accessible.
+
+Alternatives::
+* In the past, we used different domains for things managed by us and things deployed by users. This due to a concern regarding cross domain cookie access. 
+
+
+Decisison::
+The base domain will be `appuio.cloud`.
+On the third level, we will serve services that are zone independent.
+Services bound to specific zone, will be served through the fourth level where the third level will be the zone's identifier.
+Apps served through a zone's default domain, use the subdomain `apps` of a zone's base domain.
++
+Examples:
++
+* `appuio.cloud` This is the exception to the above rule and will be used to host the marketing homepage for {product}.
+`www.appuio.cloud` will be a redirect to `appuio.cloud`.
+* `id.appuio.cloud` The identity provider for {product}.
+`console.appuio.cloud` A web application to manage cross zone concerns.
+* `console.<zone>.appuio.cloud` The OpenShift console of a zone.
+* `<route>.apps.<zone>.appuio.cloud` A route hosted on a zone relying on the zones default app domain.
+
+The content of `<route>` covered by an OpenShift core feature and will consist of the name of the route object and the namespace it is located in.
+What goes into `<zone>` is covered by xref:appuio-cloud:ROOT:explanation/decisions/zone-nameing.adoc[Zone naming scheme].
+
+Rationale::
+Using a single domain conveys that this all belongs together.
+The domains are as short as possible and therefore are memorable.
+They can also be typed manually without being a big hurdle.
+As they are following a simple pattern, a versed person should be able to guess them.
+
+By current standards, reading cookies are limited by the "same origin" policy.
+For this, we do not see the need to use separate domains.
+
+NOTE: Users are always free to use domains under their control.
