@@ -1,0 +1,11 @@
+= Zone nameing scheme
+
+Problem::
+{product} will consist of several clusters we refer to as zones.
+We need a common understanding how we name them.
+
+Alternatives::
+
+Decisison::
+
+Rationale::
