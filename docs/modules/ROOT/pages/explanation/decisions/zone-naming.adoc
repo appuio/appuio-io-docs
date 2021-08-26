@@ -1,4 +1,4 @@
-= Zone nameing scheme
+= Zone naming scheme
 
 Problem::
 {product} will consist of several clusters we refer to as zones.
@@ -14,15 +14,19 @@ Alternatives::
 * Use the cloud provider followed by a numerical or alphabetical index (`cloudscale-a.appuio.cloud` or `exoscale-1.appuio.cloud`).
 * Use the country code followed by a numerical or alphabetical index (`ch-1.appuio.cloud` or `de-a.appuio.cloud`).
 
-Decisison::
+Decision::
+The zone identifier will be built following the pattern:
 +
-The zone identifier will build with the following the patter: `<provider>-<region>-<index>`.
-`<provider>` will be the name of the cloud provider the cluster is hosted on (`cloudscale`, `exoscale`, `aws`, `azure`, `gcp`, etc.).
-`<region>` will be the region taken verbatim from the cloud provider (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
-`<index>` is a zero indexed numerical identifier.
+****
+`<provider>-<region>-<index>`
+****
 +
+`<provider>`::: Name of the cloud provider the cluster is hosted on (`cloudscale`, `exoscale`, `aws`, `azure`, `gcp`, etc.).
+`<region>`::: Region name, taken verbatim from the cloud providers own naming scheme (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
+`<index>`::: Zero indexed numerical identifier.
+
 Examples:
-+
+
 * `cloudscale-rma-0.appuio.cloud` first cluster hosted on Cloudscale and placed in the region located in Rümlang.
 * `exoscale-ch-dk-2-a.appuio.cloud` third cluster hosted on Exoscale and placed in the region located in Zürich.
 * `aws-eu-central-1-a.appuio.cloud` second cluster hosted on AWS and placed in the region located in Frankfurt.

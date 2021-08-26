@@ -10,5 +10,5 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 ** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
 ** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
-** xref:appuio-cloud:ROOT:explanation/decisions/dns-nameing.adoc[DNS nameing scheme]
-** xref:appuio-cloud:ROOT:explanation/decisions/zone-nameing.adoc[Zone nameing scheme]
+** xref:appuio-cloud:ROOT:explanation/decisions/dns-naming.adoc[DNS naming scheme]
+** xref:appuio-cloud:ROOT:explanation/decisions/zone-naming.adoc[Zone naming scheme]
