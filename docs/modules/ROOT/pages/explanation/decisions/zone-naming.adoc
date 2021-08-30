@@ -34,4 +34,11 @@ The zone identifier will be built following the pattern:
 * `aws-eu-central-1-1.appuio.cloud` second cluster hosted on AWS and placed in the region located in Frankfurt.
 ====
 
+[NOTE]
+====
+On Cloudscale, you will most likely only see `rma1` and `lpg1`.
+One is inclined to assume those are the regions, but actually, those are the zones.
+As Cloudscale only has one zone per region, it is easy to confuse one for the other.
+====
+
 == Rationale
