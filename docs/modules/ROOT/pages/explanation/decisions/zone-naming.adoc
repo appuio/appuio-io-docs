@@ -30,8 +30,8 @@ The zone identifier will be built following the pattern:
 .List of examples
 ====
 * `cloudscale-rma-0.appuio.cloud` first cluster hosted on Cloudscale and placed in the region located in Rümlang.
-* `exoscale-ch-dk-2-a.appuio.cloud` third cluster hosted on Exoscale and placed in the region located in Zürich.
-* `aws-eu-central-1-a.appuio.cloud` second cluster hosted on AWS and placed in the region located in Frankfurt.
+* `exoscale-ch-dk-2-2.appuio.cloud` third cluster hosted on Exoscale and placed in the region located in Zürich.
+* `aws-eu-central-1-1.appuio.cloud` second cluster hosted on AWS and placed in the region located in Frankfurt.
 ====
 
 == Rationale
