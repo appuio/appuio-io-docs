@@ -13,6 +13,8 @@ We need a common understanding how we name them.
 * Use top level domain to encode country locality (`<zone>.appuio.ch`, `<zone>.appuio.de`).
   This does not work as not every country has a country specific top level domain (for example the United States of America).
 * Use the cloud provider followed by a numerical or alphabetical index (`cloudscale-a.appuio.cloud` or `exoscale-1.appuio.cloud`).
+* Use the cloud provider followed by the zone abbreviation used by the cloud provider (`cloudscale-rma1.appuio.cloud` or `exoscale-ch-gva-2.appuio.cloud`). (See https://www.cloudscale.ch/en/api/v1#regions and https://www.exoscale.com/datacenters/)
+** Optionally shorten the cloud provider name, e.g. `clsc` or `exo`
 * Use the country code followed by a numerical or alphabetical index (`ch-1.appuio.cloud` or `de-a.appuio.cloud`).
 
 == Decision
