@@ -32,12 +32,12 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 | `cname.<zone>.appuio.cloud`
 | The DNS entry where users can point CNAME entries to
 
-| `<hostname>.apps.<zone>.appuio.cloud`
+| `<app>.apps.<zone>.appuio.cloud`
 | A hostname hosted on an {zone} relying on the zone's default app domain.
 
 |===
 
-The content of `<hostname>` placeholder is provided by an OpenShift Route object that defaults to the name of the Route object and the namespace it is located in.
+The content of the `<app>` placeholder is provided by an OpenShift Route object that defaults to the name of the Route object and the namespace it is located in.
 Users are always free to use hostnames under their control (e.g. CNAME entries) to expose their applications running on the platform.
 
 What goes into `<zone>` placeholder is covered by the next section.
@@ -62,7 +62,7 @@ The {zone} identifier follows the pattern:
 `<region>`::: Region name, taken verbatim (lowercase) from the cloud provider's own naming scheme (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
 `<index>`::: Zero indexed numerical identifier.
 
-.List of examples
+.Examples of {zone} domains
 ====
 * `cloudscale-rma-0.appuio.cloud` first cluster hosted on Cloudscale and placed in the region located in Rümlang.
 * `exoscale-ch-dk-2-2.appuio.cloud` third cluster hosted on Exoscale and placed in the region located in Zürich.
