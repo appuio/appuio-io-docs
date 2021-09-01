@@ -1,0 +1,97 @@
+= DNS naming scheme
+
+== Base domain
+
+The base domain is `appuio.cloud`.
+
+Common services that are zone independent are served on the third level.
+Services bound to a specific zone, will be served through the fourth level where the third level is the zone's identifier.
+Apps served through a zone's default domain use the subdomain `apps` of a zone's base domain.
+
+.Known hosts and schemes of 'appuio.cloud'
+|===
+| Hostname | Description
+
+|`appuio.cloud`, `www.appuio.cloud`
+| Hosting the marketing homepage for {product}
+
+|`id.appuio.cloud`
+|identity provider for {product}
+
+|`console.appuio.cloud`
+| Frontend to manage cross zone concerns
+
+| `console.<zone>.appuio.cloud`
+| OpenShift console frontend of a zone
+
+| `api.<zone>.appuio.cloud`
+| Kubernetes API endpoint (e.g. for KubeConfig)
+
+| `cname.<zone>.appuio.cloud`
+| The DNS entry where users can point CNAME entries to
+
+| `<hostname>.apps.<zone>.appuio.cloud`
+| A hostname hosted on a zone relying on the zone's default app domain.
+
+|===
+
+The content of `<hostname>` placeholder is provided by an OpenShift Route object that defaults to the name of the Route object and the namespace it is located in.
+Users are always free to use hostnames under their control (e.g. CNAME entries) to expose their applications running on the platform.
+
+What goes into `<zone>` placeholder is covered by the next section.
+
+Using a single domain conveys that this all belongs together.
+The domains are as short as possible and therefore are memorable.
+They can also be typed manually without being a big hurdle.
+As they are following a simple pattern, a versed person should be able to guess them.
+
+NOTE: Technical sidenote: By current standards, reading cookies are limited by the "same origin" policy.
+For this, we do not see the need to use separate domains.
+
+== Zone
+
+The zone identifier follows the pattern:
+
+****
+<provider>-<region>-<index>
+****
+
+`<provider>`::: Name of the cloud provider the cluster is hosted on (see below).
+`<region>`::: Region name, taken verbatim (lowercase) from the cloud providers own naming scheme (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
+`<index>`::: Zero indexed numerical identifier.
+
+.List of examples
+====
+* `cloudscale-rma-0.appuio.cloud` first cluster hosted on Cloudscale and placed in the region located in Rümlang.
+* `exoscale-ch-dk-2-2.appuio.cloud` third cluster hosted on Exoscale and placed in the region located in Zürich.
+* `aws-eu-central-1-1.appuio.cloud` second cluster hosted on AWS and placed in the region located in Frankfurt.
+====
+
+.Known cloud providers
+|===
+| Provider | Full name
+
+| `cloudscale`
+| cloudscale.ch
+
+| `exoscale`
+| Exoscale
+
+| `aws`
+| Amazon Web Services
+
+| `gcp`
+| Google Cloud Platform
+
+| `azure`
+| Microsoft Azure
+
+|===
+
+
+[NOTE]
+====
+On Cloudscale, you will most likely only see `rma1` and `lpg1`.
+One is inclined to assume those are the regions, but actually, those are the zones.
+As Cloudscale only has one zone per region, it is easy to confuse one for the other.
+====

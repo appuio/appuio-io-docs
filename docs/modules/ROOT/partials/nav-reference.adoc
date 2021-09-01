@@ -1,5 +1,7 @@
 * xref:appuio-cloud:ROOT:references/glossary.adoc[Glossary]
 * xref:appuio-cloud:ROOT:references/document-requirements.adoc[How to read and document requirements]
+* xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[DNS Naming Scheme]
+
 
 * Architecture
 
