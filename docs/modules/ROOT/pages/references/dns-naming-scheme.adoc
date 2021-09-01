@@ -1,12 +1,14 @@
 = DNS naming scheme
 
+NOTE: The DNS naming scheme fulfills the usability requirements documented in xref:appuio-cloud:ROOT:references/quality-requirements/usability/dns-naming-scheme.adoc[DNS Naming scheme].
+
 == Base domain
 
 The base domain is `appuio.cloud`.
 
 Common services that are zone independent are served on the third level.
-Services bound to a specific zone, will be served through the fourth level where the third level is the zone's identifier.
-Apps served through a zone's default domain use the subdomain `apps` of a zone's base domain.
+Services bound to a specific {zone}, will be served through the fourth level where the third level is the zone's identifier.
+Apps served through am {zone}'s default domain use the subdomain `apps` of a zone's base domain.
 
 .Known hosts and schemes of 'appuio.cloud'
 |===
@@ -22,7 +24,7 @@ Apps served through a zone's default domain use the subdomain `apps` of a zone's
 | Frontend to manage cross zone concerns
 
 | `console.<zone>.appuio.cloud`
-| OpenShift console frontend of a zone
+| OpenShift console frontend of an {zone}
 
 | `api.<zone>.appuio.cloud`
 | Kubernetes API endpoint (e.g. for KubeConfig)
@@ -31,7 +33,7 @@ Apps served through a zone's default domain use the subdomain `apps` of a zone's
 | The DNS entry where users can point CNAME entries to
 
 | `<hostname>.apps.<zone>.appuio.cloud`
-| A hostname hosted on a zone relying on the zone's default app domain.
+| A hostname hosted on an {zone} relying on the zone's default app domain.
 
 |===
 
@@ -46,18 +48,18 @@ They can also be typed manually without being a big hurdle.
 As they are following a simple pattern, a versed person should be able to guess them.
 
 NOTE: Technical sidenote: By current standards, reading cookies are limited by the "same origin" policy.
-For this, we do not see the need to use separate domains.
+For this, there is no need to use separate domains.
 
 == Zone
 
-The zone identifier follows the pattern:
+The {zone} identifier follows the pattern:
 
 ****
 <provider>-<region>-<index>
 ****
 
 `<provider>`::: Name of the cloud provider the cluster is hosted on (see below).
-`<region>`::: Region name, taken verbatim (lowercase) from the cloud providers own naming scheme (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
+`<region>`::: Region name, taken verbatim (lowercase) from the cloud provider's own naming scheme (`rma`, `ch-dk-2`, `eu-central-1`, `switzerlandnorth`, `europe-west6`).
 `<index>`::: Zero indexed numerical identifier.
 
 .List of examples
