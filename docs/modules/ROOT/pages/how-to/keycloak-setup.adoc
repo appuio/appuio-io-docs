@@ -1,4 +1,4 @@
-= Install Keycloak on APPUiO Zone
+= Install Keycloak on {zone}
 
 This guide describes the steps required to install the APPUiO IDP onto one of the APPUiO Zones (clusters).
 

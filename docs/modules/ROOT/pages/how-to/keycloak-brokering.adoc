@@ -1,0 +1,82 @@
+= Add another Keycloak for brokering
+:appuio-keycloak: id.dev.appuio.cloud
+:appuio-realm: appuio-public
+:foreign-idp-alias: foreign-idp
+:foreign-host: foreign.hostname.tld
+:foreign-realm: foreign-realm
+:foreign-client-id: appuio-cloud-id
+
+This guide describes the steps required to configure the APPUiO Keycloak so that a foreign Keycloak as Identity Providers can be used.
+
+NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+
+image:how-to/keycloak-brokering.drawio.svg[]
+
+== Prerequisites
+
+* Installed APPUiO Keycloak (see xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak])
+* Administrator console access to APPUiO Keycloak
+* Administrator console access to foreign Keycloak
+
+TIP: It's easiest to configure brokering if you have both administration console ready in 2 browser tabs next to eachother.
+
+For the purpose of this guide, we will use the following names, interchange them as needed:
+
+|===
+| Key | Description
+
+| `{appuio-keycloak}`
+| APPUiO Keycloak hostname
+
+| `{foreign-host}`
+| Foreign Keycloak hostname
+
+| `{appuio-realm}`
+| Realm within `{appuio-keycloak}` (currently still `public`, not yet renamed to `cloud`)
+
+| `{foreign-realm}`
+| Realm within `{foreign-host}`
+
+| `{foreign-idp-alias}`
+| The Alias given to `{foreign-host}`
+
+| `{foreign-client-id}`
+| The Client ID for `{appuio-keycloak}` within `{foreign-host}`
+
+|===
+
+== Add new Client to foreign Keycloak
+
+. Log in as administrator to admin console in the **foreign Keycloak instance** and select the desired realm.
+. Add a new Client and configure the following settings:
++
+[source,subs="attributes+"]
+----
+Client ID = {foreign-client-id}
+Access Type = confidential
+Direct Access Grants Enabled = True
+Valid Redict URIs = https://{appuio-keycloak}/auth/realms/{appuio-realm}/broker/{foreign-idp-alias}/endpoint
+----
+
+. After saving, go into edit mode again and select the "Credentials" tab.
+. Keep the displayed Secret ready for copy-pasting.
+
+== Configure Identity Provider
+
+. Log in as administrator to admin console in the **APPUiO Keycloak instance** and select the desired realm.
+. Add a new Identity Provider (select `Keycloak OpenID Connect`) and configure the following settings:
++
+[source,subs="attributes+"]
+----
+Alias = {foreign-idp-alias}
+Display Name = A human friendly name displayed in the Login page
+Trust Email = True
+Sync Mode = force
+Authorization URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-connect/auth
+Token URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-connect/token
+Logout URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-connect/logout
+User Info URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-connect/userinfo
+Client Authentication = "Client secret sent as post"
+Client ID = {foreign-client-id}
+Client Secret = <The secret displayed in {appuio-keycloak} Credentials tab>
+----
