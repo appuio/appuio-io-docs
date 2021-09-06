@@ -1,0 +1,34 @@
+= DNS Naming scheme
+
+Source::
+Support Engineer
+
+Stimulus::
+Accesses an {zone} via console URL
+
+Environment::
+Desired {zone}
+
+Artifact::
+browser, `curl`, `kubectl` or `oc`
+
+Response::
+Base address URL uniquely identifies {zone}
+
+Response measure::
+The URL must contain the following information:
+* Cloud provider identifier
+* Geographic region
+* Index or identifier within the geographic region
+
+Rationale::
+To enable memorable and recognizable DNS names when working with multiple zones.
+
+Cloud provider:::
+The cloud provider identifier gives immediate indication about possible technologies and architecture relevant for the {zone}.
+
+Geographic region:::
+The location can be important for BCM concerns.
+
+Index within region:::
+There may be more than 1 {zone} per region per cloud provider.

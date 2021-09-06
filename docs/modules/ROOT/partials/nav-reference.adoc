@@ -1,5 +1,7 @@
 * xref:appuio-cloud:ROOT:references/glossary.adoc[Glossary]
 * xref:appuio-cloud:ROOT:references/document-requirements.adoc[How to read and document requirements]
+* xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[DNS Naming Scheme]
+
 
 * Architecture
 
@@ -18,5 +20,6 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/ns-validation-resilience.adoc[Namespace validation resilience]
 
 ** Usability
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/dns-naming-scheme.adoc[DNS Naming scheme]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-arbitrary-name.adoc[Arbitrary Namespace name]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/user-arbitrary-name.adoc[Arbitrary user name]
