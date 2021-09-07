@@ -5,6 +5,7 @@
 
 * Decisions
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+** xref:appuio-cloud:ROOT:explanation/decisions/idp-group-mapping.adoc[IDP group membership mapping]
 ** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
 ** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-generator.adoc[Keyverno as resource generator]
 ** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]

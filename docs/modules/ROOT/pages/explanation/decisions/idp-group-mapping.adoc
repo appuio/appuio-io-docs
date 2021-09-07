@@ -1,0 +1,52 @@
+= IDP Group membership Mapping
+
+== Problem
+
+Normal users can login via Keycloak to any {zone} and deploy workloads.
+However, certain groups are destined to be cluster administrators and require the permissions to perform privileged operations.
+
+With Keycloak being the only IDP frontend for any {zone}, group memberships need to be synchronized in a way that OpenShift is able to distinguish special organizations.
+Especially with brokered IDPs where the actual source of truth regarding group memberships of users is outside of {idp} this is a technical challenge around authorization that impacts the architecture.
+
+The problem ultimately asks the questions:
+* How does {idp} know which organization is privileged if the organization is brokered through another IDP?
+* How does {idp} determine if a user, whose login is brokered though another IDP, belongs to such an organization?
+
+== Relevant requirements
+
+* xref:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]
+
+== Relevant decisions
+
+* xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+
+== Alternatives
+
+[qanda]
+External group syncing via API::
+An extra component connects to the brokered IDP via API, collects the groups and group memberships, adapts and then pushes to {idp} also via API.
+This method allows different implementations for various brokered IDPs, for example there could be an implementation for Keycloak-to-Keycloak, or GitHub-to-Keycloak.
++
+Such a component would regularly pull and push the group memberships (or event-driven if supported) and is provided by {product} developers.
+
+Group mapping via claims::
+With OIDC protocol, custom fields in the user token payload called "Claims" allow additional information to be included.
+In this alternative, if the brokered IDP is also Keycloak, the group memberships can be easily added to those claims.
+The {idp} is then able to read and create or join the given groups on-the-fly.
++
+Unfortunately there is no built-in mechanism in Keycloak that allows to dynamically manage group memberships coming from brokered claims.
+There is a https://github.com/amomra/oidc-group-mapper[GitHub project] that implements this approach as a Keycloak extension written in Java, but it seems to be unmaintained.
+
+== Decision
+
+Group mapping via claims
+
+== Rationale
+
+A mapping via claims basically allows to delegate the desire and support of group memberships to the implementation of the brokered IDP.
+In other words, if the foreign IDP provides the group membership in the claims, then {idp} can sync the groups.
+
+On all {zone}s, once the groups have been synchronized to OpenShift, a static configuration allows a certain group to become `cluster-admin` via RBAC rules.
+
+The mentioned GitHub project will be used as inspiration, but there will be an APPUiO repository that is generally used for extending Keycloak, which includes group mapping.
+A proof-of-concept has already been tested and was successful.
