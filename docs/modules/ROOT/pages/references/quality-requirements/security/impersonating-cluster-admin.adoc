@@ -1,0 +1,25 @@
+= Impersonating cluster-admin within {zone}
+
+Source::
+{zone} administrator
+
+Stimulus::
+Impersonating as `cluster-admin` (built-in OpenShift role)
+
+Environment::
+Any {zone}
+
+Artifact::
+`kubectl` and `oc`
+
+Response::
+Operation requiring elevated privilege granted
+
+Response measure::
+Operation is granted with the `--as cluster-admin` CLI flag
+
+Rationale::
+In OpenShift, certain operations (for example installing Operators) require elevated privileges.
+Pre-defined users or groups are given the `cluster-admin` role in order to maintain the {zone} or provide technical support for customers.
+
+TIP: This is similar to `sudo` in Linux.
