@@ -7,10 +7,10 @@ Stimulus::
 Creates their APPUiO user with arbitrary name
 
 Environment::
-All APPUiO Zones
+All {zone}s
 
 Artifact::
-IDP (Keycloak)
+{idp}
 
 Response::
 User created

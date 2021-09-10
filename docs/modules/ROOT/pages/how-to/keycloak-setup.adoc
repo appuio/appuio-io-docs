@@ -1,6 +1,6 @@
 = Install Keycloak on {zone}
 
-This guide describes the steps required to install the APPUiO IDP onto one of the APPUiO Zones (clusters).
+This guide describes the steps required to install the {idp} onto one of the {zone}s (clusters).
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
 

@@ -8,4 +8,4 @@ asciidoc:
   attributes:
     product: APPUiO Cloud
     zone: APPUiO Zone
-    idp: APPUiO Keycloak
+    idp: APPUiO IdP
