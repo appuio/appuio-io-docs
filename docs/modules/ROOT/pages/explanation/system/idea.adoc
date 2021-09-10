@@ -27,5 +27,5 @@ image::system/systemidea.drawio.svg[]
 See also xref:references/glossary.adoc[Glossary]
 
 🔗 Decision references::
-* xref:explanation/decisions/keycloak.adoc[Keycloak as IDP]
+* xref:explanation/decisions/keycloak.adoc[Keycloak as IdP]
 * xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
