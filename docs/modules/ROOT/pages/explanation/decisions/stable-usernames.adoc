@@ -1,20 +1,24 @@
 = User name stability
 
-Problem::
+== Problem
+
 In the decision regarding xref:explanation/decisions/usernames.adoc[`User` object names in the OpenShift cluster], we chose to use the user's Keycloak `Username` property as the identifier for the user in the OpenShift cluster.
-+
+
 Due to some technical limitations in OpenShift, this choice requires that the user's `Username` remains stable for the lifetime of the user.
 
-Relevant decisions::
+== Relevant decisions
+
 * xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 
-Alternatives::
-* Disallow `Username` changes
-* Implement extra tooling to work around the limitations in OpenShift and allow `Username` changes.
+== Alternatives
 
-Decision::
-We disallow users to change their `Username` after creation of the user in {product}.
+. Disallow `Username` changes
+. Implement extra tooling to work around the limitations in OpenShift and allow `Username` changes.
 
-Rationale::
+== Decision
+
+Disallow `Username` changes
+
+== Rationale
 We decide to disallow users to change their `Username` after creation of the user in {product}.
 If a user needs to change their `Username`, they can register a new user with the desired `Username` and add the new user to the appropriate organizations.
