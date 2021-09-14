@@ -14,6 +14,7 @@ Alternatives::
 
 Decision::
 The User base won't be in {idp}, it has to be in the resellers IdP, e.g. in VSHNs IdP.
+It has to be made available to {idp} using xref:how-to/keycloak-brokering.adoc[identity brokering].
 
 Rationale::
 The User base belongs to the reseller and not to APPUiO Cloud.
