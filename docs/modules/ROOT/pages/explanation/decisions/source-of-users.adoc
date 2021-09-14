@@ -1,0 +1,20 @@
+= Source of Users
+
+Problem::
+The source of the Users (User base) has to be somewhere well-defined.
+
+Relevant decisions::
+* xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
+* xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+* xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
+* xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IdP]
+
+Alternatives::
+* Store user base in xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[{idp}].
+
+Decision::
+The User base won't be in {idp}, it has to be in the resellers IdP, e.g. in VSHNs IdP.
+
+Rationale::
+The User base belongs to the reseller and not to APPUiO Cloud.
+The {idp} only stores a copy of the User and enhances it with APPUiO Cloud specific annotations.
