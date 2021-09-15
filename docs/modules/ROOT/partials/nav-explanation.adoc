@@ -2,6 +2,7 @@
 ** xref:appuio-cloud:ROOT:explanation/system/context.adoc[System context]
 ** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[System idea]
 ** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[Data model]
+** xref:appuio-cloud:ROOT:explanation/system/ui.adoc[UI for cross zone concernes]
 
 * Decisions
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IdP]
