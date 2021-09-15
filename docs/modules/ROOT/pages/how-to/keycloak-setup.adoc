@@ -2,11 +2,16 @@
 
 This guide describes the steps required to install the {idp} onto one of the {zone}s (clusters).
 
-NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+[NOTE]
+====
+This page is meant to be growing and doesn't contain the final configuration at this time.
+Also, this page currently configures Keycloak for VSHN AG's purposes.
+Replace IDs and URLs as needed for your setup.
+====
 
 == Prerequisites
 
-* `oc` version 4.7 or above
+* `oc` version 4.8 or above
 * working Commodore setup
 * SMTP server for sending out emails from Keycloak
 
@@ -18,10 +23,12 @@ NOTE: This page is meant to be growing and doesn't contain the final configurati
 +
 [source,yaml,subs="attributes+"]
 ----
+applications:
+  - keycloak as appuio-keycloak
 parameters:
-  appuio_keycloak_test:
-    namespace: appuio-keycloak-test
-    fqdn: id.dev.appuio.cloud
+  appuio_keycloak:
+    namespace: appuio-keycloak
+    fqdn: id.appuio.cloud
     helm_values:
       image:
         tag: 15.0.0
@@ -43,7 +50,7 @@ parameters:
 ----
 
 . Compile and push the cluster catalog
-. Wait for Keycloak to start up and visit https://id.dev.appuio.cloud.
+. Wait for Keycloak to start up and visit https://id.appuio.cloud.
 
 == Configure Keycloak
 
@@ -62,11 +69,12 @@ oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o 
 +
 [source]
 ----
-Client ID = appuio-dev-idp
+Client ID = c-cluster-id <1>
 Access Type = confidential
-Valid Redirect URIs = https://oauth-openshift.apps.lpg1.ocp4-poc.appuio-beta.ch/oauth2callback/Appuio-Dev
-Base URL = https://console.apps.lpg1.ocp4-poc.appuio-beta.ch/
+Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
+Base URL = https://console.apps.cluster-id.tld/
 ----
+<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
 
 . Configure outgoing email settings in the realm
 +
@@ -75,7 +83,7 @@ Base URL = https://console.apps.lpg1.ocp4-poc.appuio-beta.ch/
 Host = mxout1.corp.vshn.net
 Port = 25
 From Display Name = APPUiO Cloud
-From = noreply@id.dev.appuio.cloud
+From = noreply@id.appuio.cloud
 Envelope From = tech@vshn.net
 Enable StartTLS = true
 ----
@@ -84,14 +92,8 @@ Enable StartTLS = true
 
 == Configure openshift4-authentication
 
-. Create the client secret
-+
-[source,bash]
-----
-secret="" <1>
-oc --as cluster-admin -n openshift-config create secret generic appuio-keycloak-dev-client-secret --from-literal clientSecret=${secret}
-----
-<1> The client secret as displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
+. Add the client secret to Vault.
+  The value is being displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
 
 . Add component configuration
 +
@@ -99,17 +101,21 @@ oc --as cluster-admin -n openshift-config create secret generic appuio-keycloak-
 ----
 parameters:
   openshift4_authentication:
+    secrets:
+      appuio-cloud-keycloak:
+        clientSecret: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak/clientSecret}' <1>
+
     identityProviders:
-      appuio_keycloak_test:
-        name: Appuio-Dev
+      appuio_keycloak:
+        name: APPUiO-Cloud
         type: OpenID
         mappingMethod: add
         openID:
-          issuer: https://id.dev.appuio.cloud/auth/realms/appuio-cloud
-          clientID: c-old-fire-5788
+          issuer: https://id.appuio.cloud/auth/realms/appuio-cloud
+          clientID: ${cluster:name}
           clientSecret:
-            name: appuio-keycloak-dev-client-secret
-          claims: <1>
+            name: appuio-cloud-keycloak
+          claims: <2>
             preferredUsername:
               - preferred_username
             name:
@@ -117,7 +123,8 @@ parameters:
             email:
               - email
 ----
-<1> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+<1> The Vault path for client secret
+<2> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 
 . Compile and push the cluster catalog
 . Wait for Argo CD to sync the config
