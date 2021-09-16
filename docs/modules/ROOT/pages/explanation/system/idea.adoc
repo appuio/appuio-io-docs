@@ -11,8 +11,8 @@ An instance of Keycloak is responsible for authoritatively store data for:
 * Organizations
 * Teams
 +
-The instance of Keycloak is not nessesarily authoritative for user identities.
-It's expected that most instances will setup user federation, identiy brokering or social logins where users are authenticated externally.
+The instance of Keycloak is not necessarily authoritative for user identities.
+It's expected that most instances will setup user federation, identity brokering or social logins where users are authenticated externally.
 That being the case, user sign up or registration is not part of core {product}.
 
 User and group sync::
@@ -21,9 +21,8 @@ It makes the cluster more resilient against connectivity issues between {idp} an
 
 Policy engine::
 A policy engine, also installed on each {zone}, is enforcing policies that go beyond the capabilities of Kubernetes RBAC.
-In the cases where a policy engine is not suitable, other solutions (for example https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[admission webhooks]) are considered.
 
-REST API Endpoint::
+API Endpoint::
 {product} will be designed "API-first".
 This enables different client profiles to interact with the product.
 Clients could be user or command line interfaces and other automation services.
@@ -37,7 +36,7 @@ External Services::
 {product} is not responsible for invoicing or payments.
 Those functionalities are provided by external services using an API.
 {product} will define contract-like APIs for which different implementations or adapters can be plugged in.
-See xref:explanation/system/area-external-services.adoc[External Services]
+See xref:explanation/system/details-external-services.adoc[External Services].
 
 Namespace::
 This is the Kubernetes Namespace object that the developer creates and maintains.

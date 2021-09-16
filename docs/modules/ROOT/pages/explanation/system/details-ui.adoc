@@ -22,6 +22,8 @@ List of available zones::
 * Link to OpenShift logging
 * Link to OpenShift monitoring
 * API URL
+* Kubernetes version
+* OpenShift version
 
 Reporting::
 Dashboard with:
@@ -38,7 +40,7 @@ Organization management::
 * Create new organization
 * Providing/revoking user access to the organization
 * Inviting users from other organizations
-* Manage teams and the users belonging to those theams
+* Manage teams and the users belonging to those teams
 * Assign roles to users and teams
 * A user's default organization
 
@@ -73,7 +75,7 @@ This includes:
 
 * Ability to influence the visual apearance (theming)
 * Ability to change change the logo and key text elements like the brand or company name (white label)
-* Responsive design (desktop first)
+* Responsive design (desktop first) +
   It's assumed that a graphical user interface will most likely be consumed on desktop machines.
   However we also believe in accessibility also from mobile devices.
   We anticipate that certain items would be hard to display on mobile devices.

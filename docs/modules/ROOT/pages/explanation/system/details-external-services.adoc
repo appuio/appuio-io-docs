@@ -5,7 +5,7 @@ APPUiO Cloud is intended to be provided by resellers.
 This influences how the architecture is abstracting components that aren't part of {product}.
 
 {product} features a plugin-like architecture with defined APIs.
-Plugins will implement such an API so that {product} is able to consume and use external services
+Plugins will implement such an API so that {product} is able to consume and use external services.
 Examples are an ERP system for invoicing or payment services.
 
 image::system/api.drawio.svg[]
