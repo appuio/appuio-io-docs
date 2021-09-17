@@ -1,0 +1,86 @@
+= System idea: Graphical user interface
+
+From the perspective of a single zone, the user interface is well defined.
+Each {zone}'s Kubernetes API is accessible through clients like `kubectl` or `oc`.
+A visual counterpart is the built-in _OpenShift Web Console_.
+
+Domain models like _organizations_, _teams_ (and their memberships), a users _default organization_ or other entities are across all {zone}s.
+Users of {product} should be able to manage that data centrally.
+
+The graphical user interface for {product} features a web application with features outlined below.
+It is called "{product} Portal" and as per xref:references/dns-naming-scheme.adoc[DNS naming scheme] will be reachable under `my.appuio.cloud`.
+
+[NOTE]
+====
+Those are rough ideas to help understand where this is going.
+It is not yet decided wich of the following features get implemented.
+====
+
+== Core features
+
+List of available zones::
+* Link to OpenShift web console
+* Link to OpenShift logging
+* Link to OpenShift monitoring
+* API URL
+* Kubernetes version
+* OpenShift version
+
+Reporting::
+Dashboard with:
+* Statistics (resource usage, objects, managed services)
+* Status information
+* Accumulated costs since last invoice
+
+Billing::
+* Credit management (pre paid)
+* Online payment (credit card, others)
+* Access to invoices
+
+Organization management::
+* Create new organization
+* Providing/revoking user access to the organization
+* Inviting users from other organizations
+* Manage teams and the users belonging to those teams
+* Assign roles to users and teams
+* A user's default organization
+
+System status::
+* Status of zones (overal and individual subsystems)
+* Anouncements (maintenance windows, cluster upgrades)
+
+Documentation::
+* Link to the end user documentation
+
+== Optional features
+
+Sign-up and registration::
+  * Choose user name
+
+User management::
+  * password reset/change
+  * email and name change
+
+== General thoughts
+
+Themes and white-labels::
+In general, visual apearance of any graphical user interfaces shall be consistent across {product}.
+This includes:
+* APPUiO Marketing Website (homepage)
+* {idp}
+* OpenShift web console
+* Public documentation
+* Web console for cross zone concerns
+
+== Requirements
+
+* Ability to influence the visual apearance (theming)
+* Ability to change change the logo and key text elements like the brand or company name (white label)
+* Responsive design (desktop first) +
+  It's assumed that a graphical user interface will most likely be consumed on desktop machines.
+  However we also believe in accessibility also from mobile devices.
+  We anticipate that certain items would be hard to display on mobile devices.
+  In this case, we are fine with those items not being displayed on small screens.
+  However, the essential functionalities must be available (graceful degradation).
+* No need for a mobile and or desktop application.
+* A command line client is a nice to have but is not mandatory.

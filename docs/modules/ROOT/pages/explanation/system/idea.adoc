@@ -5,22 +5,42 @@ The system idea displays a high-level architecture of {product}.
 .{product} system idea
 image::system/systemidea.drawio.svg[]
 
-* An instance of Keycloak is responsible for authoritatively store data on:
-** Organizations
-** Teams
-** Users
+Keycloak::
+An instance of Keycloak is responsible for authoritatively store data for:
++
+* Organizations
+* Teams
++
+The instance of Keycloak is not necessarily authoritative for user identities.
+It's expected that most instances will setup user federation, identity brokering or social logins where users are authenticated externally.
+That being the case, user sign up or registration is not part of core {product}.
 
-* Data owned by Keycloak will be replicated to each Zone.
-  It makes the cluster more resilient against connectivity issues between Keycloak and the Zone.
+User and group sync::
+User and groups managed by Keycloak will be replicated to each {zone} using synchronization services running separately on each {zone}.
+It makes the cluster more resilient against connectivity issues between {idp} and an {zone}.
 
-* The policy engine https://kyverno.io/[Kyverno], installed on each Zone, is there to enforce policies that go beyond the capabilities of Kubernetes RBAC.
-  In the cases where Kyverno is not suitable, custom admission/mutating https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[webhooks] will be engineered.
+Policy engine::
+A policy engine, also installed on each {zone}, is enforcing policies that go beyond the capabilities of Kubernetes RBAC.
 
-* A controller instance on each Zone will further process the the local cache of entities coming from the Keycloak adapter.
-  It will be used to configure Kyverno for instance.
+API Endpoint::
+{product} will be designed "API-first".
+This enables different client profiles to interact with the product.
+Clients could be user or command line interfaces and other automation services.
+The endpoint itself will be using external services for certain features.
 
-* "APPUiO global" serves as control plane and is responsible for synchronizing mentioned entities to all APPUiO Zones.
-  It will run on one of the selected Zones only.
+Web User Interface::
+A graphical user interface will provide management, reporting and dashboard features.
+It's not intended to be replacing the OpenShift Console on an {zone}, but rather an extension for things that affect all {zone}s.
+
+External Services::
+{product} is not responsible for invoicing or payments.
+Those functionalities are provided by external services using an API.
+{product} will define contract-like APIs for which different implementations or adapters can be plugged in.
+See xref:explanation/system/details-external-services.adoc[External Services].
+
+Namespace::
+This is the Kubernetes Namespace object that the developer creates and maintains.
+A namespace is always owned by and associated to an organization.
 
 // TODO: define better name for control plane
 
