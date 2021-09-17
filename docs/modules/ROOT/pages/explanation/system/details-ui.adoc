@@ -7,7 +7,8 @@ A visual counterpart is the built-in _OpenShift Web Console_.
 Domain models like _organizations_, _teams_ (and their memberships), a users _default organization_ or other entities are across all {zone}s.
 Users of {product} should be able to manage that data centrally.
 
-The graphical user interface for {product} features a web portal with features outlined below.
+The graphical user interface for {product} features a web application with features outlined below.
+It is called "{product} Portal" and as per xref:references/dns-naming-scheme.adoc[DNS naming scheme] will be reachable under `my.appuio.cloud`.
 
 [NOTE]
 ====
