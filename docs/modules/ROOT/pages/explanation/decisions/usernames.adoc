@@ -14,7 +14,7 @@ Please note that regardless of the choice of identifier for `preferred_username`
 This is because Openshift's OpenID Connect identity provider uses the OpenID claim `sub` to establish the user's identity, see the https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-oidc-identity-provider.html[OpenShift documentation].
 The OpenID claim `sub` is mapped to the Keycloak user's `ID` by default.
 
-== Alternatives
+== Proposals
 
 [qanda]
 Use the `Username` property of Keycloak user objects::
@@ -26,7 +26,7 @@ With this approach, users can freely change their `Username` in Keycloak.
 However, their `Username` doesn't appear anywhere in the OpenShift cluster with this approach and the output of `oc whoami` is the Keycloak user's `ID`.
 
 Use the `Email` property of Keycloak user objects::
-With this approach, users can't change their E-Mail address after signing up, for the same reasons as they can't change their `Username` property when using that property (see first alternative).
+With this approach, users can't change their E-Mail address after signing up, for the same reasons as they can't change their `Username` property when using that property (see first proposal).
 
 == Decision
 
@@ -34,8 +34,8 @@ Use the `Username` property of Keycloak user objects
 
 == Rationale
 
-For all described alternatives, Keycloak can be configured to require that the property must be unique per realm.
-Therefore, we don't risk having OpenShift `User` objects which are associated with multiple Keycloak users with any of the described alternatives.
+For all described proposals, Keycloak can be configured to require that the property must be unique per realm.
+Therefore, we don't risk having OpenShift `User` objects which are associated with multiple Keycloak users with any of the described proposals.
 
 We decide to use the `Username` property as the identifier used for the OpenShift `User` object.
 This choice provides the best trade-off in our eyes, as it allows users to change their E-Mail address at any time and it shows users a human-verifiable output when running `oc whoami`.

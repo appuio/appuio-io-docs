@@ -10,7 +10,7 @@ Due to some technical limitations in OpenShift, this choice requires that the us
 
 * xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 
-== Alternatives
+== Proposals
 
 . Disallow `Username` changes
 . Implement extra tooling to work around the limitations in OpenShift and allow `Username` changes.

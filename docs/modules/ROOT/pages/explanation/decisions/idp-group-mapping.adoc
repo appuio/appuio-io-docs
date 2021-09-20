@@ -20,7 +20,7 @@ The problem ultimately asks the questions:
 
 * xref:explanation/decisions/keycloak.adoc[Keycloak as IdP]
 
-== Alternatives
+== Proposals
 
 [qanda]
 External group syncing via API::
@@ -31,7 +31,7 @@ Such a component would regularly pull and push the group memberships (or event-d
 
 Group mapping via claims::
 With OIDC protocol, custom fields in the user token payload called "Claims" allow additional information to be included.
-In this alternative, if the brokered IdP is also Keycloak, the group memberships can be easily added to those claims.
+In this proposal, if the brokered IdP is also Keycloak, the group memberships can be easily added to those claims.
 The {idp} is then able to read and create or join the given groups on-the-fly.
 +
 Unfortunately there is no built-in mechanism in Keycloak that allows to dynamically manage group memberships coming from brokered claims.

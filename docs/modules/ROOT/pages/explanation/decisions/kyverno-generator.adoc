@@ -13,7 +13,7 @@ All generated resources are generally the same, but the solution must be able to
 
 * xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
 
-== Alternatives
+== Proposals
 
 [qanda]
 APPUiO Operator::

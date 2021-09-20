@@ -9,7 +9,7 @@ This identifier should have the following properties:
 * It should be stable for the lifetime of the user in Keycloak.
 * Users should be able to xref:references/quality-requirements/usability/user-arbitrary-name.adoc[choose it freely].
 
-== Alternatives
+== Proposals
 
 . Use the user's email address as their unique identifier.
 . Let users choose an arbitrary user name.
