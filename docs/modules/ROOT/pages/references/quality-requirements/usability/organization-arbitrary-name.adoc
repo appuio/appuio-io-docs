@@ -1,0 +1,29 @@
+= Arbitrary organization name
+
+Source::
+Developer
+
+Stimulus::
+Creates new {product} organization with arbitrary name
+
+Environment::
+Portal
+
+Artifact::
+Browser
+
+Response::
+Organization created
+
+Response measure::
+Organization name is granted but with limitations:
++
+* Organization name cannot be changed after creation
+* A warning in the browser view will inform the developer about these limitations
+
+Rationale::
+To enable a user-friendly experience.
+Developers should be able to choose their organization name on {product} freely.
+Internal discussions revealed that generated IDs are best for long-term usage (e.g. company name change), but not user-friendly or memorable.
+
+NOTE: The organization entity also features a display name (which is not the same) and is freely changeable at any time.
