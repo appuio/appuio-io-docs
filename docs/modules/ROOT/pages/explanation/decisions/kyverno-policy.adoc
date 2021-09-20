@@ -15,7 +15,7 @@ On {product} however, we require fine-grained control of certain properties, suc
 
 * xref:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator]
 
-== Alternatives
+== Proposals
 
 [qanda]
 https://www.openpolicyagent.org/[OPA]::

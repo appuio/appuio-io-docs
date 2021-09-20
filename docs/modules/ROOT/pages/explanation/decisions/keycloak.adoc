@@ -7,7 +7,7 @@ We need to store user (including passwords), team memberships and organizations.
 //Relevant requirements::
 //* tbd, links to requirement page(s)
 
-== Alternatives
+== Proposals
 
 [qanda]
 LDAP via control.vshn.net::
