@@ -1,6 +1,6 @@
 = {product} for System Engineers
 
-image::appuio-cloud.svg[APPUiO,400,link=https://www.appuio.ch]
+image::appuio.svg[APPUiO,400,link=https://www.appuio.ch]
 
 Welcome to the {product} for System Engineers documentation site.
 
