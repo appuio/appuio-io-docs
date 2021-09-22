@@ -36,9 +36,16 @@ The workload is denied if they exceed one of the following Kubernetes resources:
 * Storage:
 ** Request: 50 GiB (total)
 ** PersistentVolumeClaims: 10
+** Ephemeral Storage (EmptyDir, writeable container layers)
+*** Requests: 250 MiB
+*** Limits: 500 MiB
 * ConfigMaps: 150
 * Secrets: 150
 * Services: 20
+* Pods: 45
+* ReplicationControllers: 100
+** LoadBalancers: 0
+** NodePorts: 0
 * Images
 ** ImageStream Tags: 50 (per ImageStream)
 ** ImageStreams: 20
