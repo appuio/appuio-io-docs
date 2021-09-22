@@ -28,11 +28,11 @@ Workloads are the following Kubernetes resources:
 Response measure::
 The workload is denied if they exceed one of the following Kubernetes resources:
 * CPU (all containers in all Pods)
-** Requests: 2000m
-** Limits: 4000m
+** Requests: 1000m
+** Limits: 1500m
 * Memory (all containers in all Pods)
-** Requests: 3 GiB
-** Limits: 6 GiB
+** Requests: 4Gi
+** Limits: 4Gi
 * Storage:
 ** Request: 50 GiB (total)
 ** PersistentVolumeClaims: 10
