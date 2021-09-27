@@ -13,3 +13,4 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 ** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
 ** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
+** xref:appuio-cloud:ROOT:explanation/decisions/portal-api.adoc[Portal API]

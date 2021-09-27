@@ -1,0 +1,78 @@
+= {product} Portal API
+
+== Problem
+
+For the xref:explanation/system/details-ui.adoc[{product} Portal] an API endpoint is needed which implements and exposes the backend functionality.
+This API endpoint is described in xref:explanation/system/details-external-services.adoc[External Services] in more detail.
+As documented there, this API endpoint connects various third-party backend systems together and presents them in a well-defined uniform way for the Portal UI or other API clients to be consumed.
+
+It must be possible to connect to various different backend systems which implement the same functionality so that it is a pluggable system and can be re-used by other parties, which might have different backends for the same task.
+
+{product} API only specifies the interface, the implementation is then specific to the provider of the API.
+
+== Relevant requirements
+
+* xref:references/quality-requirements/maintainability/portal-api-modularity.adoc[Portal API Modularity]
+* xref:references/quality-requirements/reliability/portal-api-data-recoverability.adoc[Portal API Data Recoverability]
+* xref:references/quality-requirements/performance/portal-api-data-freshness.adoc[Portal API Data Freshness]
+
+== Proposals
+
+[qanda]
+Custom API implementation::
+Implementation of a custom (REST or GraphQL) API which connects to all the backend system and provides the abstraction to them.
+This can be a synchronous or asynchronous connection, depending on the implementation.
+Authentication, authorization and other core API features will have to be implemented specific to this API.
+
+Kubernetes API::
+Reuse the Kubernetes API to leverage all the core-plumbing which already exists: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
+This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server].
+
+== Decision
+
+Kubernetes API
+
+== Rationale
+
+The Kubernetes API server is a perfect match for this use-case. With it, we can many core API plumbing features "for free":
+
+Authentication::
+We can leverage what we already use for the {zone}s.
+Authentication is built-in to the Kubernetes API server and it's even pluggable.
+
+Authorization::
+We can make use of standard Kubernetes RBAC access control and could even enhance it with a policy engine like Kyverno.
+
+Asynchronous::
+It allows us to build upon an asynchronous architecture which when working with multiple backend systems will prove to be more stable and easier to implement.
+
+Persistent Storage::
+Storing data is built-in directly in the core.
+We can store temporary data without having to implement a storage backend.
+
+API Extensibility::
+The API can easily be extended by leveraging `CustomResourceDefinition` (CRDs).
+
+Scalability and Availability::
+It's a core feature of the Kubernetes API server to be highly scalable.
+High-availability possibilities are directly built-in.
+
+API definition vs. Implementation::
+By using `CustomResourceDefinition` (CRDs) to define the API structure, we can easily decouple the interface and the implementation.
+The Portal API client uses the standardized Portal API definition, whereas the implementation in the background communicates with the specific implementation of the backend system.
+
+CLI client::
+We get a CLI client "for free".
+The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
+Think of `kubectl get invoices`.
+
+Implementation boilerplate with kubebuilder::
+For the implementation of the CRD-defined interface, there already exists a good ecosystem, like kubebuilder, Operator SDK or crossplane-runtime.
+
+Frontend Development and Testing::
+For the implementation and testing of the Portal API frontend, the backend implementation doesn't actually need to exist.
+Data can be faked by just creating test-objects, defined by the custom CRDs, until the actual implementation of the controller is done ("Fake it 'till you make it").
+It also allows for having a simple test environment.
+
+Experience from Project Syn::
+We already got experience implementing such an architecture from Project Syn.
