@@ -19,6 +19,7 @@
 
 ** Reliability
 *** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/ns-validation-resilience.adoc[Namespace validation resilience]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/portal-api-data-recoverability.adoc[Portal API Data Recoverability]
 
 ** Usability
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/dns-naming-scheme.adoc[DNS Naming scheme]

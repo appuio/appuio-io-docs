@@ -1,0 +1,24 @@
+= Portal API Data Recoverability
+
+Source::
+Portal API
+
+Stimulus::
+Portal API data is lost or is being freshly initialized
+
+Environment::
+Portal API
+
+Artifact::
+Portal API
+
+Response::
+Portal API retrieves all data from backend systems and makes the data available again
+
+Response measure::
+All data is available again as it was before the data loss
+
+Rationale::
+The Portal API doesn't store any relevant data.
+All relevant data is available and stored in third-party backend systems.
+The source of truth of the data is outside of the Portal API.
