@@ -1,0 +1,27 @@
+= Portal API Data Freshness
+
+Source::
+Portal API client
+
+Stimulus::
+Portal API client reads data from Portal API
+
+Environment::
+{product} Portal API client
+
+Artifact::
+Portal API client and Portal API
+
+Response::
+Portal API returns the requested data
+
+Response measure::
+The read data is at most 10 minutes older than the original data in the backend system (source-of-truth)
+
+Rationale::
+The data in the API is not guaranteed to be up-to-date to the backend system because of its asynchronous nature.
+For the data which is presented by the API it doesn't matter when the data lacks a bit behind.
+This circumstance has to be communicated to the user of the API by documentation and a data freshness indicator.
+
+See also::
+* xref:references/quality-requirements/reliability/portal-api-data-recoverability.adoc[Portal API Data Recoverability]
