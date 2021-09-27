@@ -58,6 +58,19 @@ Direct Access Grants Enabled = True
 Valid Redict URIs = https://{appuio-keycloak}/auth/realms/{appuio-realm}/broker/{foreign-idp-alias}/endpoint
 ----
 
+. Add the group memberships to the tokens.
+  Go to the "Mappers" tab and create a new Mapper.
++
+[source,subs="attributes+"]
+----
+Name = group membership
+Mapper type = Group Membership
+Token Claim Name = groups
+Full group path = false <1>
+----
+<1> If this would be `true` (default), then a group name like `/Company/admins` would contain group `/Company/admins`, which might be undesirable.
+    If `false`, the group name would be just the group name of the leaf node, for example `admins`.
+
 . After saving, go into edit mode again and select the "Credentials" tab.
 . Keep the displayed Secret ready for copy-pasting.
 
@@ -80,3 +93,18 @@ Client Authentication = "Client secret sent as post"
 Client ID = {foreign-client-id}
 Client Secret = <The secret displayed in {appuio-keycloak} Credentials tab>
 ----
+
+. Add a group mapper to the client via the "Mappers" tab
++
+[source,subs="attributes+"]
+----
+Name = import-groups
+Sync Mode Override = inherit
+Mapper Type = Claim to Group Mapper
+Claim = groups
+Contains text = <1>
+Create groups if not exists = True
+----
+<1> Enter the group name if you only want to sync a certain group
++
+NOTE: This step requires that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
