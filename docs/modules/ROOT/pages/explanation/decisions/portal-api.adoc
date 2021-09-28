@@ -10,6 +10,8 @@ It must be possible to connect to various different backend systems which implem
 
 {product} API only specifies the interface, the implementation is then specific to the provider of the API.
 
+image::system/api.drawio.svg[]
+
 == Relevant requirements
 
 * xref:references/quality-requirements/maintainability/portal-api-modularity.adoc[Portal API Modularity]
@@ -33,6 +35,8 @@ A CLI client could be there "for free" if wanted. The Kubernetes CLI client `kub
 Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
 This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller].
 Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with external third-party APIs.
++
+image::decision/kubernetes-api-proposal.drawio.svg[]
 
 == Decision
 
