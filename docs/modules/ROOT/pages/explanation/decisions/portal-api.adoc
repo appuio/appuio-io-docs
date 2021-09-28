@@ -26,7 +26,7 @@ Authentication, authorization and other core API features will have to be implem
 
 Kubernetes API::
 Reuse the Kubernetes API to leverage all the core-plumbing which already exists: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
-This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server].
+This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server]. We could get a CLI client "for free" if we wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
 
 == Decision
 
@@ -55,24 +55,19 @@ The API can easily be extended by leveraging `CustomResourceDefinition` (CRDs).
 
 Scalability and Availability::
 It's a core feature of the Kubernetes API server to be highly scalable.
-High-availability possibilities are directly built-in.
 
 API definition vs. Implementation::
 By using `CustomResourceDefinition` (CRDs) to define the API structure, we can easily decouple the interface and the implementation.
-The Portal API client uses the standardized Portal API definition, whereas the implementation in the background communicates with the specific implementation of the backend system.
-
-CLI client::
-We get a CLI client "for free".
-The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
-Think of `kubectl get invoices`.
 
 Implementation boilerplate with kubebuilder::
 For the implementation of the CRD-defined interface, there already exists a good ecosystem, like kubebuilder, Operator SDK or crossplane-runtime.
+VSHN has already a lot of experience writing Kubernetes-based controllers and knows how to work with the Kubernetes API.
 
 Frontend Development and Testing::
 For the implementation and testing of the Portal API frontend, the backend implementation doesn't actually need to exist.
 Data can be faked by just creating test-objects, defined by the custom CRDs, until the actual implementation of the controller is done ("Fake it 'till you make it").
 It also allows for having a simple test environment.
+This would also hold true for the custom API implementation, but would be much more engineering effort.
 
 Experience from Project Syn::
-We already got experience implementing such an architecture from Project Syn.
+Project Syn features a similar architecture which serves as inspiration.
