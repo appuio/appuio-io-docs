@@ -25,8 +25,14 @@ This can be a synchronous or asynchronous connection, depending on the implement
 Authentication, authorization and other core API features will have to be implemented specific to this API.
 
 Kubernetes API::
-Reuse the Kubernetes API to leverage all the core-plumbing which already exists: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
-This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server]. We could get a CLI client "for free" if we wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
+Use the Kubernetes API server to leverage all the core-plumbing which already exists there: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
+This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server].
++
+A CLI client could be there "for free" if wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
++
+Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
+This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller].
+Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with external third-party APIs.
 
 == Decision
 
@@ -34,34 +40,40 @@ Kubernetes API
 
 == Rationale
 
-The Kubernetes API server is a perfect match for this use-case. With it, we can many core API plumbing features "for free":
+The Kubernetes API approach has been chosen because the engineers at VSHN have a lot of know-how working with it.
+It allows to start fast as the important API plumbing is provided right from the beginning from the Kubernetes API server.
+
+== Additional information
+
+There are a lot of other topics provided by the Kubernetes API server:
 
 Authentication::
-We can leverage what we already use for the {zone}s.
+The same authentication processes can be leveraged which is already in use for authenticating against {zone}s.
 Authentication is built-in to the Kubernetes API server and it's even pluggable.
 
 Authorization::
-We can make use of standard Kubernetes RBAC access control and could even enhance it with a policy engine like Kyverno.
+The standard Kubernetes RBAC access control can be used and could even be enhanced with a policy engine like Kyverno.
 
 Asynchronous::
-It allows us to build upon an asynchronous and eventual-consistency architecture which we have a lot of experience with due to our day-to-day business with Kubernetes.
+It allows to build upon an asynchronous and eventual-consistenct architecture which VSHN has a lot of experience with due to VSHNs day-to-day business with Kubernetes.
 
 Persistent Storage::
-Storing data is built-in directly in the core.
-We can store temporary data without having to implement a storage backend.
+Storing ephemeral data is built-in directly in the core, if there should be a need for it.
+Temporary data can be stored without having to implement a storage backend.
 
-API Extensibility::
+API Extensibility and Versioning::
 The API can easily be extended by leveraging `CustomResourceDefinition` (CRDs).
-
-Scalability and Availability::
-It's a core feature of the Kubernetes API server to be highly scalable.
+By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning] it makes it easier to progress the API into future iterations.
 
 API definition vs. Implementation::
 By using `CustomResourceDefinition` (CRDs) to define the API structure, we can easily decouple the interface and the implementation.
 
+Scalability and Availability::
+It's a core feature of the Kubernetes API server to be highly scalable.
+
 Implementation boilerplate with kubebuilder::
 For the implementation of the CRD-defined interface, there already exists a good ecosystem, like kubebuilder, Operator SDK or crossplane-runtime.
-VSHN has already a lot of experience writing Kubernetes-based controllers and knows how to work with the Kubernetes API.
+VSHN already has a lot of experience writing Kubernetes-based controllers (like K8up) and knows how to work with the Kubernetes API.
 
 Frontend Development and Testing::
 For the implementation and testing of the Portal API frontend, the backend implementation doesn't actually need to exist.
