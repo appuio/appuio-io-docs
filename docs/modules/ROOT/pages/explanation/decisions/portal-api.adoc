@@ -44,7 +44,7 @@ Authorization::
 We can make use of standard Kubernetes RBAC access control and could even enhance it with a policy engine like Kyverno.
 
 Asynchronous::
-It allows us to build upon an asynchronous architecture which when working with multiple backend systems will prove to be more stable and easier to implement.
+It allows us to build upon an asynchronous and eventual-consistency architecture which we have a lot of experience with due to our day-to-day business with Kubernetes.
 
 Persistent Storage::
 Storing data is built-in directly in the core.
