@@ -33,10 +33,23 @@ This seems to be a common topic in the Cloud Native world, see for example the e
 A CLI client could be there "for free" if wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
 +
 Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
-This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller].
+This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or if the use-case can't be reached this way by using a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
 Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with external third-party APIs.
 +
+A dedicated Kubernetes API server will be used for that to not interfere with other workload running on this instance.
+This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster]) or a full-blown Kubernetes cluster.
+The controllers acting on the CRDs can run directly in this API server or outside in another Kubernetes cluster.
+All operations are handled through the Kubernetes API server, CRDs and controllers.
++
 image::decision/kubernetes-api-proposal.drawio.svg[]
++
+An example architecture could look like this:
++
+* Organizations are represented as `Organization` object in a dedicated APPUiO Cloud control namespace.
+  This then leads into the creation of a Group in Keycloak and a Namespace in the API server.
+* The Organization-level objects are stored in the Namespace of it and protected through appropriate RBAC rules:
+** Teams are represented as `Team` object and will manage the Sub-group in Keycloak
+** Invoices are represented as `Invoice` object, synced from the ERP system
 
 == Decision
 
