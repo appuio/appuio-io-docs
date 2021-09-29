@@ -1,21 +1,26 @@
-= Portal API Ephemeral Data
+= Data compatibility with external components
 
 Source::
-Portal API
+{product} administrator
 
 Stimulus::
-Data is stored
+Reinstall APPUiO Global from scratch
 
 Environment::
-Portal API
+{zone}
 
 Artifact::
-Portal API and external third-party systems
+Portal API, external third-party component
 
 Response::
-Portal API stores the data in an ephemeral storage while data persistency is granted by the third-party backend system
+Entities that have their lifecycle outside of {product} have their availability restored
+
+Response measure::
+Following entities are recovered at latest after 48 hours since reinstallation:
++
+* Invoices
 
 Rationale::
-The Portal API doesn't store any relevant data persistent.
-All relevant data is available and stored in third-party backend systems.
-The source of truth of the data is outside of the Portal API.
+{product} doesn't store any relevant third-party entities.
+Although some form of caching is permissible, the cache can be rebuilt entirely in the given timeframe by reintegrating the third-party component.
+The source of truth of the mentioned entities is outside of {product} since {product} does not enforce a certain lifecycle into those entities.
