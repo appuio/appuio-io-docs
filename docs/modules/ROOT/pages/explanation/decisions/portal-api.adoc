@@ -46,6 +46,7 @@ Kubernetes API
 
 The Kubernetes API approach has been chosen because the engineers at VSHN have a lot of know-how working with it.
 It allows to start fast as the important API plumbing is provided right from the beginning from the Kubernetes API server.
+And it adheres to the https://handbook.vshn.ch/hb/beliefs.html#_beliefs[VSHN Company Beliefs], mainly the part "For that we use".
 
 == Additional information
 
