@@ -10,7 +10,6 @@ It must be possible to connect to various different backend systems which implem
 
 {product} API only specifies the interface, the implementation is then specific to the provider of the API.
 
-image::system/api.drawio.svg[]
 
 == Relevant requirements
 
@@ -20,36 +19,55 @@ image::system/api.drawio.svg[]
 
 == Proposals
 
-[qanda]
-Custom API implementation::
-Implementation of a custom (REST or GraphQL) API which connects to all the backend system and provides the abstraction to them.
-This can be a synchronous or asynchronous connection, depending on the implementation.
-Authentication, authorization and other core API features will have to be implemented specific to this API.
+=== Custom API
 
-Kubernetes API::
+For each subsystem there will be well-defined interfaces that serve as "contracts" which providers have to implement.
+The API (`api.appuio.cloud`) is a custom (REST or GraphQL) API endpoint which consumes third-party providers.
+The providers have to behave according to the contract, but may need to connect (or "adapt") to their concrete subsystem via API.
+Authentication, authorization and other core API features will have to be implemented specific within this API.
+Operations can be a synchronous or asynchronous.
+
+With a well-defined interface, clients can be generated for all major programming languages, for example for frontends or CLI apps.
+
+image::decision/rest-api-proposal.drawio.svg[]
+
+.Invoicing example
+[example]
+====
+. At the end of a month, the Portal API collects metrics to prepare a new invoice.
+. That data collection gets sent to the third-party ERP adapter via the "Invoicing" subsystem interface.
+. Eventually, the foreign ERP system has generated the invoice.
+. Clients requesting a list of invoices will transparently query the ERP adapter which will then return a set of relevant invoices.
+====
+
+=== Kubernetes API
+
 Use the Kubernetes API server to leverage all the core-plumbing which already exists there: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
 This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server].
-+
+
 A CLI client could be there "for free" if wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
-+
+
 Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
 This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or if the use-case can't be reached this way by using a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
 Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with external third-party APIs.
-+
+
 A dedicated Kubernetes API server will be used for that to not interfere with other workload running on this instance.
 This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster]) or a full-blown Kubernetes cluster.
 The controllers acting on the CRDs can run directly in this API server or outside in another Kubernetes cluster.
 All operations are handled through the Kubernetes API server, CRDs and controllers.
-+
+
 image::decision/kubernetes-api-proposal.drawio.svg[]
-+
-An example architecture could look like this:
-+
+
+.An example architecture could look like this:
+[example]
+====
+* Third-party system connects directly to the metrics database and creates invoices.
 * Organizations are represented as `Organization` object in a dedicated APPUiO Cloud control namespace.
   This then leads into the creation of a Group in Keycloak and a Namespace in the API server.
 * The Organization-level objects are stored in the Namespace of it and protected through appropriate RBAC rules:
 ** Teams are represented as `Team` object and will manage the Sub-group in Keycloak
 ** Invoices are represented as `Invoice` object, synced from the ERP system
+====
 
 == Decision
 
@@ -59,45 +77,26 @@ Kubernetes API
 
 The Kubernetes API approach has been chosen because the engineers at VSHN have a lot of know-how working with it.
 It allows to start fast as the important API plumbing is provided right from the beginning from the Kubernetes API server.
-And it adheres to the https://handbook.vshn.ch/hb/beliefs.html#_beliefs[VSHN Company Beliefs], mainly the part "For that we use".
 
-== Additional information
-
-There are a lot of other topics provided by the Kubernetes API server:
-
-Authentication::
-The same authentication processes can be leveraged which is already in use for authenticating against {zone}s.
-Authentication is built-in to the Kubernetes API server and it's even pluggable.
+The following reasons favor the Kubernetes API over the custom API:
 
 Authorization::
-The standard Kubernetes RBAC access control can be used and could even be enhanced with a policy engine like Kyverno.
+The standard Kubernetes RBAC system provides basic access control.
+Optionally a policy engine like Kyverno allows more fine-grained control.
 
 Asynchronous::
-It allows to build upon an asynchronous and eventual-consistenct architecture which VSHN has a lot of experience with due to VSHNs day-to-day business with Kubernetes.
+It allows to build upon an asynchronous and eventual-consistent architecture which VSHN has a lot of experience with due to VSHNs day-to-day business with Kubernetes.
 
-Persistent Storage::
-Storing ephemeral data is built-in directly in the core, if there should be a need for it.
-Temporary data can be stored without having to implement a storage backend.
+API Extensibility and versioning::
+By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning] Kubernetes brings already proven strategies dealing with extending APIs.
 
-API Extensibility and Versioning::
-The API can easily be extended by leveraging `CustomResourceDefinition` (CRDs).
-By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning] it makes it easier to progress the API into future iterations.
+Framework ecosystem::
+For both proposals there are popular OpenSource ecosystems with various framework support.
+However VSHN has more experience writing Kubernetes-based controllers and knows how to work with the Kubernetes API.
 
-API definition vs. Implementation::
-By using `CustomResourceDefinition` (CRDs) to define the API structure, we can easily decouple the interface and the implementation.
-
-Scalability and Availability::
-It's a core feature of the Kubernetes API server to be highly scalable.
-
-Implementation boilerplate with kubebuilder::
-For the implementation of the CRD-defined interface, there already exists a good ecosystem, like kubebuilder, Operator SDK or crossplane-runtime.
-VSHN already has a lot of experience writing Kubernetes-based controllers (like K8up) and knows how to work with the Kubernetes API.
-
-Frontend Development and Testing::
-For the implementation and testing of the Portal API frontend, the backend implementation doesn't actually need to exist.
-Data can be faked by just creating test-objects, defined by the custom CRDs, until the actual implementation of the controller is done ("Fake it 'till you make it").
-It also allows for having a simple test environment.
-This would also hold true for the custom API implementation, but would be much more engineering effort.
+Frontend development and testing::
+Both proposals enable faking an inexistent provider.
+The Kubernetes API approach makes this comparatively easier by just creating Kubernetes resources without an actual controller reconciling them ("Fake it 'till you make it").
 
 Experience from Project Syn::
 Project Syn features a similar architecture which serves as inspiration.
