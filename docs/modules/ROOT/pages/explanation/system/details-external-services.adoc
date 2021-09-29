@@ -8,6 +8,8 @@ This influences how the architecture is abstracting components that aren't part 
 Plugins will implement such an API so that {product} is able to consume and use external services.
 Examples are an ERP system for invoicing or payment services.
 
+See also xref:appuio-cloud:ROOT:references/quality-requirements/portability/external-components-plugins.adoc[External components as plugins] requirement.
+
 image::system/api.drawio.svg[]
 
 Let us take invoicing as an example.
