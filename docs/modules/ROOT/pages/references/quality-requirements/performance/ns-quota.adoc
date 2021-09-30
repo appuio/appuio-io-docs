@@ -9,7 +9,7 @@ Stimulus::
 Creates new Namespace in a Zone for the same organization
 
 Environment::
-Any APPUiO Zone
+Any {zone}
 
 Artifact::
 kubectl
@@ -21,8 +21,8 @@ Response measure::
 Maximum 10 Namespaces are allowed
 
 Rationale::
-* The APPUiO zone shall be protected from abusive resource usage.
-* Having a limit of the amount of Namespaces that can be created per organization per Zone slows down resource consumption that allows better capacity planning.
+* The {zone} shall be protected from abusive resource usage.
+* Having a limit of the amount of Namespaces that can be created per organization per {zone} slows down resource consumption that allows better capacity planning.
 
 See also::
 * xref:references/quality-requirements/performance/resource-quota.adoc[Resource limit per Namespace]

@@ -9,7 +9,7 @@ As the focus is on the outside interactions, the "system to build" can be consid
 .{product} system context
 image::system/systemcontext.drawio.svg[]
 
-{product} is built to enable Single-Sign-On for developers and synchronize any user and team memberships to all enabled APPUiO zones.
+{product} is built to enable Single-Sign-On for developers and synchronize any user and team memberships to all enabled {zone}s.
 A zone is basically an Openshift 4 cluster with the {product} add-on installed.
 There can be any number of zones from different IaaS providers.
 

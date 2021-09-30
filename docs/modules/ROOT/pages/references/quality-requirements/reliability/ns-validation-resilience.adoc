@@ -7,7 +7,7 @@ Stimulus::
 Validate input values when creating Namespaces
 
 Environment::
-Any APPUiO Zone
+Any {zone}
 
 Artifact::
 Input validation system
@@ -20,4 +20,4 @@ With only accessing internal Kubernetes API
 
 Rationale::
 This increases resilience to network failures and keeps a low response time when validating.
-The validation process should not be dependant on external APIs that are running outside of the cluster.
+The validation process should not be dependant on components that are running outside of the {zone}.
