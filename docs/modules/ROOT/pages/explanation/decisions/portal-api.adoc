@@ -45,7 +45,8 @@ image::decision/rest-api-proposal.drawio.svg[]
 Use the Kubernetes API server to leverage all the core-plumbing which already exists there: Authentication, RBAC, scalability, well-defined resource-model, extensibility with `CRDs`, aggregated API server and much more.
 This seems to be a common topic in the Cloud Native world, see for example the experiment called https://github.com/kcp-dev/kcp[kcp - a minimal Kubernetes API server].
 
-A CLI client could be there "for free" if wanted. The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
+A CLI client could be there "for free" if wanted.
+The Kubernetes CLI client `kubectl` can display and work with the custom API endpoints of the Portal API out-of-the-box.
 
 Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
 This could mean that the API specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or if the use-case can't be reached this way by using a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
