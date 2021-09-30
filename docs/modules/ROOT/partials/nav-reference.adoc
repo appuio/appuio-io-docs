@@ -30,4 +30,4 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]
 
 ** Portability
-*** xref:appuio-cloud:ROOT:references/quality-requirements/portability/external-components-plugins.adoc[External components as plugins]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/portability/foreign-components-plugins.adoc[Foreign components as plugins]

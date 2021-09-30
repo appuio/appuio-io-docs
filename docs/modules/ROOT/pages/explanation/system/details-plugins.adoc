@@ -1,0 +1,22 @@
+= Plugins
+
+Simply put, certain functionalities in {product} are implemented in _third party systems_.
+{product} is intended to be provided by resellers.
+This influences how the architecture is abstracting components that aren't part of {product}
+
+{product} features a plugin-like architecture with defined APIs or behavioral contracts.
+Plugins (foreign systems) will implement such an API so that they can be integrated into {product}.
+Examples are an ERP system for invoicing or payment services.
+
+See also xref:appuio-cloud:ROOT:references/quality-requirements/portability/foreign-components-plugins.adoc[Foreign components as plugins] requirement.
+
+.Let us take invoicing as an example
+[example]
+====
+Invoicing most likely will be the need to integrate with an ERP system.
+Is very unlikely that potential resellers use the same ERP.
+And even if they do, their configuration and processes are probably not the same.
+In consequence, we need an architecture where {product} is ERP-agnostic but allows easy integration.
+
+In contrast, a payment service needs to be integrated for billing.
+====
