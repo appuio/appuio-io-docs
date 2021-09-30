@@ -27,6 +27,19 @@ A Kubernetes namespace (in OpenShift also an object type "Project")
 Zone::
 A single OpenShift cluster that is part of an {product} offering.
 
+Control API::
+An API endpoint that exposes certain {product} features to users.
+Specifically, this consists of:
+* API that users write to with various clients (for example frontend or CLI) and thus configure their organizations
+* API that users read with various clients that is usually the result of {product} components (for example read-only access to invoices)
+
+Plugin API::
+A subset of Control API that is specifically targeted for Plugins.
+This specification may not only be technical, but may also contain a "behavioral contract" that is in documentation only.
+It basically defines how Plugins should behave and interact with {product}.
++
+TIP: This term is introduced to better distinguish between {product} internal API and API interacting with Plugins.
+
 Plugin::
 A component or system that is foreign to the core of {product}, but implements the functionalities through a Plugin API that complete {product}.
 +
