@@ -68,8 +68,8 @@ Mapper type = Group Membership
 Token Claim Name = groups
 Full group path = false <1>
 ----
-<1> If this would be `true` (default), then a group name like `/Company/admins` would contain group `/Company/admins`, which might be undesirable.
-    If `false`, the group name would be just the group name of the leaf node, for example `admins`.
+<1> If this is `true` (the default), then the group name for group `/Company/admins` is `/Company/admins`, which might be undesirable.
+    If this is `false`, the group name is just the value of the leaf node instead, for example group `/Company/admins` will be assigned the name `admins`.
 
 . After saving, go into edit mode again and select the "Credentials" tab.
 . Keep the displayed Secret ready for copy-pasting.
