@@ -1,12 +1,12 @@
 = Add another Keycloak for brokering
-:appuio-keycloak: id.dev.appuio.cloud
-:appuio-realm: appuio-public
+:appuio-keycloak: id.appuio.cloud
+:appuio-realm: appuio-cloud
 :foreign-idp-alias: foreign-idp
 :foreign-host: foreign.hostname.tld
 :foreign-realm: foreign-realm
 :foreign-client-id: appuio-cloud-id
 
-This guide describes the steps required to configure the APPUiO Keycloak so that a foreign Keycloak as Identity Providers can be used.
+This guide describes the steps required to configure the {idp} so that a foreign Keycloak as Identity Providers can be used.
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
 
@@ -14,8 +14,8 @@ image:how-to/keycloak-brokering.drawio.svg[]
 
 == Prerequisites
 
-* Installed APPUiO Keycloak (see xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak])
-* Administrator console access to APPUiO Keycloak
+* Installed {idp} (see xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak])
+* Administrator console access to {idp}
 * Administrator console access to foreign Keycloak
 
 TIP: It's easiest to configure brokering if you have both administration console ready in 2 browser tabs next to eachother.
@@ -26,13 +26,13 @@ For the purpose of this guide, we will use the following names, interchange them
 | Key | Description
 
 | `{appuio-keycloak}`
-| APPUiO Keycloak hostname
+| {idp} hostname
 
 | `{foreign-host}`
 | Foreign Keycloak hostname
 
 | `{appuio-realm}`
-| Realm within `{appuio-keycloak}` (currently still `public`, not yet renamed to `cloud`)
+| Realm within `{appuio-keycloak}`
 
 | `{foreign-realm}`
 | Realm within `{foreign-host}`
@@ -55,7 +55,7 @@ For the purpose of this guide, we will use the following names, interchange them
 Client ID = {foreign-client-id}
 Access Type = confidential
 Direct Access Grants Enabled = True
-Valid Redict URIs = https://{appuio-keycloak}/auth/realms/{appuio-realm}/broker/{foreign-idp-alias}/endpoint
+Valid Redict URIs = https://{appuio-keycloak}/auth/realms/{appuio-realm}/broker/{foreign-idp-alias}/endpoint*
 ----
 
 . Add the group memberships to the tokens.
@@ -76,7 +76,7 @@ Full group path = false <1>
 
 == Configure Identity Provider
 
-. Log in as administrator to admin console in the **APPUiO Keycloak instance** and select the desired realm.
+. Log in as administrator to admin console in the **{idp} instance** and select the desired realm.
 . Add a new Identity Provider (select `Keycloak OpenID Connect`) and configure the following settings:
 +
 [source,subs="attributes+"]
