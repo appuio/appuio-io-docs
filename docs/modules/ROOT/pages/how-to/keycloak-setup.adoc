@@ -29,6 +29,25 @@ parameters:
   appuio_keycloak:
     namespace: appuio-keycloak
     fqdn: id.appuio.cloud
+    extraInitContainers:
+      install-extensions:
+        image: quay.io/appuio/appuio-keycloak-extensions:latest
+        command:
+          - sh
+        args:
+          - -c
+          - |
+            echo "Copying extension..."
+            cp -R /extensions/* /deployments
+        volumeMounts:
+          - name: extensions
+            mountPath: /deployments
+    extraVolumes:
+      extensions:
+        emptyDir: {}
+    extraVolumeMounts:
+      extensions:
+        mountPath: /opt/jboss/keycloak/standalone/deployments
     helm_values:
       image:
         tag: 15.0.0
