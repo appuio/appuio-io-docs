@@ -1,0 +1,130 @@
+= {controlapi}
+
+== Problem
+
+{product} is on one hand an orchestrator of configuration across multiple {zone}s.
+On the other hand it contains features that go beyond simply deploying Kubernetes workload, for example metering and billing of such workload.
+The {controlapi} is the construct for both.
+
+{product} does not contain all the features in its core.
+Certain features are to be provided by foreign software components, which are called xref:explanation/system/details-adapters.adoc[Adapters] in this context.
+
+For both {controlapi} (and consequently Adapter API) an architecture pattern is needed to define the playground for both the orchestration but also the adapters.
+This pattern must follow the https://handbook.vshn.ch/hb/beliefs.html#_beliefs[VSHN Company Beliefs] (mainly the part "For that we use"), which states that the chosen proposal should run with or on Kubernetes.
+
+This decision is specifically addressing the following concrete issues:
+
+* Definition of an API pattern that users can interact with in order to configure their view of {product} (for example organizations or teams).
+* Definition of an API pattern that users query for accessing data which {product} is not authoritative for.
+
+Out of scope in this decision is the definition of how adapters and other internal components interact with eachother in order to complete their tasks.
+
+The {controlapi} has to provide means so that xref:explanation/system/details-ui.adoc[{portal}] can use the same API endpoint as well as other clients, for example a CLI.
+
+It must be possible to integrate various different backend systems which implement the same functionality.
+
+{controlapi} only specifies the interface, the implementation is then specific to the provider of the API.
+
+
+== Relevant requirements
+
+* xref:references/quality-requirements/maintainability/portal-api-modularity.adoc[Portal API Modularity]
+* xref:references/quality-requirements/reliability/portal-api-data-recoverability.adoc[Portal API Data Recoverability]
+* xref:references/quality-requirements/performance/portal-api-data-freshness.adoc[Portal API Data Freshness]
+* xref:references/quality-requirements/portability/adapters.adoc[Foreign Components as Adapters]
+
+== Proposals
+
+=== Custom API
+
+For each subsystem there will be well-defined interfaces that serve as "contracts" which providers have to implement.
+{controlapi} is a custom (REST or GraphQL) API endpoint which consumes third-party providers.
+
+Not only is this API endpoint an interface for foreign components, but also contains some orchestration, for example talking to Keycloak in order to create new organizations.
+
+Authentication, authorization and other core features will have to be implemented specific within this orchestration layer.
+Operations can be a synchronous or asynchronous.
+This orchestration layer can also be implemented as microservices, this proposal does not further define the deployment aspect, though this layer is to be running on Kubernetes.
+
+Adapters have to behave according to a Adapter API, but may need to connect (adapt) to their concrete subsystem via a foreign API.
+
+With a well-defined interface, clients can be generated for all major programming languages, for example for frontends or CLI apps.
+
+image::decision/rest-api-proposal.drawio.svg[]
+
+NOTE: This diagram is an example to highlight the idea and does not display the final state.
+
+.Invoicing example
+[example]
+====
+. A foreign ERP adapter queries the metrics database to generate new invoices.
+. Eventually, the foreign ERP system has generated the invoice along with a PDF version.
+. Clients requesting a list of invoices will transparently query the ERP adapter which will then return a set of relevant invoices.
+====
+
+=== Kubernetes API
+
+The Kubernetes API server provides a standardized API pattern that comes with authentication, RBAC, well-defined resource-model or extensibility with `CRDs`.
+By design, Kubernetes is a API framework that works with reconciling a desired state.
+Business logic or orchestration is asynchronous by nature and this leads to an eventual-consistent behavior of the platform.
+
+Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
+This could mean that the {controlapi} specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
+Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with foreign third-party APIs.
+
+A dedicated Kubernetes API server will be used for that to not interfere with other workload running on this instance.
+This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster]) or a full-blown Kubernetes cluster.
+The controllers acting on the CRDs can run directly in this API server or outside in another Kubernetes cluster.
+All operations are handled through the Kubernetes API server, CRDs and controllers.
+
+Popular Kubernetes CLI clients such as `kubectl` can natively display and work with the {controlapi}.
+The {portal} can directly interact with native Kubernetes API without another REST or GraphQL between.
+
+image::decision/kubernetes-api-proposal.drawio.svg[]
+
+NOTE: This diagram is an example to highlight the idea and does not display the final state.
+
+.Invoicing example
+[example]
+====
+. A foreign ERP adapter queries the metrics database to generate new invoices.
+. Eventually, the foreign ERP system has generated the invoice along with a PDF version.
+. The ERP adapter creates an `Invoice` custom Kubernetes resource with a download link to a PDF version.
+. Clients requesting invoices can retrieve a list of `Invoices` via Kubernets API.
+====
+
+The orchestration of other core features is also implemented as controllers.
+For example organizations are represented as `Organization` object in a dedicated {product} metadata namespace.
+A controller will then create a group in Keycloak.
+
+== Decision
+
+Kubernetes API
+
+== Rationale
+
+The Kubernetes API approach has been chosen because the engineers at VSHN have a lot of know-how working with it.
+It allows to start fast as the important API plumbing is provided right from the beginning from the Kubernetes API server.
+
+The following reasons favor the Kubernetes API over the custom API:
+
+Authorization::
+The standard Kubernetes RBAC system provides basic access control.
+Optionally a policy engine like Kyverno allows more fine-grained control.
+
+Asynchronous::
+It allows to build upon an asynchronous and eventual-consistent architecture which VSHN has a lot of experience with due to VSHNs day-to-day business with Kubernetes.
+
+API Extensibility and versioning::
+By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning] Kubernetes brings already proven strategies dealing with extending APIs.
+
+Framework ecosystem::
+For both proposals there are popular OpenSource ecosystems with various framework support.
+However VSHN has more experience writing Kubernetes-based controllers and knows how to work with the Kubernetes API.
+
+Frontend development and testing::
+Both proposals enable faking an inexistent provider.
+The Kubernetes API approach makes this comparatively easier by just creating Kubernetes resources without an actual controller reconciling them ("Fake it 'till you make it").
+
+Experience from Project Syn::
+Project Syn features a similar architecture which serves as inspiration.
