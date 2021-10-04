@@ -7,7 +7,7 @@ Stimulus::
 Creates new Kubernetes namespace with arbitrary name
 
 Environment::
-Any APPUiO Zone
+Any {zone}
 
 Artifact::
 kubectl

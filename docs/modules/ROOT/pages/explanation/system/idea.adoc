@@ -26,17 +26,17 @@ API Endpoint::
 {product} will be designed "API-first".
 This enables different client profiles to interact with the product.
 Clients could be user or command line interfaces and other automation services.
-The endpoint itself will be using external services for certain features.
+The endpoint itself will be using foreign services for certain features.
 
 Web User Interface::
 A graphical user interface will provide management, reporting and dashboard features.
 It's not intended to be replacing the OpenShift Console on an {zone}, but rather an extension for things that affect all {zone}s.
 
-External Services::
+Adapters::
 {product} is not responsible for invoicing or payments.
-Those functionalities are provided by external services using an API.
-{product} will define contract-like APIs for which different implementations or adapters can be plugged in.
-See xref:explanation/system/details-external-services.adoc[External Services].
+Those functionalities are provided by foreign services using APIs.
+{product} will define plugin-like APIs for which different implementations or adapters can be plugged in.
+See xref:explanation/system/details-adapters.adoc[Adapters].
 
 Namespace::
 This is the Kubernetes Namespace object that the developer creates and maintains.

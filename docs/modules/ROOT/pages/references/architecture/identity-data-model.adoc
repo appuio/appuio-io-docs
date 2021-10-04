@@ -1,7 +1,5 @@
 = Identity data model
 
-:zone: {product} zone
-
 [TIP]
 ====
 The identity data model shows how Users and Organizations are implemented in Keycloak and OpenShift.
