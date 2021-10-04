@@ -32,11 +32,11 @@ Web User Interface::
 A graphical user interface will provide management, reporting and dashboard features.
 It's not intended to be replacing the OpenShift Console on an {zone}, but rather an extension for things that affect all {zone}s.
 
-Plugins::
+Adapters::
 {product} is not responsible for invoicing or payments.
 Those functionalities are provided by foreign services using APIs.
-{product} will define contract-like APIs for which different implementations or adapters can be plugged in.
-See xref:explanation/system/details-plugins.adoc[Plugins].
+{product} will define plugin-like APIs for which different implementations or adapters can be plugged in.
+See xref:explanation/system/details-adapters.adoc[Adapters].
 
 Namespace::
 This is the Kubernetes Namespace object that the developer creates and maintains.

@@ -33,21 +33,21 @@ Specifically, this consists of:
 * API that users write to with various clients (for example frontend or CLI) and thus configure their organizations
 * API that users read with various clients that is usually the result of {product} components (for example read-only access to invoices)
 
-Plugin API::
-A subset of Control API that is specifically targeted for Plugins.
+Adapter API::
+A subset of Control API that is specifically targeted for Adapters.
 This specification may not only be technical, but may also contain a "behavioral contract" that is in documentation only.
-It basically defines how Plugins should behave and interact with {product}.
+It basically defines how Adapters should behave and interact with {product}.
 +
-TIP: This term is introduced to better distinguish between {product} internal API and API interacting with Plugins.
+TIP: This term is introduced to better distinguish between {product} internal API and API interacting with Adapters.
 
-Plugin::
-A component or system that is foreign to the core of {product}, but implements the functionalities through a Plugin API that complete {product}.
+Adapter::
+A component or system that is foreign to the core of {product}, but implements the functionalities through a Adapter API that completes {product}.
 +
 [example]
 ====
 {product} itself doesn't contain an invoicing system.
 Generating and maintaining the lifecycle of invoices is the task of an invoicing or ERP system.
-Since there are countless systems already available, {product} will only define a Plugin API but not otherwise enforce resellers to use a certain ERP software.
+Since there are countless systems already available, {product} will only define a Adapter API but not otherwise enforce resellers to use a certain ERP software.
 ====
 
 Admin::

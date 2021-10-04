@@ -1,4 +1,4 @@
-= Foreign components as Plugins
+= Foreign components as Adapters
 
 Source::
 {product} administrator

@@ -1,14 +1,14 @@
-= Plugins
+= Adapters
 
 Simply put, certain functionalities in {product} are implemented in _third party systems_.
 {product} is intended to be provided by resellers.
 This influences how the architecture is abstracting components that aren't part of {product}
 
 {product} features a plugin-like architecture with defined APIs or behavioral contracts.
-Plugins (foreign systems) will implement such an API so that they can be integrated into {product}.
+Adapters (foreign systems) will implement such an API so that they can be integrated into {product}.
 Examples are an ERP system for invoicing or payment services.
 
-See also xref:appuio-cloud:ROOT:references/quality-requirements/portability/foreign-components-plugins.adoc[Foreign components as plugins] requirement.
+See also xref:appuio-cloud:ROOT:references/quality-requirements/portability/adapters.adoc[Foreign components as Adapters] requirement.
 
 .Let us take invoicing as an example
 [example]
