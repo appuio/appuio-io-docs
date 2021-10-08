@@ -1,3 +1,4 @@
 * Installation
 ** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
 ** xref:appuio-cloud:ROOT:how-to/keycloak-brokering.adoc[Add Keycloak brokering]
+** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Activate {zone}]

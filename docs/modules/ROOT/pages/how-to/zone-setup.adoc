@@ -1,0 +1,34 @@
+= Activate {zone}
+
+This guide describes the steps required to turn an OpenShift 4 cluster into am {zone}s.
+
+== Configure group-sync-operator
+
+The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator] is required to sync Keycloak groups to each {zone}.
+
+. Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  group_sync_operator:
+    secrets:
+      sync-appuio-keycloak-groups:
+        stringData:
+          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/username}'
+          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/password}'
+    sync:
+      sync-keycloak-groups:
+        schedule: '* * * * *'
+        providers:
+          keycloak:
+            keycloak:
+              url: https://id.appuio.cloud
+              credentialsSecret:
+                name: sync-appuio-keycloak-groups
+              loginRealm: master
+              realm: appuio-cloud
+              scope: sub
+----
