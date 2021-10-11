@@ -1,0 +1,64 @@
+= Activate {zone}
+
+This guide describes the steps required to turn an OpenShift 4 cluster into an {zone}.
+
+== Configure group-sync-operator
+
+The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator] is required to sync Keycloak groups to each {zone}.
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  group_sync_operator:
+    secrets:
+      sync-appuio-keycloak-groups:
+        stringData:
+          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/username}'
+          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/password}'
+    sync:
+      sync-keycloak-groups:
+        schedule: '* * * * *'
+        providers:
+          keycloak:
+            keycloak:
+              url: https://id.appuio.cloud
+              credentialsSecret:
+                name: sync-appuio-keycloak-groups
+              loginRealm: master
+              realm: appuio-cloud
+              scope: sub
+----
+
+== Configure keycloak-attribute-sync-controller
+
+The https://github.com/redhat-cop/group-sync-operator[keycloak-attribute-sync-controller] is required to sync Keycloak user attributes to each {zone}.
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  keycloak_attribute_sync_controller:
+    sync_credentials:
+      sync-default-org-credentials:
+        stringData:
+          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/username}' <1>
+          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/password}'
+
+    sync_configurations:
+      sync-default-org:
+        url: https://id.appuio.cloud
+        loginRealm: master
+        credentialsSecret:
+          name: sync-default-org-credentials
+        realm: appuio-cloud
+        attribute: appuio.io/default-organization
+        targetAnnotation: appuio.io/default-organization
+        schedule: '@every 1m'
+----
+<1> The user for syncing attributes is the same as the one used for group-sync-operator.
+
+. Compile and push the cluster catalog
+. Wait for Argo CD to sync the config
