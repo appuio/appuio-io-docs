@@ -15,8 +15,8 @@ parameters:
     secrets:
       sync-appuio-keycloak-groups:
         stringData:
-          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/username}'
-          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/password}'
+          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-sync/username}'
+          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-sync/password}'
     sync:
       sync-keycloak-groups:
         schedule: '* * * * *'
@@ -44,8 +44,8 @@ parameters:
     sync_credentials:
       sync-default-org-credentials:
         stringData:
-          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/username}' <1>
-          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-user-sync/password}'
+          username: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-sync/username}' <1>
+          password: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak-sync/password}'
 
     sync_configurations:
       sync-default-org:
