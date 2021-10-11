@@ -109,6 +109,8 @@ Enable StartTLS = true
 
 . Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
 
+. Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
+
 == Configure openshift4-authentication
 
 . Add the client secret to Vault.

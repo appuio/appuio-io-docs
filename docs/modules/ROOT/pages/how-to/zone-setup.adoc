@@ -6,8 +6,6 @@ This guide describes the steps required to turn an OpenShift 4 cluster into an {
 
 The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator] is required to sync Keycloak groups to each {zone}.
 
-. Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
-
 . Add component configuration
 +
 [source,yaml,subs="attributes+"]
