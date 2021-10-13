@@ -25,6 +25,7 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-arbitrary-name.adoc[Arbitrary Namespace name]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/user-arbitrary-name.adoc[Arbitrary user name]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/organization-arbitrary-name.adoc[Arbitrary organization name]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/measuring-scope-for-invoiding.adoc[Measuring scope for invoicing]
 
 ** Security
 *** xref:appuio-cloud:ROOT:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]
