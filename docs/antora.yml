@@ -6,7 +6,7 @@ nav:
   - modules/ROOT/partials/nav.adoc
 asciidoc:
   attributes:
-    global: APPUiO Global
+    global: APPUiO Cloud Global
     product: APPUiO Cloud
     zone: APPUiO Zone
     idp: APPUiO IdP
