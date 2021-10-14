@@ -1,0 +1,24 @@
+= Metrics scope for invoicing
+
+Source::
+Invoicing adapter
+
+Stimulus::
+Calculate invoice
+
+Environment::
+{global}
+
+Artifact::
+Metric storage for invoicing
+
+Response::
+A time series of usage metrics
+
+Response measure::
+A time series is returned per pod.
+
+Rationale::
+Users manage their workload on the level of pods through Kubernetes Deployments and StatefulSets.
+However, OpenShift 4 collects metrics on the level of containers within pods.
+Summarizing the data at the pod level allows to present the data in a familiar way to the user.
