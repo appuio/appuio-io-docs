@@ -10,7 +10,7 @@ Environment::
 {global}
 
 Artifact::
-Enterprice resouce planning or accounting system where the invoices get created.
+Enterprise resource planning or accounting system where the invoices get created.
 
 Response::
 Line items on the generated invoices for the billed resources.
