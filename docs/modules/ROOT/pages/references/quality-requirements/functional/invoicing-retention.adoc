@@ -4,7 +4,7 @@ Source::
 Invoicing adapter
 
 Stimulus::
-Calculate invoice
+Adjust existing invoice
 
 Environment::
 {global}
@@ -16,14 +16,14 @@ Response::
 A time series of usage metrics
 
 Response measure::
-The oldest sample ist at least two years old.
+The oldest sample is at least two years old.
 
 Rationale::
-Experience with APPUiO Public shows, sometimes it is nessesary to do corrections and or changes to created invoices.
-Reason might be that there is an bug in the invoice generation or some missconfiguration.
+Experience with APPUiO Public shows that sometimes it's necessary to do corrections to existing invoices.
+Reason might be bugs in the invoice generation or some misconfiguration.
 The most efficient way to fix such cases is to run the invoice generation again.
-Thethe faulty invoices are then replaced by the new and correct ones.
-Corrections and changes to invocing can be made until accounting creates the annual finacial statements.
-In order to do such corrections and changes requires that the source data is still available.
-The retention time of two years does guarantee this.
-This takes into account, that the annual financial statements are finalized after the financial year has ended and some headroom is required.
+The faulty invoices are then replaced by the new and corrected ones.
+Usually changes to invoices can be made until any company accounting creates the annual financial reports.
+In order to do such changes the source data has to be still available.
+The retention time of two years is considered to be sufficient for such cases.
+This takes into account, that the annual financial report are finalized after the financial year has ended and some headroom is required.
