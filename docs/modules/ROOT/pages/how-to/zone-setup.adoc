@@ -1,6 +1,8 @@
-= Activate {zone}
+= Add a cluster to {product}
 
 This guide describes the steps required to turn an OpenShift 4 cluster into an {zone}.
+
+NOTE: VSHN employees can refer to xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] for an easier setup.
 
 == Configure group-sync-operator
 

@@ -1,6 +1,7 @@
 * Installation
 ** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
-** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Activate {zone}]
+** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Add a cluster to {product}]
 
 * Examples for VSHN
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[Activate Zone]
