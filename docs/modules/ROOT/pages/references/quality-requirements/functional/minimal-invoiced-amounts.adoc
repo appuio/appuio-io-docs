@@ -1,0 +1,26 @@
+= Minimal invoiced amounts
+
+Source::
+Invoicing adapter
+
+Stimulus::
+Calculate invoice
+
+Environment::
+{global}
+
+Artifact::
+Enterprice resouce planning or accounting system where the invoices get created.
+
+Response::
+Line items on the generated invoices for the billed resources.
+
+Response measure::
+A minimal amount gets billed even if the effective usage is lower.
+
+Memory::: 125MB
+Disk storage::: 1GB
+
+Rationale::
+Allocating compute and storage resources on a Kubernetes cluster binds some resources on the clusters control plane.
+The minimal billed amount accounts for that overhead.
