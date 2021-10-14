@@ -1,0 +1,33 @@
+= Sampling interval for invoicing
+
+Source::
+Invoicing adapter
+
+Stimulus::
+Calculate invoice
+
+Environment::
+{global}
+
+Artifact::
+Metric storage for invoicing
+
+Response::
+A time series of usage metrics
+
+Response measure::
+At least one sample per minute
+
+Rationale::
+The smallest resolution an invoicing adapter can expect is one sample per minute.
+Ideally a scrape interval smaller than 60s is used.
+This should guarantee the one sample per minute.
+Downsampling of two or more samples is done using the statistical mean.
+
+[TIP]
+====
+The scrape interval of Prometheus is only an approximate number.
+Depending on the system load, scrapes can be delayed.
+With a scrape interval of 60s, a scrape might happen 63s later than the previous one.
+If that happens, we miss a sample.
+====
