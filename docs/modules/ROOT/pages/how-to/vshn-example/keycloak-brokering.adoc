@@ -115,13 +115,14 @@ Create groups if not exists = True
 +
 [source,subs="attributes+"]
 ----
-Name = assign-default-organization
+Name = default-organization
 Sync Mode Override = inherit
 Mapper Type = Claim to Attribute
 Claim = groups
 Target attribute = appuio.io/default-organization
-Ignore entries pattern = ^Service.*
+Overwrite existing attribute value = false
+Ignore entries pattern = [ ^Service.* , ^VSHN\s.* ]
 Lowercase names = True
 Trim whitespaces = True
-Trim prefix = Cust\s*
+Trim prefix = Cust\s
 ----
