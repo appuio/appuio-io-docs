@@ -1,0 +1,74 @@
+= APPUiO Control API Design
+
+This page describes the overall APPUiO Control API ("API" in the rest of this page) design.
+It adheres to the decision taken in xref:explanation/decisions/control-api.adoc[APPUiO Control API].
+The design follows the features asked in xref:explanation/system/details-ui.adoc[System idea: Graphical user interface].
+
+image:reference/control-api-design.drawio.svg[]
+
+== Cross-Zone Objects
+
+The cross-zone objects are stored in a control namespace called `appuio-cloud-control`.
+These are the objects which are global to the {product} instance.
+RBAC rules do protect these objects.
+
+=== `Organization`
+
+This is the main object.
+It's job is to manage the organization.
+
+* Manage the lifecycle and access rules of the Organization specific Namespace
+* Manage the organization in {idp}
+
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: Organization
+metadata:
+  name: acme-corp
+  namespace: appuio-cloud-control
+spec:
+  displayName: Acme Corp.
+status:
+  namespace: org-acme-corp
+  keycloak-group: acem-corp
+----
+
+The adapter to this object is core of {product}.
+
+=== `AppuioZone`
+
+This is a list of all {zone}s.
+
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: AppuioZone
+metadata:
+  name: cloudscale-lpg-0
+  namespace: appuio-cloud-control
+spec:
+  displayName: cloudscale.ch LPG 0
+  features:
+    openshift-version: "4.8"
+    kubernetes-version: "1.21"
+    sdn: OVN-Kubernetes
+  console-url: https://console.cloudscale-lpg-0.appuio.cloud/
+  kubernetes-api-url: https://api.cloudscale-lpg-0.appuio.cloud:6443/
+status:
+  status-message: running
+----
+
+The adapter to this object is specific to the reseller of {product}.
+
+== Organization Specific Objects
+
+Each organization has a dedicated namespace which contains the organization-level objects.
+These namespaces are named like `org-$orgname`.
+
+RBAC rules are deployed on these namespaces to protect access to the objects.
+
+Example:
+
+* Invoices
+* Teams

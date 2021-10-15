@@ -9,6 +9,7 @@
 ** xref:appuio-cloud:ROOT:references/architecture/identity-data-model.adoc[Identity data model]
 ** xref:appuio-cloud:ROOT:references/architecture/openshift-authentication.adoc[Authentication on OpenShift clusters]
 ** xref:appuio-cloud:ROOT:references/architecture/namespace-ownership.adoc[Namespace ownership]
+** xref:appuio-cloud:ROOT:references/architecture/control-api-design.adoc[Control API design]
 
 * Quality Requirements
 
