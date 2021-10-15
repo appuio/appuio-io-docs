@@ -1,14 +1,18 @@
-= Add another Keycloak for brokering
+= Add VSHN SSO for brokering
 :appuio-keycloak: id.appuio.cloud
 :appuio-realm: appuio-cloud
-:foreign-idp-alias: foreign-idp
-:foreign-host: foreign.hostname.tld
-:foreign-realm: foreign-realm
-:foreign-client-id: appuio-cloud-id
+:foreign-idp-alias: vshn
+:foreign-host: id.vshn.net
+:foreign-realm: vshn-realm
+:foreign-client-id: VSHN_to_APPUiO_Cloud
 
 This guide describes the steps required to configure the {idp} so that a foreign Keycloak as Identity Providers can be used.
+In this case, we will use the VSHN SSO as an example.
+Please adjust the settings for your own case where necessary.
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+
+NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
 
 image:how-to/keycloak-brokering.drawio.svg[]
 
@@ -45,9 +49,9 @@ For the purpose of this guide, we will use the following names, interchange them
 
 |===
 
-== Add new Client to foreign Keycloak
+== Add new Client to VSHN SSO
 
-. Log in as administrator to admin console in the **foreign Keycloak instance** and select the desired realm.
+. Log in as administrator to admin console in **VSHN SSO** and select the desired realm.
 . Add a new Client and configure the following settings:
 +
 [source,subs="attributes+"]
@@ -91,20 +95,34 @@ Logout URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-
 User Info URL = https://{foreign-host}/auth/realms/{foreign-realm}/protocol/openid-connect/userinfo
 Client Authentication = "Client secret sent as post"
 Client ID = {foreign-client-id}
-Client Secret = <The secret displayed in {appuio-keycloak} Credentials tab>
+Client Secret = <The secret displayed in {foreign-host} Credentials tab>
 ----
 
-. Add a group mapper to the client via the "Mappers" tab
+. Add a "Claim to Group" mapper to the client via the "Mappers" tab
 +
 [source,subs="attributes+"]
 ----
 Name = import-groups
 Sync Mode Override = inherit
-Mapper Type = Claim to Group Mapper
+Mapper Type = Claim to Group
 Claim = groups
 Contains text = <1>
 Create groups if not exists = True
 ----
 <1> Enter the group name if you only want to sync a certain group
+
+. Add a "Claim to Attribute" mapper to the identity broker via the "Mappers" tab
 +
-NOTE: This step requires that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
+[source,subs="attributes+"]
+----
+Name = default-organization
+Sync Mode Override = inherit
+Mapper Type = Claim to Attribute
+Claim = groups
+Target attribute = appuio.io/default-organization
+Overwrite existing attribute value = false
+Ignore entries pattern = [ ^Service.* , ^VSHN\s.* ]
+Lowercase names = True
+Trim whitespaces = True
+Trim prefix = Cust\s
+----

@@ -1,0 +1,34 @@
+= Activate {zone}
+
+NOTE: This guide is targeted at VSHN employees.
+
+. Add the cluster as a new client to {idp}
++
+[source]
+----
+Client ID = $CLUSTER_ID
+Access type = confidential
+Valid Redirect URIs = https://oauth-openshift.apps.<domain>/oauth2callback/APPUiO <1>
+Base URL = https://console.apps.<domain> <1>
+----
+<1> `<domain>` is a placeholder for the base hostname of the cluster
+
+. Add the Commodore class to your cluster:
++
+[source,yaml]
+----
+classes:
+  - global.apps.appuio-cloud-zone
+----
+
+. Create the following secrets in Vault:
++
+[source,bash]
+----
+vault kv put clusters/kv/${TENANT_ID}/${CLUSTER_ID}/oidc/appuio-keycloak-sync password=... username=... <1>
+vault kv put clusters/kv/${TENANT_ID}/${CLUSTER_ID}/oidc/appuio-keycloak clientSecret=... <2>
+----
+<1> The API user for syncing groups and attributes from {idp}.
+<2> The generated client secret when configuring the cluster as a client in {idp} in previous step.
+
+. Compile and push cluster catalog
