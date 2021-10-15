@@ -1,0 +1,29 @@
+= Retention time of metrics used for invoicing
+
+Source::
+Invoicing adapter
+
+Stimulus::
+Adjust existing invoice
+
+Environment::
+{global}
+
+Artifact::
+Metric storage for invoicing
+
+Response::
+A time series of usage metrics
+
+Response measure::
+The oldest sample is at least two years old.
+
+Rationale::
+Experience with APPUiO Public shows that sometimes it's necessary to do corrections to existing invoices.
+Reason might be bugs in the invoice generation or some misconfiguration.
+The most efficient way to fix such cases is to run the invoice generation again.
+The faulty invoices are then replaced by the new and corrected ones.
+Usually changes to invoices can be made until any company accounting creates the annual financial reports.
+In order to do such changes the source data has to be still available.
+The retention time of two years is considered to be sufficient for such cases.
+This takes into account, that the annual financial report are finalized after the financial year has ended and some headroom is required.
