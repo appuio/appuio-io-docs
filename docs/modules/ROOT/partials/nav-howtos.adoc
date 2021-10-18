@@ -1,5 +1,6 @@
 * Installation
 ** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
+** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
 ** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Add a cluster to {product}]
 
 * Examples for VSHN
