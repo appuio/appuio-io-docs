@@ -6,6 +6,10 @@
             "labels": ["decision"]
         },
         {
+            "title": "## 📕 Tutorials",
+            "labels": ["tutorial"]
+        },
+        {
             "title": "## 🧾 Quality Requirements",
             "labels": ["requirement/quality"]
         },
