@@ -1,0 +1,66 @@
+= Configure role mappings for Keycloak brokering
+:appuio-realm: appuio-cloud
+:foreign-host: id.vshn.net
+:foreign-idp-display-name: VSHN SSO
+
+This guide describes the steps required to configure the {idp} so that claims from a foreign Keycloak can be used as roles.
+In this guide, we use the {foreign-idp-display-name} as an example.
+The example shows how to map groups `VSHN openshiftroot` and `Service APPUiOCloud` to roles in {idp}.
+This guide assumes that you've already configured the xref:how-to/vshn-example/keycloak-brokering.adoc[brokering] itself.
+
+NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+
+NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
+
+For the purpose of this guide, we'll use the following names, adjust as needed:
+
+|===
+| Key | Description
+
+| `{foreign-host}`
+| Foreign Keycloak hostname
+
+| `{foreign-idp-display-name}`
+| The display name of the `{foreign-host}` identity provider in {idp}
+
+| `{appuio-realm}`
+| Realm within {idp}
+
+|===
+== Prerequisites
+
+* Installed {idp}
+* Logged in to {idp} as Administrator
+* Brokering with {foreign-host} configured
+* {foreign-host} provides group memberships of each user in claim `groups`
+
+== Create roles in {idp}
+
+. Select realm {appuio-realm} in {idp}.
+. Create roles with "Roles > Realm Roles > Add Role".
+For our example, we create roles `vshneer-zone-access` and `appuio-zone-access`.
+
+== Configure Identity Provider
+
+. Go to {foreign-idp-display-name} in "Identity Providers" and select tab "Mappers"
+. Create a new mapper to map group `VSHN openshiftroot` to role `vshneer-zone-access` for users logging in via {foreign-host}.
++
+[source]
+----
+Name = vshneer-global-access
+Mapper type = Claim to Role
+Claim = groups
+Claim Value = VSHN openshiftroot
+Role = vshneer-zone-access
+----
+
+. Create a new mapper to map group `Service APPUiOCloud` to role `appuio-zone-access` for users logging in via {foreign-host}.
++
+[source]
+----
+Name = customer-global-access
+Mapper type = Claim to Role
+Claim = groups
+Claim Value = Service APPUiOCloud
+Role = appuio-zone-access
+----

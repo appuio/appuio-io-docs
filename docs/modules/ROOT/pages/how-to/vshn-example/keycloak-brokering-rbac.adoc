@@ -1,0 +1,88 @@
+= Configure role-based access control for brokered users
+:appuio-realm: appuio-cloud
+:foreign-host: id.vshn.net
+:foreign-idp-display-name: VSHN SSO
+
+This guide describes the steps required to implement role-based access control (RBAC) for users logging via identity brokering.
+In this guide, we use the {foreign-idp-display-name} as an example.
+We configure RBAC for the roles we've mapped in the xref:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[role mapping how-to].
+This guide assumes that you've already configured the xref:how-to/vshn-example/keycloak-brokering.adoc[brokering] itself and have configured suitable role mappings.
+
+NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
+
+For the purpose of this guide, we'll use the following names, adjust as needed:
+
+|===
+| Key | Description
+
+| `{foreign-host}`
+| Foreign Keycloak hostname
+
+| `{foreign-idp-display-name}`
+| The display name of the `{foreign-host}` identity provider in {idp}
+
+| `{appuio-realm}`
+| Realm within {idp}
+
+|===
+
+== Prerequisites
+
+* Installed {idp}
+* Logged in to {idp} as Administrator
+* Brokering with {foreign-host} configured
+* Role mappings from claims provided by {foreign-host} configured
+
+== Create post-login flow
+
+. Select realm {appuio-realm} in {idp}.
+. Go to "Authentication" and create a new flow:
++
+[source,subs="attributes+"]
+----
+Alias = {foreign-idp-display-name} post-login
+Description = Check user roles after brokered login via {foreign-host}
+Top Level Flow Type = generic
+----
+
+. Add the "Browser Redirect/Refresh" execution to the flow:
+
+. Add a new sub-flow:
++
+[source,subs="attributes+"]
+----
+Alias = check user roles {foreign-idp-display-name}
+Flow Type = generic
+----
+
+. Set the sub-flow as `CONDITIONAL`
+
+. Add a "Condition - User Role" execution to the sub-flow ("Actions > Add Flow" on the sub-flow) for each role that should have access.
+For VSHN AG's APPUiO Cloud configure a "Condition - User Role" execution for both realm roles `vshneer-zone-access` and `appuio-zone-access`.
++
+.Configuration ("Actions > Config")
+[source]
+----
+Alias = vshneer-access <1>
+User role = vshneer-zone-access <2>
+Negate output = On <3>
+----
+<1> Choose a name that describes the role you're checking for
+<2> Select the realm role to check for
+<3> We negate the output because we want to stop processing conditions if the user trying to log in has the specified role.
+
+. Add a "Deny Access" execution to the sub-flow.
+This blocks access to all users that have none of the roles configured in the previous step.
+
+. Mark all the executions in the sub-flow as `REQUIRED`.
+
+== Configure the post-login flow on the {foreign-idp-display-name} Identity Provider
+
+. Go to "Identity Providers" and select "{foreign-idp-display-name}" from the list.
+. Set the post-login flow
++
+[source,subs="attributes+"]
+----
+Post Login Flow = {foreign-idp-display-name} post-login
+----
+. Save the Identity Provider
