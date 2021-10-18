@@ -1,0 +1,41 @@
+= Disable access to {product}
+
+This guide describes how to remove a user's access to all {zone}s
+
+NOTE: This page will be updated once we've implemented support for selective access to single {zone}s.
+
+== Prerequisites
+
+* Installed {idp} (see xref:appuio-cloud:root:how-to/keycloak-setup.adoc[Install Keycloak])
+* Administrator console access to {idp}
+
+== Extra steps for brokered users
+
+To remove a brokered user's access to all {zone}s perform the following steps.
+
+TIP: This section can be skipped when removing access for a user registered directly on {idp}.
+
+. Make sure the role/service/group membership granting the user access to {product} is removed in the upstream IDP.
++
+TIP: For VSHNeers, remove service "APPUiO Cloud" from the user in control.vshn.net
+
+. Make sure the user's {idp} session is terminated in the upstream IDP.
++
+TIP: For VSHNeers, go to "Users > {username} > Sessions" in id.vshn.net and terminate the user's session in client `VSHN_to_APPUiO_Cloud`.
+
+== Remove access role from user
+
+To remove a user's access to all {zone}s perform the following steps.
+
+. Go to "Users > {username} > Role Mappings" and remove role `appuio-zone-access` from the user
+. Switch to tab "Sessions" and logout all {zone} sessions of the user
+. On each {zone} (cluster), remove any `oauthaccesstokens` of the user:
++
+[source,bash]
+----
+export username=<username> <1>
+export KUBECONFIG=/path/to/zone/kubeconfig <2>
+oc --as=cluster-admin get oauthaccesstokens | grep ${username} | cut -d' ' -f1 | xargs oc --as=cluster-admin delete oauthaccesstokens
+----
+<1> The username of the user to remove
+<2> Point `kubectl` to a {zone}
