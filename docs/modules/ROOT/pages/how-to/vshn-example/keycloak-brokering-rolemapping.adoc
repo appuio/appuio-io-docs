@@ -32,7 +32,7 @@ For the purpose of this guide, we'll use the following names, adjust as needed:
 * Installed {idp}
 * Logged in to {idp} as Administrator
 * Brokering with {foreign-host} configured
-* {foreign-host} provides user group memberships in claim `groups`
+* {foreign-host} provides group memberships of each user in claim `groups`
 
 == Create roles in {idp}
 
