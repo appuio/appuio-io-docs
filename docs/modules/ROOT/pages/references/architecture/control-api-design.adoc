@@ -6,19 +6,69 @@ The design follows the features asked in xref:explanation/system/details-ui.adoc
 
 image:reference/control-api-design.drawio.svg[]
 
-== Cross-Zone Objects
+== General Principles
 
-The cross-zone objects are stored in a control namespace called `appuio-cloud-control`.
-These are the objects which are global to the {product} instance.
-RBAC rules do protect these objects.
+Kubernetes API::
+The Control API is built upon the Kubernetes API and adheres to it's https://kubernetes.io/docs/reference/kubernetes-api/[design principles].
 
-=== `Organization`
+API object field: Status::
+The `status` field (also called https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#status-subresource["Status subresource"]) represents the current status and external information.
+It is read-only to the end-user.
 
-This is the main object.
-It's job is to manage the organization.
+API object field: Spec::
+The `spec` field contains the desired state for reconciliation.
 
-* Manage the lifecycle and access rules of the Organization specific Namespace
-* Manage the organization in {idp}
+=== Virtual vs. CRD based resources
+
+Some resources not persisted to etcd and are only available virtually (API extension), others are persisted to etcd and are defined and represented via `CustomResourceDefinition`s (CRDs).
+
+Virtual resources are accessible via an https://kubernetes.io/docs/tasks/extend-kubernetes/setup-extension-api-server/[API Server Extension].
+These resources are similar to views in a relational database.
+The benefit of providing these resources instead of only using CRDs is that we can calculate access permissions dynamically for every request.
+The same concept is also used by OpenShift with its `Project` resource which represents RBAC filter `Namespaces` (see https://github.com/openshift/kube-projects[kube-projects]).
+
+=== Authentication and Authorization
+
+Authentication against the API server is done by the {idp} by leveraging OIDC.
+This allows to transport authorized information about the user in a JWT token.
+
+For authorization, standard https://kubernetes.io/docs/reference/access-authn-authz/rbac/[Kubernetes RBAC] is being used.
+Kyverno policies can be used to implement enhanced policies, for example the number of resources of a specified kind a user is allowed to create.
+
+== Main Use-Cases
+
+All use-cases are from the view of an API user.
+
+Authentication and Authorization::
+* Authenticate against the API, so that the API knows who I am
+* Authorization to work with resources granted to me
+
+Organizations::
+* List organizations I have access to
+* Create a new organization if I'm allowed to
+* Update an existing organization if I'm allowed to
+* Delete an existing organization if I'm allowed to
+* Invite a user to an organization if I'm allowed to send invitations
+* Join an existing organization If I'm invited
+
+Zones::
+* List of zones I have access to
+* See details of zone I have access to
+
+== Global Resources
+
+These are the resources which are global to the {product} instance.
+They are available in the global scope of the Kubernetes API server.
+
+=== `Organization` (Virtual)
+
+Organizations are the container for all resources which belong to an organization.
+It is represented by a Kubernetes Namespace with specific labels and annotations.
+This allows to use standard Kubernetes RBAC rules for organization-specific resources.
+
+To circumvent the current limitation of Kubernetes to show filtered lists of cluster-scoped resources based on access rights, the virtual object `Organization` represents an organization.
+
+The dynamic filter works through the list of namespaces which represent an organization and checks if the subject has access to the namespace.
 
 [source,yaml]
 ----
@@ -26,17 +76,35 @@ apiVersion: appuio.io/v1
 kind: Organization
 metadata:
   name: acme-corp
-  namespace: appuio-cloud-control
 spec:
   displayName: Acme Corp.
-status:
-  namespace: org-acme-corp
-  keycloak-group: acem-corp
 ----
 
-The adapter to this object is core of {product}.
+[source,yaml]
+----
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: org-acme-corp <1>
+  labels:
+    appuio.io/resource-type: organization <2>
+    organization.appuio.io/displayName: Acme Corp. <3>
+----
+<1> Prefixed (`org`) name to circumvent possible name collision (e.g. if a company is called "kube-system")
+<2> Identify resource type, used by the API server to filter for namespace representing organizations
+<3> Reflected in the organization object as `spec.displayName`
 
-=== `AppuioZone`
+Working with organization-resources always happens via the `Organization` object, it's not meant to directly CRUD namespaces which represent an organization.
+
+==== RBAC rules
+
+These are `ClusterRole` which can be bound to a subject by either a `ClusterRoleBinding` or a namespaced `RoleBinding`:
+
+`org-creator`:: Allow for creating organizations - on the `Organization` object (ClusterRoleBinding)
+`org-view`:: Namespace scope RoleBinding to allow view access to an organization
+`org-admin`:: Namespace scope RoleBinding to allow admin access to an organization (update, delete)
+
+=== `AppuioZone` (CRD)
 
 This is a list of all {zone}s.
 
@@ -46,29 +114,27 @@ apiVersion: appuio.io/v1
 kind: AppuioZone
 metadata:
   name: cloudscale-lpg-0
-  namespace: appuio-cloud-control
 spec:
   displayName: cloudscale.ch LPG 0
+status:
   features:
     openshift-version: "4.8"
     kubernetes-version: "1.21"
     sdn: OVN-Kubernetes
   console-url: https://console.cloudscale-lpg-0.appuio.cloud/
   kubernetes-api-url: https://api.cloudscale-lpg-0.appuio.cloud:6443/
-status:
-  status-message: running
 ----
 
-The adapter to this object is specific to the reseller of {product}.
+== Organization-Level Resources
 
-== Organization Specific Objects
-
-Each organization has a dedicated namespace which contains the organization-level objects.
-These namespaces are named like `org-$orgname`.
-
-RBAC rules are deployed on these namespaces to protect access to the objects.
+These objects are namespace-scoped and live in the corresponding Namespace of the organization.
+Access to these objects is granted by Kubernetes RBAC rules.
 
 Example:
 
 * Invoices
 * Teams
+
+=== User Invitation
+
+Ideas missing atm...
