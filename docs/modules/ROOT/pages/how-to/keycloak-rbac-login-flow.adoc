@@ -1,0 +1,68 @@
+= Setup role-based access control for {product}
+
+This guide describes how to setup role-based access control (RBAC) for users registered directly in {idp}.
+
+TIP: See xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac[Configure role-based access control for brokered users] to setup RBAC for users brokered from another identity provider.
+
+NOTE: This page will be updated once we've implemented support for selectively granting users access to single {zone}s.
+
+== Prerequisites
+
+* Installed {idp} (see xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak])
+* Administrator console access to {idp}
+
+== Create customized browser login flow
+
+TIP: This section only needs to be done once.
+
+. Login to {idp} as Administrator
+. Go to realm `appuio-cloud`
+. Go to "Authentication > Flows"
+. Select flow "Browser" and click "Copy".
+Give the copy a descriptive name, for example "browser rbac".
+. In row "Browser Rbac Forms", select "Actions > Add Flow"
++
+[source,subs="attributes+"]
+----
+Alias = check user roles
+Description = Check user's roles and deny access if user isn't granted access to {product}
+Flow Type = generic
+----
+. Change the new "Check User Roles" sub-flow to type `CONDITIONAL`.
+. Select "Actions > Add Execution" on the "Check User Roles" sub-flow to add an execution in the flow
++
+[source]
+----
+Provider = Condition - User Role
+----
+
+. Configure the new "Condition - User Role" execution by selecting "Action > Config"
++
+[source]
+----
+Alias = check-user-role
+User role = appuio-zone-access
+Negate output = ON <1>
+----
+<1> We negate the output of the "Condition - User Role" execution to break out of the sub-flow for users who have the specified role.
+
+. Add a new execution to deny access to users who didn't break out of the sub-flow
++
+[source]
+----
+Provider = Deny access
+----
+
+. Mark both executions in the "Check User Roles" sub-flow as `REQUIRED`.
+
+== Configure all {zone} clients to use custom browser login flow
+
+Configure the "Browser Rbac" flow as the browser login flow for each {zone} {idp} client.
+
+. Go to "Clients > zone-client > Authentication Flow Overrides"
+. Set the browser flow to "Browser Rbac"
++
+[source]
+----
+Browser Flow = browser rbac
+----
