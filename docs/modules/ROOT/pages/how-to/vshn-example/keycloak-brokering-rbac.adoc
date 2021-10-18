@@ -58,6 +58,7 @@ Flow Type = generic
 . Set the sub-flow as `CONDITIONAL`
 
 . Add a "Condition - User Role" execution to the sub-flow ("Actions > Add Flow" on the sub-flow) for each role that should have access.
+For VSHN AG's APPUiO Cloud configure a "Condition - User Role" execution for both realm roles `vshneer-zone-access` and `appuio-zone-access`.
 +
 .Configuration ("Actions > Config")
 [source]
@@ -69,8 +70,6 @@ Negate output = On <3>
 <1> Choose a name that describes the role you're checking for
 <2> Select the realm role to check for
 <3> We negate the output because we want to stop processing conditions if the user trying to log in has the specified role.
-+
-TIP: For VSHN AG's APPUiO Cloud configure a "Condition - User Role" execution for realm roles `vshneer-zone-access` and `appuio-zone-access`.
 
 . Add a "Deny Access" execution to the sub-flow.
 This blocks access to all users that have none of the roles configured in the previous step.
