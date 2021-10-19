@@ -104,6 +104,51 @@ These are `ClusterRole` which can be bound to a subject by either a `ClusterRole
 `org-view`:: Namespace scope RoleBinding to allow view access to an organization
 `org-admin`:: Namespace scope RoleBinding to allow admin access to an organization (update, delete)
 
+=== `Invitation` and `InvitationAccept` (CRD)
+
+An invitation for a user to join an organization.
+
+Definition of being part of an organization:
+
+* At least `org-view` role in organization NS
+* Member of organization group in Keycloak
+
+Process:
+
+. An `Invitation` object is created in the organization namespace for which the invitation is meant for
++
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: Invitation
+metadata:
+  name: invite-1
+  namespace: org-acme-corp
+spec:
+  invitationcode: ju1aefaeKooz <1>
+  role: org-viewer <2>
+----
+<1> Generated invitation code
+<2> Role which this invitation assigns
+. A user who wants to accept this invitation creates a cluster-scoped `InvitationAccept` resource
++
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: InvitationAccept
+metadata:
+  name: invite-1-accept
+spec:
+  invitationcode: ju1aefaeKooz
+status:
+  blubb: bla
+----
+. The invitation controller searches through all namespaces to find an `Invitation` object where `spec.invitationcode` is the same
+.. A clusterrole and a clusterrolebinding is generated to allow access to this `InvitationAccept` object, granting access to the creating user
+.. The user is added to the matching rolebinding (`spec.role` in `Invitation`)
+.. The `Invitation` and the `InvitationAccept` object gets deleted
+.. The clusterrole and a clusterrolebinding is deleted
+
 === `AppuioZone` (CRD)
 
 This is a list of all {zone}s.
@@ -134,7 +179,3 @@ Example:
 
 * Invoices
 * Teams
-
-=== User Invitation
-
-Ideas missing atm...
