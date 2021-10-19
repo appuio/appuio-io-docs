@@ -30,8 +30,6 @@ Minimal invoiced amounts::
 Allocating compute and storage resources on a Kubernetes cluster binds some resources on the clusters control plane.
 To account for that overhead, a minimal amount will be invoiced even if the effective usage is lower.
 
-// TODO Argument for invoicing memory in steps of 125 units while persistent storage gets invoiced in steps of one unit.
-
 == Metric: memory usage
 
 The metrics exporter reports metrics on the level of a single container.
@@ -44,6 +42,13 @@ So the effective invoiced memory usage is the maximum of:
 * The Pods effective memory usage
 * The Pods memory reservation
 * 125 MB
+
+The business model of VSHN defines, that this number is increased in steps of 125 MB rounded up.
+
+[source,pseudo]
+----
+ceil(max(effective usage, reservation, 125)/125) * 125
+----
 
 The corresponding metrics for this are `container_memory_usage_bytes` and `container_spec_memory_reservation_limit_bytes` (needs verification).
 
