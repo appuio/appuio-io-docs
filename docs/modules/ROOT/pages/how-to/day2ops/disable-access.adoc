@@ -6,7 +6,7 @@ NOTE: This page will be updated once we've implemented support for selective acc
 
 == Prerequisites
 
-* Administrator console access to {idp}
+* xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to the {idp}]
 
 == Extra steps for brokered users
 

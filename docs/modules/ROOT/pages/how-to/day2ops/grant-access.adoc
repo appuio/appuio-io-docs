@@ -6,7 +6,7 @@ NOTE: This page will be updated once we've implemented support for selectively g
 
 == Prerequisites
 
-* Administrator console access to {idp}
+* xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to the {idp}]
 * Role-based access configured for {zone} (see xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access for {product}])
 
 == Grant role to user

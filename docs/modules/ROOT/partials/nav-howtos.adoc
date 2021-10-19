@@ -4,6 +4,7 @@
 ** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Add a cluster to {product}]
 
 * Day 2 operations
+** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to {idp}]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/grant-access.adoc[Grant access to {product}]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/disable-access.adoc[Disable access to {product}]
 
