@@ -34,7 +34,8 @@ To remove a user's access to all {zone}s perform the following steps.
 ----
 export username=<username> <1>
 export KUBECONFIG=/path/to/zone/kubeconfig <2>
-oc --as=cluster-admin get oauthaccesstokens | grep ${username} | cut -d' ' -f1 | xargs oc --as=cluster-admin delete oauthaccesstokens
+oc --as=cluster-admin get oauthaccesstokens | grep ${username} | cut -d' ' -f1 | \
+  xargs oc --as=cluster-admin delete oauthaccesstokens
 ----
 <1> The username of the user to remove
 <2> Point `kubectl` to a {zone}
