@@ -16,11 +16,11 @@ TIP: This section can be skipped when removing access for a user registered dire
 
 . Make sure the role/service/group membership granting the user access to {product} is removed in the upstream IDP.
 +
-TIP: For VSHNeers, remove service "APPUiO Cloud" from the user in control.vshn.net
+TIP: VSHNeers can remove the service "APPUiO Cloud" from the user in control.vshn.net to complete this step.
 
 . Make sure the user's {idp} session is terminated in the upstream IDP.
 +
-TIP: For VSHNeers, go to "Users > {username} > Sessions" in id.vshn.net and terminate the user's session in client `VSHN_to_APPUiO_Cloud`.
+TIP: VSHNeers can go to "Users > {username} > Sessions" in id.vshn.net and terminate the user's session in client `VSHN_to_APPUiO_Cloud`.
 
 == Remove access role from user
 
