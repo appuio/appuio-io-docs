@@ -8,9 +8,7 @@ NOTE: This page will be updated once we've implemented support for selective acc
 
 * xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to the {idp}]
 
-== Extra steps for brokered users
-
-To remove a brokered user's access to all {zone}s perform the following steps.
+== Remove access in the upstream IDP for brokered users
 
 TIP: This section can be skipped when removing access for a user registered directly on {idp}.
 
