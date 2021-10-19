@@ -4,20 +4,20 @@ This guide describes how to grant a user access to all {zone}s
 
 NOTE: This page will be updated once we've implemented support for selectively granting users access to single {zone}s.
 
+NOTE: Currently this page has instructions specifically for VSHN AG's {product} instance.
+
 == Prerequisites
 
 * xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to the {idp}]
-* Role-based access configured for {zone} (see xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access for {product}])
+* xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Role-based access configured for brokered users]
 
 == Grant role to user
 
-To grant a user access to all {zone}s, go to "Users > {username} > Role Mappings" and add role `appuio-zone-access` to the user.
+You can grant a customer user access to {product} by enabling service "APPUiO Cloud" for the user in https://control.vshn.net/users[control.vshn.net].
 
 [TIP]
 ====
-VSHNeers can grant a customer user access to {product} by enabling service "APPUiO Cloud" in control.vshn.net for the user.
+A customer user who has the service "APPUiO Cloud" is enabled in control.vshn.net is automatically granted the role `appuio-zone-access` in the {idp}.
 
-The {idp} is configured to automatically assign role `appuio-zone-access` to VSHN customer users for whom service "APPUiO Cloud" is enabled.
-
-See xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak brokering] and xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Configure role-based access control for brokered users] for the configuration required for this automatic assignment to work.
+See xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak brokering] and xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Configure role-based access control for brokered users] for the configuration required for this mapping to work.
 ====
