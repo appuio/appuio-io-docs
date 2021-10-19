@@ -6,7 +6,6 @@ NOTE: This page will be updated once we've implemented support for selectively g
 
 == Prerequisites
 
-* Installed {idp} (see xref:appuio-cloud:root:how-to/keycloak-setup.adoc[Install Keycloak])
 * Administrator console access to {idp}
 * Role-based access configured for {zone} (see xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access for {product}])
 

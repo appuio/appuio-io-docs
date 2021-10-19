@@ -6,7 +6,6 @@ NOTE: This page will be updated once we've implemented support for selective acc
 
 == Prerequisites
 
-* Installed {idp} (see xref:appuio-cloud:root:how-to/keycloak-setup.adoc[Install Keycloak])
 * Administrator console access to {idp}
 
 == Extra steps for brokered users
