@@ -78,6 +78,8 @@ parameters:
 
 == Configure Keycloak
 
+These steps configure Keycloak on a global level and have to be done once per {product} environment.
+
 . Extract the password from the `keycloak-admin-user` secret.
 +
 [source,bash]

@@ -19,7 +19,7 @@ classes:
 
 == Configure Keycloak
 
-. Configure outgoing email settings in "appuio-cloud (realm) > Realm Settings > Email".
+. Configure outgoing email settings in "appuio-cloud (realm) > Realm Settings > Email"
 +
 [source]
 ----
@@ -30,3 +30,19 @@ From = noreply@id.appuio.cloud
 Envelope From = tech@vshn.net
 Enable StartTLS = true
 ----
+
+. Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
+
+. Add an API user in "master (realm) > Users > Add user" with the following properties:
++
+[source]
+----
+Username = appuio-keycloak-sync
+[ Credentials tab ] <1>
+Password = <Password>
+Temporary = False
+[ Role Mappings tab ] <1>
+Client Roles = appuio-cloud-realm
+Assigned Roles = view-users
+----
+<1> The tabs are visible after saving the new user first.
