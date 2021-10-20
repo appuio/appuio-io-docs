@@ -14,9 +14,10 @@ Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback
 Base URL = https://console.apps.cluster-id.tld/
 
 [ Authentication Flow Overrides ]
-Browser Flow = browser rbac
+Browser Flow = browser rbac <2>
 ----
 <1> For each enabled {zone} there shall be its own client using the cluster ID as name.
+<2> See xref:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
 
 NOTE: VSHN employees can now follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
 
