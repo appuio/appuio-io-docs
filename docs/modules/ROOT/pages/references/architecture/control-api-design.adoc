@@ -62,7 +62,7 @@ They are available in the global scope of the Kubernetes API server.
 
 === `Organization` (Virtual)
 
-Organizations are the container for all resources which belong to an organization.
+`Organization` objects are the container for all resources which belong to an organization.
 It is represented by a Kubernetes Namespace with specific labels and annotations.
 This allows to use standard Kubernetes RBAC rules for organization-specific resources.
 
