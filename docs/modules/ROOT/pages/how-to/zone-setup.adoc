@@ -2,14 +2,25 @@
 
 This guide describes the steps required to turn an OpenShift 4 cluster into an {zone}.
 
-NOTE: VSHN employees can refer to xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] for an easier setup.
+== Configure Keycloak
+
+. Create a new Keycloak Client with the following settings (leave the others at default value)
++
+[source]
+----
+Client ID = c-cluster-id <1>
+Access Type = confidential
+Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
+Base URL = https://console.apps.cluster-id.tld/
+
+[ Authentication Flow Overrides ]
+Browser Flow = browser rbac
+----
+<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
+
+NOTE: VSHN employees can now follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
 
 == Configure openshift4-authentication
-
-[NOTE]
-====
-VSHN employees can follow xref:how-to/vshn-example/activate-zone.adoc[this how-to] instead.
-====
 
 . After adding the cluster as a new client to {idp}, add the client secret to Vault.
   The value is being displayed in a grey box in the "Credentials" tab from the Keycloak client settings.

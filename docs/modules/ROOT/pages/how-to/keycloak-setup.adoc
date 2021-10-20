@@ -91,24 +91,13 @@ oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o 
 
 . Create a realm role called `appuio-zone-access`
 
-. Create a new Keycloak Client with the following settings (leave the others at default value)
-+
-[source]
-----
-Client ID = c-cluster-id <1>
-Access Type = confidential
-Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
-Base URL = https://console.apps.cluster-id.tld/
-----
-<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
-
-. Configure the browser login flow for the client as described in xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
-
-. Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
-
 . Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
 +
 [NOTE]
 ====
-VSHN employees can refer to xref:how-to/vshn-example/activate-global.adoc#configure-keycloak[this step] instead.
+VSHN employees can refer to xref:how-to/vshn-example/activate-global.adoc#_configure_keycloak[this step] instead.
 ====
+
+. Configure the browser login flow as described in xref:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
+
+For each {zone} to be added, follow the dedicated xref:how-to/zone-setup.adoc[Add a Cluster to {product}] guide.
