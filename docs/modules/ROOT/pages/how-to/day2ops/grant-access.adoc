@@ -1,0 +1,23 @@
+= Grant access to {product}
+
+This guide describes how to grant a user access to all {zone}s
+
+NOTE: This page will be updated once we've implemented support for selectively granting users access to single {zone}s.
+
+NOTE: Currently this page has instructions specifically for VSHN AG's {product} instance.
+
+== Prerequisites
+
+* xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to the {idp}]
+* xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Role-based access configured for brokered users]
+
+== Grant role to user
+
+You can grant a customer user access to {product} by enabling service "APPUiO Cloud" for the user in https://control.vshn.net/users[control.vshn.net].
+
+[TIP]
+====
+A customer user who has the service "APPUiO Cloud" is enabled in control.vshn.net is automatically granted the role `appuio-zone-access` in the {idp}.
+
+See xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak brokering] and xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Configure role-based access control for brokered users] for the configuration required for this mapping to work.
+====

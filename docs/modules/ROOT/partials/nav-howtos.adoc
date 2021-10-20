@@ -3,6 +3,11 @@
 ** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
 ** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Add a cluster to {product}]
 
+* Day 2 operations
+** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to {idp}]
+** xref:appuio-cloud:ROOT:how-to/day2ops/grant-access.adoc[Grant access to {product}]
+** xref:appuio-cloud:ROOT:how-to/day2ops/disable-access.adoc[Disable access to {product}]
+
 * Examples for VSHN
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak Brokering]
