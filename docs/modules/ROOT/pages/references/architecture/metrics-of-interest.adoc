@@ -1,0 +1,93 @@
+= Metrics of interest 
+:stem:
+
+[abstract]
+--
+The https://products.docs.vshn.ch/products/appuio/cloud/price_model.html[VSHN products documentation] explains the price model for a business oriented audience. 
+The following breaks this down to a more technical level.
+--
+
+{product} is designed to be generic at its core.
+This is written from the perspective of VSHN, and it does not necessarily resemble the needs of another company interested to run {product}. 
+This should not be an issue.
+The architecture is flexible enough to also cover other business models.
+The only assumption is: metrics are collected on {zone}s using Prometheus.
+
+== Common rules
+
+Downsampling::
+xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-invoicing.adoc[Sampling interval for invoicing] states the requirement to measure metrics at least every 30 seconds.
+The interval of interest for invoicing is 1 minute.
+For intervals where more than one sample is available, those samples will be aggregated using aggregation functions.
+In Prometheus lingo the `<aggregation>_over_time()` functions will be used applied to a time window of 1 minute.
+
+Reported unit::
+In the Prometheus ecosystem, it is common to measure memory in https://prometheus.io/docs/practices/naming/#base-units[base units (for example bytes)].
+This would result in utterly long numbers.
+During the invoice generation, those units will be converted to a more suitable one.
+
+Minimal invoiced amounts::
+Allocating compute and storage resources on a Kubernetes cluster binds some resources on the clusters control plane.
+To account for that overhead, a minimal amount will be invoiced even if the effective usage is lower.
+
+== Metric: memory usage
+
+The metrics exporter reports metrics on the level of a single container.
+As defined in xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[Metrics scope for invoicing] it will be invoiced on the level of a Pod.
+The corresponding metrics will be aggregated using the `sum()` function.
+
+If a Pod gets deployed with a memory reservation, that reservation gets invoiced should the effective usage be lower.
+So the effective invoiced memory usage is the maximum of:
+
+* The Pods effective memory usage
+* The Pods memory reservation
+* 125 MB
+
+The business model of VSHN defines, that this number is increased in steps of 125 MB rounded up.
+
+[source,pseudo]
+----
+ceil(max(effective usage, reservation, 125)/125) * 125
+----
+
+The corresponding metrics for this are `container_memory_usage_bytes` and `container_spec_memory_reservation_limit_bytes` (needs verification).
+
+Aggregation method::
+Average
+
+Reported unit::
+Megabyte (stem:[10^6])
+
+Minium invoiced amount::
+125 MB
+
+== Metric: usage of persistent storage
+
+Persistent storage gets invoiced based on the requested amount of a `PersistentVolumeClaim` (allocated usage).
+The corresponding metric for this is `kube_persistentvolumeclaim_resource_requests_storage_bytes`.
+
+Aggregation method::
+Max
+
+Reported unit::
+Gigabyte (stem:[10^9])
+
+Minimum invoiced amount::
+1 GB
+
+== Labels
+
+The following labels must exist on collected metrics:
+
+`zone`::
+Metrics are collected from several zones and invoiced in a single invoice.
+For the recipient of the invoice it must be obvious in which {zone} the usage accumulated.
+
+`pod`::
+xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[Metrics scope for invoicing] defines that the cost will be reported on the level of Pods.
+
+`namespace`::
+The same as with the zone, the recipient of the invoice should be able to tell in witch namespace the workload was/is deployed.
+
+`organization`::
+This is required to link the metric to the entity the invoice will be sent to.

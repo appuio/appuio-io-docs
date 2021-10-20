@@ -1,0 +1,33 @@
+= Metering of resource usage
+
+[abstract]
+--
+{product} is invoiced based on effective resource usage.
+Creating invoices based on that usage requires the means to collect data about the used resources.
+
+{product} will not take the responsibility of managing all of an invoice lifecycle.
+Instead, an adapter will be responsible to create invoices in an ERP or accounting system.
+It is then the responsibility of that ERP/accounting system to handle the remainder of the invoice lifecycle.
+--
+
+== System idea
+
+The metrics of interest are already being measured by the monitoring system of an {zone} which is built on top of Prometheus.
+The amount of metrics collected usually results in a short retention time (in the range of days to weeks).
+In addition, the storage engine of Prometheus is not meant to be use for long term storage.
+Also the invoicing adapter should be able to invoice all the usage from all the {zone}s.
+All of this calls for another system that collects, aggregates and stores those metrics.
+
+Since the source of all the metrics is Prometheus, the most logical choice is to pair it with https://thanos.io/[Thanos^].
+It provides a collection of tools to solve different use cases that Prometheus can not solve on its own.
+One of those cases is storing metrics on a different system for long term storage.
+
+A second source of input is a collection of metadata.
+That data allows to create the link between the metrics and their labels to its corresponding objects in the ERP/accounting system.
+It also provides different rate plans and where they apply.
+
+On the output side, we have an adapter to the ERP/accounting system.
+Its purpose is to query the metrics and the metadata and create the corresponding invoices from it.
+Those invoices then gets created within the ERP/accounting system.
+
+image::system/metering-invoicing.drawio.svg[]
