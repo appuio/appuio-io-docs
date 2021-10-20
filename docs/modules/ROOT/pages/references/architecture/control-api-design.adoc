@@ -70,6 +70,7 @@ To circumvent the current limitation of Kubernetes to show filtered lists of clu
 
 The dynamic filter works through the list of namespaces which represent an organization and checks if the subject has access to the namespace.
 
+Consider a user-generated `Organization`:
 [source,yaml]
 ----
 apiVersion: appuio.io/v1
@@ -80,6 +81,7 @@ spec:
   displayName: Acme Corp.
 ----
 
+The API server would then create a `Namespace` with following spec:
 [source,yaml]
 ----
 apiVersion: v1
