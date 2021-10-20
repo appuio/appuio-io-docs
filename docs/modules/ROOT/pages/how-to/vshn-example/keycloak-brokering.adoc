@@ -106,10 +106,13 @@ Name = import-groups
 Sync Mode Override = inherit
 Mapper Type = Claim to Group
 Claim = groups
-Contains text = <1>
+Match patterns = [ "VSHN openshiftroot" , "Cust\s.*" ] (insert patterns without quotes) <1>
 Create groups if not exists = True
+Lowercase names = True
+Trime whitespaces = True
+Trim Prefix = Cust\s
 ----
-<1> Enter the group name if you only want to sync a certain group
+<1> Only the groups matching one of these patterns are to be synced.
 
 . Add a "Claim to Attribute" mapper to the identity broker via the "Mappers" tab
 +
@@ -121,7 +124,7 @@ Mapper Type = Claim to Attribute
 Claim = groups
 Target attribute = appuio.io/default-organization
 Overwrite existing attribute value = false
-Ignore entries pattern = [ ^Service.* , ^VSHN\s.* ]
+Ignore entries pattern = [ "^Service.*" , "^VSHN\s.*" ] (insert patterns without quotes)
 Lowercase names = True
 Trim whitespaces = True
 Trim prefix = Cust\s
