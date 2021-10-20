@@ -4,6 +4,47 @@ This guide describes the steps required to turn an OpenShift 4 cluster into an {
 
 NOTE: VSHN employees can refer to xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] for an easier setup.
 
+== Configure openshift4-authentication
+
+[NOTE]
+====
+VSHN employees can follow xref:how-to/vshn-example/activate-zone.adoc[this how-to] instead.
+====
+
+. After adding the cluster as a new client to {idp}, add the client secret to Vault.
+  The value is being displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  openshift4_authentication:
+    secrets:
+      appuio-cloud-keycloak:
+        clientSecret: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak/clientSecret}' <1>
+
+    identityProviders:
+      appuio_keycloak:
+        name: APPUiO-Cloud
+        type: OpenID
+        mappingMethod: add
+        openID:
+          issuer: https://id.appuio.cloud/auth/realms/appuio-cloud
+          clientID: ${cluster:name}
+          clientSecret:
+            name: appuio-cloud-keycloak
+          claims: <2>
+            preferredUsername:
+              - preferred_username
+            name:
+              - name
+            email:
+              - email
+----
+<1> The Vault path for client secret
+<2> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+
 == Configure group-sync-operator
 
 The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator] is required to sync Keycloak groups to each {zone}.
