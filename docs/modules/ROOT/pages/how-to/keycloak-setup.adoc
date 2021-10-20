@@ -13,7 +13,6 @@ Replace IDs and URLs as needed for your setup.
 
 * `oc` version 4.8 or above
 * working Commodore setup
-* SMTP server for sending out emails from Keycloak
 
 == Configure component-keycloak
 
@@ -67,6 +66,8 @@ parameters:
             chmod:
               enabled: false
 ----
++
+NOTE: VSHN employees can refer to xref for a simpler step.
 
 . Compile and push the cluster catalog
 . Wait for Keycloak to start up and visit https://id.appuio.cloud.
@@ -98,18 +99,6 @@ Base URL = https://console.apps.cluster-id.tld/
 <1> For each enabled {zone} there shall be its own client using the cluster ID as name.
 
 . Configure the browser login flow for the client as described in xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
-
-. Configure outgoing email settings in the realm
-+
-[source]
-----
-Host = mxout1.corp.vshn.net
-Port = 25
-From Display Name = APPUiO Cloud
-From = noreply@id.appuio.cloud
-Envelope From = tech@vshn.net
-Enable StartTLS = true
-----
 
 . Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
 

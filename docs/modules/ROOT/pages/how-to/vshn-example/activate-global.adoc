@@ -1,0 +1,32 @@
+= Activate {global} Environment
+
+NOTE: This guide is targeted at VSHN employees.
+
+== Prerequisites
+
+* working Commodore setup
+* SMTP server for sending out emails from Keycloak
+
+== Configure Cluster
+
+. Add the Commodore class to your cluster:
++
+[source,yaml]
+----
+classes:
+  - global.apps.appuio-cloud-global
+----
+
+== Configure Keycloak
+
+. Configure outgoing email settings in "appuio-cloud (realm) > Realm Settings > Email".
++
+[source]
+----
+Host = mxout1.corp.vshn.net
+Port = 25
+From Display Name = APPUiO Cloud
+From = noreply@id.appuio.cloud
+Envelope From = tech@vshn.net
+Enable StartTLS = true
+----
