@@ -2,7 +2,60 @@
 
 This guide describes the steps required to turn an OpenShift 4 cluster into an {zone}.
 
-NOTE: VSHN employees can refer to xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] for an easier setup.
+== Configure Keycloak
+
+. Create a new Keycloak Client with the following settings (leave the others at default value)
++
+[source]
+----
+Client ID = c-cluster-id <1>
+Access Type = confidential
+Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
+Base URL = https://console.apps.cluster-id.tld/
+
+[ Authentication Flow Overrides ]
+Browser Flow = browser rbac <2>
+----
+<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
+<2> See xref:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
+
+NOTE: VSHN employees can now follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
+
+== Configure openshift4-authentication
+
+. After adding the cluster as a new client to {idp}, add the client secret to Vault.
+  The value is being displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
+
+. Add component configuration
++
+[source,yaml,subs="attributes+"]
+----
+parameters:
+  openshift4_authentication:
+    secrets:
+      appuio-cloud-keycloak:
+        clientSecret: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak/clientSecret}' <1>
+
+    identityProviders:
+      appuio_keycloak:
+        name: APPUiO-Cloud
+        type: OpenID
+        mappingMethod: add
+        openID:
+          issuer: https://id.appuio.cloud/auth/realms/appuio-cloud
+          clientID: ${cluster:name}
+          clientSecret:
+            name: appuio-cloud-keycloak
+          claims: <2>
+            preferredUsername:
+              - preferred_username
+            name:
+              - name
+            email:
+              - email
+----
+<1> The Vault path for client secret
+<2> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
 
 == Configure group-sync-operator
 

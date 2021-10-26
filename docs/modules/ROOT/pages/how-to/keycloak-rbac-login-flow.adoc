@@ -54,15 +54,3 @@ Provider = Deny access
 ----
 
 . Mark both executions in the "Check User Roles" sub-flow as `REQUIRED`.
-
-== Configure all {zone} clients to use custom browser login flow
-
-Configure the "Browser Rbac" flow as the browser login flow for each {zone} {idp} client.
-
-. Go to "Clients > zone-client > Authentication Flow Overrides"
-. Set the browser flow to "Browser Rbac"
-+
-[source]
-----
-Browser Flow = browser rbac
-----

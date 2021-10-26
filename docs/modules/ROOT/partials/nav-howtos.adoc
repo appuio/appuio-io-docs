@@ -13,3 +13,4 @@
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak Brokering]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Configure role-based access control for brokered users]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[Activate Zone]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-global.adoc[Activate Global Environment]

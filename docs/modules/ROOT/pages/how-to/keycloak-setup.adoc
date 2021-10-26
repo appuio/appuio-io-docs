@@ -13,13 +13,18 @@ Replace IDs and URLs as needed for your setup.
 
 * `oc` version 4.8 or above
 * working Commodore setup
-* SMTP server for sending out emails from Keycloak
 
 == Configure component-keycloak
 
 . Login to the cluster as cluster admin with `oc`
 
 . Add component configuration to Project Syn cluster catalog
++
+[NOTE]
+====
+VSHN employees can refer to xref:how-to/vshn-example/activate-global.adoc#configure-cluster[this step] for a shortcut.
+Be sure to come back here for the next steps.
+====
 +
 [source,yaml,subs="attributes+"]
 ----
@@ -73,6 +78,8 @@ parameters:
 
 == Configure Keycloak
 
+These steps configure Keycloak on a global level and have to be done once per {product} environment.
+
 . Extract the password from the `keycloak-admin-user` secret.
 +
 [source,bash]
@@ -86,70 +93,13 @@ oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o 
 
 . Create a realm role called `appuio-zone-access`
 
-. Create a new Keycloak Client with the following settings (leave the others at default value)
-+
-[source]
-----
-Client ID = c-cluster-id <1>
-Access Type = confidential
-Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
-Base URL = https://console.apps.cluster-id.tld/
-----
-<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
-
-. Configure the browser login flow for the client as described in xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
-
-. Configure outgoing email settings in the realm
-+
-[source]
-----
-Host = mxout1.corp.vshn.net
-Port = 25
-From Display Name = APPUiO Cloud
-From = noreply@id.appuio.cloud
-Envelope From = tech@vshn.net
-Enable StartTLS = true
-----
-
-. Allow the cluster's egress IP address(es) to relay mails on the configured SMTP host
-
 . Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
-
-== Configure openshift4-authentication
-
-. Add the client secret to Vault.
-  The value is being displayed in a grey box in the "Credentials" tab from the Keycloak client settings.
-
-. Add component configuration
 +
-[source,yaml,subs="attributes+"]
-----
-parameters:
-  openshift4_authentication:
-    secrets:
-      appuio-cloud-keycloak:
-        clientSecret: '?{vaultkv:${cluster:tenant}/${cluster:name}/oidc/appuio-keycloak/clientSecret}' <1>
+[NOTE]
+====
+VSHN employees can refer to xref:how-to/vshn-example/activate-global.adoc#_configure_keycloak[this step] instead.
+====
 
-    identityProviders:
-      appuio_keycloak:
-        name: APPUiO-Cloud
-        type: OpenID
-        mappingMethod: add
-        openID:
-          issuer: https://id.appuio.cloud/auth/realms/appuio-cloud
-          clientID: ${cluster:name}
-          clientSecret:
-            name: appuio-cloud-keycloak
-          claims: <2>
-            preferredUsername:
-              - preferred_username
-            name:
-              - name
-            email:
-              - email
-----
-<1> The Vault path for client secret
-<2> See also xref:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
+. Configure the browser login flow as described in xref:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
 
-. Compile and push the cluster catalog
-. Wait for Argo CD to sync the config
+For each {zone} to be added, follow the dedicated xref:how-to/zone-setup.adoc[Add a Cluster to {product}] guide.
