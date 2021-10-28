@@ -1,0 +1,14 @@
+= Functional Requirements to Zones
+
+This page is mainly targeting the Control API.
+
+== List Zones
+
+> As a xref:references/glossary.adoc#_user[User] I want to see all available {zone}s so that I know of them.
+
+The listing should include:
+
+* URL of OpenShift web console
+* API URL
+* Kubernetes version
+* OpenShift version
