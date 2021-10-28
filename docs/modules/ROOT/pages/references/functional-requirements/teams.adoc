@@ -1,0 +1,33 @@
+= Functional Requirements to Teams
+
+== Create a Team
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] I want to be able to create a team in my organization so that I can group users under it.
+
+== List Teams
+
+> As a xref:references/glossary.adoc#_user[User] I want to see all teams of my organization and the members of them so that I know of them.
+
+== Update a Team
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] I want to update a team detail so that I can adapt to changes.
+
+== Delete a Team
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] I want to delete a team in my organization which isn't in use anymore so that I can get rid of dangling data.
+
+== Add User to a Team
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] I want to add a user which is already member of my organization to a team so that I can group users together.
+
+Only users which are member of the organization can be added to a Team (similar to how GitHub does it).
+
+== Remove a User from a Team
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] I want to remove a user which is member of a team in my organization so that I can keep Teams tidy.
+
+== Team as Kubernetes RBAC Subject
+
+> As a xref:references/glossary.adoc#_developer[Developer] I want to use a team as a subject for granting access via a rolebinding in a namespace so that I don't have to assign permissions to individual users.
+
+This is reflected via a `Group` in OpenShift.
