@@ -29,6 +29,9 @@ Specifically, this consists of:
 * API that users write to with various clients (for example frontend or CLI) and thus configure their organizations
 * API that users read with various clients that is usually the result of {product} components (for example read-only access to invoices)
 
+=== {product} Portal
+Web application which exposes the functionality of the Control API in a graphical way.
+
 === Adapter API
 A subset of Control API that is specifically targeted for Adapters.
 This specification may not only be technical, but may also contain a "behavioral contract" that is in documentation only.
