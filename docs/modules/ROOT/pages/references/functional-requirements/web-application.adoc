@@ -21,3 +21,7 @@ If a subject isn't able to create a resource, make it clear by not showing a `Cr
 > As a xref:references/glossary.adoc#_user[User] I want to only login once to the {product} ecosystem so that I can use strong authentication methods and still get a good user experience.
 
 Login to the web application happens via the {idp} and the same authentication must be used to connect to the Control API.
+
+== Personal Settings: Default Organization
+
+> As a xref:references/glossary.adoc#_user[User] I want to configure my default organization so that I don't have to specify the organization when creating a namespace or project.
