@@ -1,48 +1,44 @@
 = Glossary
 
-User::
-A human that interacts with {product}.
+== General
 
-Developer::
-A user which interacts with {product} (the Kubernetes API) in a specified namespace.
-
-Organization Owner::
-A user which interacts with {product} (the Kubernetes API).
-
-Organization::
+=== Organization
 A unit that groups together Users, Teams and Namespaces.
 It's the entity that owns the associated resources and the business connection.
 Billing is done on this level.
 
-Team::
+=== Team
 A group of users.
 Always belongs to exactly one organization.
 
-Role::
-A collection of permissions a subject has within an object (subjects would be User and Team, objects would be Organization, Team and Namespace)
+=== Role
+A collection of permissions a subject has within an object (subjects would be User and Team, objects would be Organization, Team and Namespace).
 
-Namespace::
-A Kubernetes namespace (in OpenShift also an object type "Project")
+=== Namespace
+A Kubernetes namespace (in OpenShift also an object type "Project").
 
-Zone::
+== {product} specific
+
+=== Zone
 A single OpenShift cluster that is part of an {product} offering.
 
-Control API::
+=== Control API
 An API endpoint that exposes certain {product} features to users.
 Specifically, this consists of:
+
 * API that users write to with various clients (for example frontend or CLI) and thus configure their organizations
 * API that users read with various clients that is usually the result of {product} components (for example read-only access to invoices)
 
-Adapter API::
+=== Adapter API
 A subset of Control API that is specifically targeted for Adapters.
 This specification may not only be technical, but may also contain a "behavioral contract" that is in documentation only.
 It basically defines how Adapters should behave and interact with {product}.
-+
+
 TIP: This term is introduced to better distinguish between {product} internal API and API interacting with Adapters.
 
-Adapter::
+=== Adapter
 A component or system that is foreign to the core of {product}, but implements the functionalities through a Adapter API that completes {product}.
-+
+
 [example]
 ====
 {product} itself doesn't contain an invoicing system.
@@ -50,11 +46,29 @@ Generating and maintaining the lifecycle of invoices is the task of an invoicing
 Since there are countless systems already available, {product} will only define a Adapter API but not otherwise enforce resellers to use a certain ERP software.
 ====
 
-Admin::
-Role
+== Personas
 
-Editor::
-Role
+=== User
+A human that interacts with {product}.
 
-Viewer::
-Role
+=== Developer
+A user which interacts with {product} (the Kubernetes API) in a specified namespace.
+
+=== Organization Owner
+A user which interacts with {product} (the Kubernetes API).
+
+== Roles
+
+OpenShift default roles are documented in the https://docs.openshift.com/container-platform/4.9/authentication/using-rbac.html#default-roles_using-rbac[upstream documentation].
+
+=== Admin
+[quote, OpenShift default role]
+A project manager. If used in a local binding, an admin has rights to view any resource in the project and modify any resource in the project except for quota.
+
+=== Editor
+[quote, OpenShift default role]
+> A user that can modify most objects in a project but does not have the power to view or modify roles or bindings.
+
+=== Viewer
+[quote, OpenShift default role]
+> A user who cannot make any modifications, but can see most objects in a project. They cannot view or modify roles or bindings.
