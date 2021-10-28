@@ -12,6 +12,8 @@
 ** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage]
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[Metrics of interest]
 
+* xref:appuio-cloud:ROOT:references/functional-requirements.adoc[Functional Requirements]
+
 * Quality Requirements
 
 ** Functional
