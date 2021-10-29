@@ -1,3 +1,19 @@
 = {controlapi}: Team
 
 TIP: This resource implements the xref:references/functional-requirements.adoc#_feature_manage_teams["Manage Teams"] features.
+
+== Object
+
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: Team
+metadata:
+  name: myteam1
+  namespace: org-acme-corp
+spec:
+  userRefs: <1>
+  - max-muster
+  - demo-user
+----
+<1> References to one or more `User` objects

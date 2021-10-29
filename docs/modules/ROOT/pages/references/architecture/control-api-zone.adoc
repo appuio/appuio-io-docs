@@ -7,12 +7,12 @@ TIP: This resource implements the xref:references/functional-requirements.adoc#_
 [source,yaml]
 ----
 apiVersion: appuio.io/v1
-kind: AppuioZone
+kind: Zone
 metadata:
   name: cloudscale-lpg-0
 spec:
-  displayName: cloudscale.ch LPG 0
-status:
+  displayName: cloudscale.ch LPG 0 <1>
+status: <2>
   features:
     openshift-version: "4.8"
     kubernetes-version: "1.21"
@@ -20,3 +20,5 @@ status:
   console-url: https://console.cloudscale-lpg-0.appuio.cloud/
   kubernetes-api-url: https://api.cloudscale-lpg-0.appuio.cloud:6443/
 ----
+<1> {product} instance specific name
+<2> Provided by adapter, e.g. by https://syn.tools/[Project Syn Lieutenant]

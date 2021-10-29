@@ -64,6 +64,10 @@ Organization:: Kubernetes namespaced resource.
 |Global
 |Virtual (represents filtered `Namespace` resources)
 
+|xref:references/architecture/control-api-user.adoc[User]
+|Global
+|CRD
+
 |xref:references/architecture/control-api-team.adoc[Team]
 |Organization
 |CRD

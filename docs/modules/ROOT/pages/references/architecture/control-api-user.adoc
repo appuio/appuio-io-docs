@@ -1,0 +1,16 @@
+= {controlapi}: User
+
+TIP: This resource implements the xref:references/functional-requirements.adoc#_feature_personal_settings_per_user["Personal Settings per User"] feature.
+
+== Object
+
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: User
+metadata:
+  name: demo-max
+spec:
+  defaultOrganizationRef: acme-corp <1>
+----
+<1> Reference to an `Organization` object
