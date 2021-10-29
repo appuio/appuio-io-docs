@@ -12,11 +12,7 @@
 ** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage]
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[Metrics of interest]
 
-* Functional Requirements
-** xref:appuio-cloud:ROOT:references/functional-requirements/web-application.adoc[Web Application]
-** xref:appuio-cloud:ROOT:references/functional-requirements/organizations.adoc[Organizations]
-** xref:appuio-cloud:ROOT:references/functional-requirements/teams.adoc[Teams]
-** xref:appuio-cloud:ROOT:references/functional-requirements/zones.adoc[Zones]
+* xref:appuio-cloud:ROOT:references/functional-requirements.adoc[Functional Requirements]
 
 * Quality Requirements
 
