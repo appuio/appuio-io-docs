@@ -46,11 +46,8 @@ _Implementation: xref:references/architecture/control-api-org.adoc[APPUiO Contro
 * Add User to Team
 * Remove User from Team
 
-<<<<<<< HEAD
 _Implementation: xref:references/architecture/control-api-team.adoc[APPUiO Control API: Team]._
 
-=======
->>>>>>> functional-req-generic
 == Feature: Zones
 
 > As a xref:references/glossary.adoc#_user[User] +
@@ -61,11 +58,8 @@ _Implementation: xref:references/architecture/control-api-team.adoc[APPUiO Contr
 
 * List {zone}s
 
-<<<<<<< HEAD
 _Implementation: xref:references/architecture/control-api-zone.adoc[APPUiO Control API: Zone]._
 
-=======
->>>>>>> functional-req-generic
 == Feature: Personal Settings per User
 
 > As a xref:references/glossary.adoc#_user[User] +
@@ -76,19 +70,11 @@ _Implementation: xref:references/architecture/control-api-zone.adoc[APPUiO Contr
 
 * Default Organization
 
-<<<<<<< HEAD
-== Feature: Look and Feel
-
-> As a xref:references/glossary.adoc#_user[User] +
-> I want to have a familiar feeling when using the web application
-> So that I can start using it right away and feel home
-=======
 == Feature: Branding
 
 > As an xref:references/glossary.adoc#_instance_owner[Instance Owner] +
 > I want to provide a familiar feeling to the user when using the web application
 > So that I can have a consistent feeling throughout my offering
->>>>>>> functional-req-generic
 
 *Scenarios*
 
