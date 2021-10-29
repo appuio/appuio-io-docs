@@ -5,7 +5,7 @@
 
 This guide describes the steps required to configure the {idp} so that claims from a foreign Keycloak can be used as roles.
 In this guide, we use the {foreign-idp-display-name} as an example.
-The example shows how to map groups `VSHN openshiftroot` and `Service APPUiOCloud` to roles in {idp}.
+The example shows how to map groups `VSHN employee` and `Service APPUiOCloud` to roles in {idp}.
 This guide assumes that you've already configured the xref:how-to/vshn-example/keycloak-brokering.adoc[brokering] itself.
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
@@ -43,14 +43,14 @@ For our example, we create roles `vshneer-zone-access` and `appuio-zone-access`.
 == Configure Identity Provider
 
 . Go to {foreign-idp-display-name} in "Identity Providers" and select tab "Mappers"
-. Create a new mapper to map group `VSHN openshiftroot` to role `vshneer-zone-access` for users logging in via {foreign-host}.
+. Create a new mapper to map group `VSHN employee` to role `vshneer-zone-access` for users logging in via {foreign-host}.
 +
 [source]
 ----
 Name = vshneer-global-access
 Mapper type = Claim to Role
 Claim = groups
-Claim Value = VSHN openshiftroot
+Claim Value = VSHN employee
 Role = vshneer-zone-access
 ----
 
