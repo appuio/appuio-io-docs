@@ -1,0 +1,51 @@
+= {controlapi}: Organization
+
+TIP: This resource implements the xref:references/functional-requirements.adoc#_feature_manage_organizations["Manage Organizations"] features.
+
+`Organization` is a virtual resource and represents a filtered and formatted list of Kubernetes Namespaces with specific labels and annotations.
+
+To circumvent the current limitation of Kubernetes to show filtered lists of cluster-scoped resources based on access rights, the virtual object `Organization` represents an organization.
+
+== Object
+
+Consider a user-generated `Organization`:
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: Organization
+metadata:
+  name: acme-corp
+spec:
+  displayName: Acme Corp.
+----
+
+The API server would then create a `Namespace` with following spec:
+[source,yaml]
+----
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: org-acme-corp <1>
+  labels:
+    appuio.io/resource-type: organization <2>
+  annotations:
+    organization.appuio.io/displayName: Acme Corp. <3>
+----
+<1> Prefixed (`org`) name to circumvent possible name collision (e.g. if a company is called "kube-system")
+<2> Identify resource type, used by the API server to filter for namespace representing organizations
+<3> Reflected in the organization object as `spec.displayName`
+
+Working with organization-resources always happens via the `Organization` object, it's not meant to directly CRUD namespaces which represent an organization.
+
+== Resource filter
+
+The dynamic filter works through the list of namespaces which represent an organization and checks if the subject has access to the namespace.
+
+== RBAC rules
+
+These are `ClusterRole` which can be bound to a subject by either a `ClusterRoleBinding` or a namespaced `RoleBinding`:
+
+`org-view`:: Namespace scope RoleBinding to allow view access to an organization
+`org-admin`:: Namespace scope RoleBinding to allow admin access to an organization (update, delete)
+
+Creating organizations can be done by all authenticated users.

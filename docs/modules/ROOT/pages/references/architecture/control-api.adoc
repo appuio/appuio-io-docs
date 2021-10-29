@@ -38,3 +38,29 @@ There are several layers of authorization:
 * Kubernetes RBAC
 * Kyverno policies
 * Virtual resources with filtering
+
+== Resources
+
+[cols="1,1,2",options="header"]
+|===
+|Name
+|Scope
+|Type
+
+|xref:references/architecture/control-api-org.adoc[Organization]
+|Global
+|Virtual (represents filtered `Namespace` resources)
+
+|xref:references/architecture/control-api-team.adoc[Team]
+|Organization
+|CRD
+
+|xref:references/architecture/control-api-zone.adoc[Zone]
+|Global
+|CRD
+|===
+
+*Scopes*
+
+Global:: Kubernetes cluster global resource.
+Organization:: Kubernetes namespaced resource.
