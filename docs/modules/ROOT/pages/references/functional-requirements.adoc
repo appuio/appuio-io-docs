@@ -1,7 +1,7 @@
 = Functional Requirements
 
 This page discusses functional requirements.
-It currently mainly targets the Control API and the Web Application.
+It currently mainly targets the Control API and the {product} Portal.
 
 == Feature: Authentication
 
