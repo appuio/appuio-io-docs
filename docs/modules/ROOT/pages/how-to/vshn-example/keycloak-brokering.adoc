@@ -106,13 +106,17 @@ Name = import-groups
 Sync Mode Override = inherit
 Mapper Type = Claim to Group
 Claim = groups
-Match patterns = [ "VSHN openshiftroot" , "Cust\s.*" ] (insert patterns without quotes) <1>
+Match pattern = (VSHN (openshiftroot|employee)|Cust\s.*) <1>
 Create groups if not exists = True
-Lowercase names = True
-Trime whitespaces = True
-Trim Prefix = Cust\s
+Lowercase names = True <2>
+Trim whitespace = True <3>
+Trim Prefix = (Cust\s|\semployee) <4>
 ----
-<1> Only the groups matching one of these patterns are to be synced.
+<1> Only the groups matching this regex are synced.
+<2> Disable this option if you don't want to normalize the resulting groups with all lowercase names
+<3> Disable this option if you don't want to trim leading and trailing white space, and replace other white space with dashes
+<4> The first occurrence of this regex is removed from group names.
+This is executed before the "Lowercase names" and "Trim whitespace" options are applied.
 
 . Add a "Claim to Attribute" mapper to the identity broker via the "Mappers" tab
 +
@@ -124,8 +128,15 @@ Mapper Type = Claim to Attribute
 Claim = groups
 Target attribute = appuio.io/default-organization
 Overwrite existing attribute value = false
-Ignore entries pattern = [ "^Service.*" , "^VSHN\s.*" ] (insert patterns without quotes)
-Lowercase names = True
-Trim whitespaces = True
-Trim prefix = Cust\s
+Ignore entries pattern = <1>
+Search entries pattern = ^(Cust\s.*|VSHN employee) <2>
+Lowercase names = True <3>
+Trim whitespaces = True <3>
+Trim prefix = (Cust\s|\semployee) <3>
 ----
+<1> Groups matching this regex are ignored when configuring the target attribute.
+Left empty for the default configuration for VSHN.
+<2> Only groups matching this regex are considered to configure the target attribute.
+The "Ignore entries pattern" takes precedence over this pattern.
+<3> These fields work the same as the fields with the same names for the "Claim To Group" mapper.
+Make sure these fields are configured the same for the "Claim To Group" and "Claim To Attribute" mappers if you want to match attribute values to group names.
