@@ -1,1 +1,22 @@
 = {controlapi}: Zone
+
+TIP: This resource implements the xref:references/functional-requirements.adoc#_feature_zones["Manage Zones"] features.
+
+== Object
+
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: AppuioZone
+metadata:
+  name: cloudscale-lpg-0
+spec:
+  displayName: cloudscale.ch LPG 0
+status:
+  features:
+    openshift-version: "4.8"
+    kubernetes-version: "1.21"
+    sdn: OVN-Kubernetes
+  console-url: https://console.cloudscale-lpg-0.appuio.cloud/
+  kubernetes-api-url: https://api.cloudscale-lpg-0.appuio.cloud:6443/
+----

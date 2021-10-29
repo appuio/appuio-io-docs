@@ -1,1 +1,3 @@
 = {controlapi}: Team
+
+TIP: This resource implements the xref:references/functional-requirements.adoc#_feature_manage_teams["Manage Teams"] features.

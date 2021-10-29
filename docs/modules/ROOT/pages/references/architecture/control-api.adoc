@@ -39,6 +39,19 @@ There are several layers of authorization:
 * Kyverno policies
 * Virtual resources with filtering
 
+== Resource Scopes
+
+Resources on the Kubernetes API server can either be https://kubernetes.io/docs/reference/using-api/api-concepts/#standard-api-terminology[cluster scoped or namespace scoped].
+
+Each {controlapi} instance is represented by one Kubernetes API server instance.
+This allows us to leverage the scoping concept of the Kubernetes API server to reflect the scopes in the {product} domain.
+Also, by doing it that way, standard Kubernetes RBAC rules can be used for permission handling on an organization level.
+
+{global} resources are available on the Kubernetes global scope (no namespace) whereas organization level resources are namespace scoped.
+
+Global:: Kubernetes cluster global resource.
+Organization:: Kubernetes namespaced resource.
+
 == Resources
 
 [cols="1,1,2",options="header"]
@@ -59,8 +72,3 @@ There are several layers of authorization:
 |Global
 |CRD
 |===
-
-*Scopes*
-
-Global:: Kubernetes cluster global resource.
-Organization:: Kubernetes namespaced resource.
