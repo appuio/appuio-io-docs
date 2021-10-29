@@ -70,6 +70,8 @@ _Implementation: xref:references/architecture/control-api-zone.adoc[APPUiO Contr
 
 * Default Organization
 
+_Implementation: xref:references/architecture/control-api-user.adoc[APPUiO Control API: User]._
+
 == Feature: Branding
 
 > As an xref:references/glossary.adoc#_instance_owner[Instance Owner] +

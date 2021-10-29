@@ -19,8 +19,6 @@
 
 * xref:appuio-cloud:ROOT:references/functional-requirements.adoc[Functional Requirements]
 
-* xref:appuio-cloud:ROOT:references/functional-requirements.adoc[Functional Requirements]
-
 * Quality Requirements
 
 ** Functional
