@@ -29,6 +29,8 @@ It currently mainly targets the Control API and the {product} Portal.
 * Invite User to Organization
 * Join Organization
 
+_Implementation: xref:references/architecture/control-api-org.adoc[APPUiO Control API: Organization]._
+
 == Feature: Manage Teams
 
 > As an xref:references/glossary.adoc#_organization-owner[Organization Owner] +
@@ -44,6 +46,8 @@ It currently mainly targets the Control API and the {product} Portal.
 * Add User to Team
 * Remove User from Team
 
+_Implementation: xref:references/architecture/control-api-team.adoc[APPUiO Control API: Team]._
+
 == Feature: Zones
 
 > As a xref:references/glossary.adoc#_user[User] +
@@ -53,6 +57,8 @@ It currently mainly targets the Control API and the {product} Portal.
 *Scenarios*
 
 * List {zone}s
+
+_Implementation: xref:references/architecture/control-api-zone.adoc[APPUiO Control API: Zone]._
 
 == Feature: Personal Settings per User
 
