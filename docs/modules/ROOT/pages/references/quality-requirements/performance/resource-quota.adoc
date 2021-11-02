@@ -52,7 +52,7 @@ The workload is denied if they exceed one of the following Kubernetes resources:
 
 Rationale::
 * The {zone} shall be protected from abusive resource usage.
-* A quota prevents a developer (or a system account) from creating potentially billable workload (accidental or purposefully) that could lead to surprizes in the bill.
+* A quota prevents a developer (or a system account) from creating potentially billable workload (accidental or purposefully) that could lead to surprises in the bill.
 * Quotas slow down resource consumption on a cluster level and that gives time for cluster admins to do capacity planning, e.g. scale up a nearly-full {zone}.
 
 See also::
