@@ -16,39 +16,43 @@ kubectl
 
 Response::
 Workloads are denied if they exceed the resource limit.
-Workloads are the following Kubernetes resources:
+Workloads can comprise the following Kubernetes resources:
 * Pods
+* PersistentVolumeClaims
 * ConfigMaps
 * Secrets
-* PersistentVolumeClaims
 * Services
 * ImageStreams
 * ImageStreamTags
 
 Response measure::
-The workload is denied if they exceed one of the following Kubernetes resources:
-* CPU (all containers in all Pods)
-** Requests: 1000m
-** Limits: 1500m
-* Memory (all containers in all Pods)
-** Requests: 4Gi
-** Limits: 4Gi
-* Storage:
-** Request: 50 GiB (total)
-** PersistentVolumeClaims: 10
-** Ephemeral Storage (EmptyDir, writeable container layers)
-*** Requests: 250 MiB
-*** Limits: 500 MiB
-* ConfigMaps: 150
-* Secrets: 150
-* Services: 20
-* Pods: 45
-* ReplicationControllers: 100
-** LoadBalancers: 0
-** NodePorts: 0
-* Images
-** ImageStream Tags: 50 (per ImageStream)
-** ImageStreams: 20
+The workload is denied if they exceed any of the following resource quotas.
+
+* Count of
+** `NotTerminating` Pods
+** `Terminating` Pods
+** PersistentVolumeClaims
+** ConfigMaps
+** Secrets
+** Services
+** ImageStreams
+** ImageStreamTags
+* Cumulative CPU requests or limits
+** across all containers in all `NotTerminating` Pods
+** across all containers in all `Terminating` Pods
+* Cumulative memory requests or limits
+** across all containers in all `NotTerminating` Pods
+** across all containers in all `Terminating` Pods
+* Cumulative storage requests (across all PVCs)
+* Cumulative ephemeral storage consumption (EmptyDirs and writable container layers)
+
+As listed, pods are separated into `NotTerminating` and `Terminating`.
+A `Terminating` pod is a pod which has `.spec.activeDeadlineSeconds >= 0`.
+A `NotTerminating` pod is a pod which has `.spec.activeDeadlineSecons = nil`.
+
+See the Kubernetes docs on https://kubernetes.io/docs/concepts/policy/resource-quotas/#quota-scopes[Quota Scopes] for the official documentation about `NotTerminating` and `Terminating` pods.
+
+See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component] for the exact default quota values.
 
 Rationale::
 * The {zone} shall be protected from abusive resource usage.
