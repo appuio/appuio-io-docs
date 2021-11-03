@@ -1,0 +1,89 @@
+= Functional Requirements Targeting the Portal
+
+This page discusses functional requirements targeting the Control API and the {product} Portal.
+
+== Feature: Authentication
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to only login once to the {product} ecosystem +
+> So that I can use strong authentication methods and still get a good user experience
+
+*Scenarios*
+
+* Login
+* Logout
+
+== Feature: Manage Organizations
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to manage organizations +
+> So that I can group resources under it
+
+*Scenarios*
+
+* Create Organization
+* List Organizations
+* Edit Organization Metadata
+* Delete Organization
+* Invite User to Organization
+* Join Organization
+
+== Feature: Manage Teams
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] +
+> I want to manage teams in an organization +
+> So that I can group users under it for easier access management
+
+*Scenarios*
+
+* Create Team
+* List Teams
+* Edit Team
+* Delete Team
+* Invite User to Team with a specific Role
+
+== Feature: Zones
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to see a list of all available {zone}s +
+> So that I know the zone details
+
+*Scenarios*
+
+* List {zone}s
+
+== Feature: Personal Settings per User
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to configure my personal settings +
+> So that I can have my defaults configured to my liking
+
+*Scenarios*
+
+* Define or override default Organization when creating new Projects
+
+== Feature: Branding
+
+> As an xref:references/glossary.adoc#_instance_owner[Instance Owner] +
+> I want to provide a familiar feeling to the user when using the web application
+> So that I can have a consistent feeling throughout my offering
+
+*Scenarios*
+
+* Logo
+* Colors
+* Navigation
+* Naming
+
+== Feature: Permissions
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to only see what I can really do according to my permissions +
+> So that I don't get confused by actions which I'm not allowed to
+
+*Scenarios*
+
+* List resources
+* Create resources
+* Update resources
+* Delete resources
