@@ -27,12 +27,15 @@ This page discusses functional requirements targeting the Control API and the {p
 * Invite User to Organization
 * Join Organization
 
+[NOTE]
+====
 The "Delete Organization" isn't listed by intention as deleting an organization is a delicious task.
 A lot of sanity checks are needed:
 
 * No depending resources running / available anymore
 * No unpaid invoices
 * And more
+====
 
 == Feature: Manage Teams
 
