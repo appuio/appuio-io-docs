@@ -37,12 +37,10 @@ The workload is denied if they exceed any of the following resource quotas.
 ** Services
 ** ImageStreams
 ** ImageStreamTags
-* Cumulative CPU requests or limits
-** across all containers in all `NotTerminating` Pods
-** across all containers in all `Terminating` Pods
-* Cumulative memory requests or limits
-** across all containers in all `NotTerminating` Pods
-** across all containers in all `Terminating` Pods
+* Cumulative CPU requests or limits across all containers in all `NotTerminating` Pods
+* Cumulative CPU limits across all containers in all `Terminating` Pods
+* Cumulative memory requests or limits across all containers in all `NotTerminating` Pods
+* Cumulative memory limits across all containers in all `Terminating` Pods
 * Cumulative storage requests (across all PVCs)
 * Cumulative ephemeral storage consumption (EmptyDirs and writable container layers)
 
