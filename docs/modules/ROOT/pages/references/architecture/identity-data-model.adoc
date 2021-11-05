@@ -18,7 +18,7 @@ Organizations::
 Each {product} organization is represented by a group object in Keycloak.
 
 Teams::
-Each team of an {product} organization is represented by a group object in Keycloak.
+Each team of an {product} organization is implemented as a group object in Keycloak.
 A group object set below an organization group object in the group hierarchy becomes a team.
 
 == Data model in OpenShift
