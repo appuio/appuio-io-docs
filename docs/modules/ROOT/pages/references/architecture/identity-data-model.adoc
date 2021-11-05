@@ -17,14 +17,21 @@ Each {product} user is represented by a user object in Keycloak.
 Organizations::
 Each {product} organization is represented by a group object in Keycloak.
 
+Teams::
+Each team of an {product} organization is implemented as a group object in Keycloak.
+A group object set below an organization group object in the group hierarchy becomes a team.
+
 == Data model in OpenShift
 
 {product} users are represented as a pair of `User` and `Identity` objects in each OpenShift cluster ({zone}).
 These objects are created when a user first logs in on a OpenShift cluster.
 The user's Keycloak property `Username` is used to name the `User` object in each OpenShift cluster.
 
-{product} organizations are represented as `Group` objects in each OpenShift cluster.
+{product} organizations and their teams are represented as `Group` objects in each OpenShift cluster.
 The `Groups` are synchronized from Keycloak to all OpenShift clusters in regular intervals.
+The organization _CyberIgnite_ with team _NobleGoldfish_ has two `Groups`: `CyberIgnite` and `CyberIgnite+NobleGoldfish`.
 The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[group-sync-operator].
+
+To ensure `Groups` and their `Users` can't be overridden by external actors the separator between organisation and team `+` is forbidden in group names.
 
 Organization memberships are represented in each {zone} by adding the user's `User` object name to the organization's `Group` object.
