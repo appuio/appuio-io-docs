@@ -9,6 +9,7 @@ With Keycloak being the only IdP frontend for any {zone}, group memberships need
 Especially with brokered IdPs where the actual source of truth regarding group memberships of users is outside of {idp} this is a technical challenge around authorization that impacts the architecture.
 
 The problem ultimately asks the questions:
+
 * How does {idp} know which organization is privileged if the organization is brokered through another IdP?
 * How does {idp} determine if a user, whose login is brokered though another IdP, belongs to such an organization?
 
