@@ -4,6 +4,7 @@
 
 On a low-level we work with bytes.
 Representing bytes to a human isn't practical, therefor a unit prefix has to be used to make it better understandable.
+It also helps in various different aspects like product description, marketing, invoices and other places where a human reads it and wants to understand it.
 
 == Proposals
 
