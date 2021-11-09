@@ -1,0 +1,62 @@
+= Update Resource Limits of a Project
+
+This guide describes how to change the resource limits of a single Project in a {zone}.
+
+
+== Prerequisites
+
+* Administrator access to the {zone}
+
+== Change Resource Quota of a Namespace
+
+By default in a namespace there are three different `ResourceQuotas`.
+
+`organization-compute`::
+Limits for pods and their resource usage.
+
+`organization-compute-terminating`::
+Limits for terminating resources, such as jobs.
+
+`organization-objects`::
+Limits the number of objects, such as `configmaps` or `services`.
+
+You can update the defaults of any of these `ResourceQuotas` by setting an annotation on the `Namespace`.
+The annotation need to have the following structure
+
+[source]
+----
+resourcequota.appuio.io/<resourceQuotaName>.<resource>
+----
+
+The `resourceQuotaName` is the name of one of the three `ResourceQuotas` and `resource` is the specific field of the quota you want to update.
+
+[NOTE]
+====
+For resources containing a forward slash, you will need to substitute it for an underline.
+For example: `resourcequota.appuio.io/organization-objects.openshift.io_imagestreams: "40"`.
+====
+
+=== Examples
+  
+.Update the allowed number of pods in the namespace `restless-wave` to `100`
+[source,bash]
+----
+kubectl annotate namespace restless-wave \
+  resourcequota.appuio.cloud/organization-compute.pods=100
+----
+
+.Update the limit of CPU requests for terminating pods to `7`
+[source,bash]
+----
+kubectl annotate namespace restless-wave \
+  resourcequota.appuio.cloud/organization-compute-terminating.requests.cpu=7
+----
+
+.Update the limit of allwed `configmaps` to `300`
+[source,bash]
+----
+kubectl annotate namespace restless-wave \
+  resourcequota.appuio.cloud/organization-objects.count_configmaps=300
+----
+
+
