@@ -19,6 +19,9 @@ A Kubernetes namespace (in OpenShift also an object type "Project").
 
 == {product} specific
 
+=== {product} Instance
+An instance of an {product} installation, consisting of a {global} instance and a number of Zones.
+
 === Zone
 A single OpenShift cluster that is part of an {product} offering.
 
@@ -59,6 +62,13 @@ A user which interacts with {product} (the Kubernetes API) in a specified namesp
 
 === Organization Owner
 A user which interacts with {product} (the Kubernetes API).
+
+=== Instance Owner
+Owner of the particular {product} instance.
+
+=== Instance Admin
+Administrator of the particular {product} instance.
+On a {zone} it's the cluster admin, on the global level it's the admin.
 
 == Roles
 

@@ -1,0 +1,127 @@
+= {controlapi}: Organization
+
+TIP: This resource implements the xref:references/functional-requirements/portal.adoc#_feature_manage_organizations["Manage Organizations"] features.
+
+List operations on Kubernetes resources can not be filtered by RBAC, it's a binary operation:
+Resources can either be listed or not, there is no way to give access only to a sub-set.
+To circumvent this limitation, `Organization` is a virtual resource.
+
+The `Organization` resource represents a filtered and formatted list of standard Kubernetes `Namespace` resources which have specific labels and annotations.
+
+It is assumed that the `Organization` resource is used for all operations, the represented `Namespace` must not be directly manipulated.
+
+== Object
+
+.Virtual resource
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: Organization
+metadata:
+  name: acme-corp <1>
+  annotations:
+    organization.appuio.io/namespace: org-acme-corp <2>
+spec:
+  displayName: Acme Corp. <3>
+----
+Field mapping from the represented `Namespace` resource:
+
+<1> `metadata.labels[appuio.io/metadata.name]`
+<2> `metadata.name`
+<3> `metadata.annotations[organization.appuio.io/display-name]`
+
+An https://book.kubebuilder.io/reference/generating-crd.html#additional-printer-columns[additional printer column] can help to identify the associated namespace resource name.
+This is useful when working with organization-scoped objects which are available in the organization's namespace.
+
+.Original resource
+[source,yaml]
+----
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: org-acme-corp <1>
+  labels:
+    appuio.io/resource.type: organization <2>
+    appuio.io/metadata.name: acme-corp <3>
+  annotations:
+    organization.appuio.io/display-name: Acme Corp. <4>
+----
+<1> Resource name, prefixed with `org-` to circumvent possible name collision
+<2> Identify resource type, used by the API server to filter for namespaces representing organizations
+<3> `metadata.name` of the virtual `Organization` object
+<4> Reflected in the `Organization` object as `spec.displayName`
+
+== Labels and Annotations
+
+[cols="2,1,1,3",options="header"]
+|===
+|Name
+|Type
+|Resource
+|Description
+
+|`appuio.io/resource.type`
+|label
+|`v1/Namespace`
+|Identifies the resource type in the scope of the {controlapi}
+
+|`appuio.io/metadata.name`
+|label
+|`v1/Namespace`
+|`metadata.name` of the virtual resource
+
+|`organization.appuio.io/display-name`
+|annotation
+|`appuio.io/v1/Organization`
+|Display name of the organization
+
+|===
+
+== Resource filter
+
+The virtual resource is a filtered view of `Namespaces`.
+The filter uses the following heuristic:
+
+* API version: `v1`
+* Kind: `Namespace`
+* Label: `appuio.io/resource-type=organization`
+* Subject is bound to one of the defined `ClusterRole` resources.
+
+== RBAC and Cluster roles
+
+These are `ClusterRole` resources which are bound to a subject by a namespaced `RoleBinding`:
+
+`org-view`:: View (read only) access to an organization
+`org-admin`:: Admin (read / write) access to an organization
+
+By default, creating organizations can be done by all authenticated users.
+
+== Organization Membership
+
+All members of an organization are configured in an `OrganizationMembers` resource.
+
+.CRD based
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: OrganizationMembers
+metadata:
+  name: acme-corp-members
+  namespace: org-acme-corp
+spec:
+  userRefs: <1>
+  - id: bec0d928-2ae2-4cec-94a0-5f72f12b8b39
+  - username: peter.muster
+status:
+  resolvedUserRefs: <2>
+  - id: bec0d928-2ae2-4cec-94a0-5f72f12b8b39
+    username: kate.demo
+  - id: 508a9160-977c-4c57-963f-c7b511c4ecc5
+    username: peter.muster
+----
+<1> References to one or more xref:references/architecture/control-api-user.adoc[`User`] resource. +
+    Only one of the two parameters are allowed:
+
+    * `id` must match `metadata.name` of an existing `User` resource
+    * `username` must match `spec.username` from an existing `User` resource
+<2> This is resolved by the xref:explanation/system/details-adapters.adoc[adapter]
