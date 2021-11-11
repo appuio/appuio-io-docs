@@ -42,21 +42,21 @@ For example: `resourcequota.appuio.io/organization-objects.openshift.io_imagestr
 [source,bash]
 ----
 kubectl annotate namespace restless-wave \
-  resourcequota.appuio.cloud/organization-compute.pods=100
+  resourcequota.appuio.io/organization-compute.pods=100
 ----
 
 .Update the limit of CPU requests for terminating pods to `7`
 [source,bash]
 ----
 kubectl annotate namespace restless-wave \
-  resourcequota.appuio.cloud/organization-compute-terminating.requests.cpu=7
+  resourcequota.appuio.io/organization-compute-terminating.requests.cpu=7
 ----
 
 .Update the limit of allwed `configmaps` to `300`
 [source,bash]
 ----
 kubectl annotate namespace restless-wave \
-  resourcequota.appuio.cloud/organization-objects.count_configmaps=300
+  resourcequota.appuio.io/organization-objects.count_configmaps=300
 ----
 
 
