@@ -1,0 +1,48 @@
+= Override Namespace Quota
+
+This guide describes how a cluster admin can override the namespace/project quota for an organization in a single {zone}.
+
+== Prerequisites
+
+* Administrator access to the {zone}
+
+== Steps
+
+=== Method 1: Configure in cluster catalog
+
+This method uses the https://hub.syn.tools/appuio-cloud/references/parameters.html#_namespacequotaoverrides[component parameters] to generate and maintain the `ConfigMaps` for the overrides.
+
+. Configure component per {zone}:
++
+[source,yaml]
+----
+parameters:
+  appuio_cloud:
+    namespaceQuotaOverrides:
+      example-company: 50 <1>
+----
+<1> The organization `example-company` can now have 50 namespaces
+
+. Compile and push the cluster catalog
+
+NOTE: ArgoCD will overwrite any existing `ConfigMaps` that may have been created manually.
+
+=== Method 2: Create ConfigMap manually
+
+The override is active as soon as you create a `ConfigMap` for the organization.
+
+[source,yaml]
+----
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: appuio-cloud <1>
+  name: override-example-company <2>
+data:
+  namespaceQuota: '50' <3>
+----
+<1> The namespace in which the component is installed.
+<2> The name follows the pattern `override-?` where `?` is the organization name as defined in `appuio.io/organization` annotation.
+<3> Set the new quota (as a string).
+
+TIP: You can use `oc -n <namespace> create cm override-<org> --from-literal=namespaceQuota=50` to create an appropriate `ConfigMap` with a single command.
