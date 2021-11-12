@@ -14,6 +14,13 @@ metadata:
 EOF
 ```
 
+== Labels and Annotations
+
+Kubernetes, various controllers, and OpenShift use labels and annotations, such as `scheduler.alpha.kubernetes.io/node-selector`, on namespaces to manage internal state and some advanced config.
+We don't necessarily know the labels and annotations in advance. This makes denylists hard to implement.
+
+Allowed labels are thus explicitly tracked in an allowlist. `custom.appuio.io/*` was chosen as a prefix for user defined labels.
+
 == Related decisions
 
 * xref:explanation/decisions/kyverno-policy.adoc[Kyverno as policy engine]
