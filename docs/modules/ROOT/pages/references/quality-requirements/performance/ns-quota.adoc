@@ -6,23 +6,24 @@ Source::
 Developer
 
 Stimulus::
-Creates new Namespace in a Zone for the same organization
+Creates new `Namespace` in a {zone} for the same organization
 
 Environment::
 Any {zone}
 
 Artifact::
-kubectl
+kubectl, oc
 
 Response::
-Namespace creation fails with error message
+`Namespace` or `Project` creation fails with error message
 
 Response measure::
-Maximum 10 Namespaces are allowed
+The workload is denied if they exceed the configured quota.
+See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component] for the exact default quota values.
 
 Rationale::
 * The {zone} shall be protected from abusive resource usage.
-* Having a limit of the amount of Namespaces that can be created per organization per {zone} slows down resource consumption that allows better capacity planning.
+* Having a limit of the amount of `Namespaces` that can be created per organization per {zone} slows down resource consumption that allows better capacity planning.
 
 See also::
 * xref:references/quality-requirements/performance/resource-quota.adoc[Resource limit per Namespace]
