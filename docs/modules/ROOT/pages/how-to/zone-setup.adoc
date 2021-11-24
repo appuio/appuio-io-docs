@@ -117,3 +117,63 @@ parameters:
 
 . Compile and push the cluster catalog
 . Wait for Argo CD to sync the config
+
+== Configure metering metrics collection
+
+We collect a small set of metrics which are used for metering from each zone.
+This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos Receiver] on each zone and configure the zone's cluster monitoring to send selected metrics to the Thanos Receiver via Prometheus's remote write feature.
+
+. Create an S3 bucket which can be accessed using the same credentials as the cluster's registry bucket.
+Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
+
+. Add configuration
++
+[source,yaml]
+----
+applications:
+  - thanos
+parameters:
+  openshift4_monitoring:
+    configs:
+      prometheusK8s:
+        remoteWrite:
+          - name: appuio-metering
+            url: http://thanos-receive.syn-thanos.svc:19291/api/v1/receive
+            writeRelabelConfigs:
+              - sourceLabels: ['__name__']
+                regex: '(container_memory_usage_bytes|kube_pod_container_resource_requests|kube_persistentvolumeclaim_resource_requests_storage_bytes)' <1>
+                action: keep
+
+  thanos:
+    cluster_kubernetes_version: '${dynamic_facts:kubernetesVersion:major}.${dynamic_facts:kubernetesVersion:minor}' <2>
+    commonConfig:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ssd
+      # Override default security context for all components
+      securityContext: {}
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: '${cluster:name}-appuio-metering' <3>
+        endpoint: objects.lpg.cloudscale.ch <4>
+        region: lpg <4>
+        access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_access_key}' <5>
+        secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_secret_key}' <5>
+    query:
+      enabled: false # we don't need the querier on the zones
+    receive:
+      enabled: true
+      replicas: 2
+----
+<1> The set of metrics to collect (as an RE2 regex)
+<2> The cluster's Kubernetes version.
+The example makes use of the `kubernetesVersion` dynamic fact reported by Steward on the cluster.
+<3> The name of the bucket created in the previous step
+<4> The S3 endpoint and region for the bucket
+Adjust for zones which are not on cloudscale.ch in region LPG.
+<5> The S3 credentials for the bucket.
+Adjust for zones which are not on cloudscale.ch
+
+. Compile and push the cluster catalog
+. Wait for ArgoCD to sync the changes
