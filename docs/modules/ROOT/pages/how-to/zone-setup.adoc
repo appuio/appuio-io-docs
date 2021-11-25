@@ -120,13 +120,13 @@ parameters:
 
 == Configure metering metrics collection
 
-We collect a small set of metrics which are used for metering from each zone.
-This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos Receiver] on each zone and configure the zone's cluster monitoring to send selected metrics to the Thanos Receiver via Prometheus's remote write feature.
+We collect a small set of metrics from each {zone} for xref:references/architecture/metering.adoc[metering].
+This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos Receiver] on each zone and configuring the zone's cluster monitoring to send selected metrics to the Thanos Receiver via Prometheus's remote write feature.
 
 . Create an S3 bucket which can be accessed using the same credentials as the cluster's registry bucket.
 Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
 
-. Add configuration
+. Add configuration for components `openshift4-monitoring` and `thanos`
 +
 [source,yaml]
 ----
@@ -150,17 +150,17 @@ parameters:
     commonConfig:
       volumeClaimTemplate:
         spec:
-          storageClassName: ssd
+          storageClassName: ssd <3>
       # Override default security context for all components
       securityContext: {}
     objectStorageConfig:
       type: S3
       config:
-        bucket: '${cluster:name}-appuio-metering' <3>
-        endpoint: objects.lpg.cloudscale.ch <4>
-        region: lpg <4>
-        access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_access_key}' <5>
-        secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_secret_key}' <5>
+        bucket: '${cluster:name}-appuio-metering' <4>
+        endpoint: objects.lpg.cloudscale.ch <5>
+        region: lpg <5>
+        access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_access_key}' <6>
+        secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_secret_key}' <6>
     query:
       enabled: false # we don't need the querier on the zones
     receive:
@@ -170,11 +170,13 @@ parameters:
 <1> The set of metrics to collect (as an RE2 regex)
 <2> The cluster's Kubernetes version.
 The example makes use of the `kubernetesVersion` dynamic fact reported by Steward on the cluster.
-<3> The name of the bucket created in the previous step
-<4> The S3 endpoint and region for the bucket
+<3> The storage class to use for the PVCs for the Thanos Receiver.
+We highly recommend using a storage class suitable for database workloads.
+<4> The name of the bucket created in the previous step
+<5> The S3 endpoint and region for the bucket
 Adjust for zones which are not on cloudscale.ch in region LPG.
-<5> The S3 credentials for the bucket.
-Adjust for zones which are not on cloudscale.ch
+<6> The S3 credentials for the bucket.
+Adjust the secret references so they point to the Vault secret that's used for the cluster's registry bucket.
 
 . Compile and push the cluster catalog
 . Wait for ArgoCD to sync the changes
