@@ -140,3 +140,25 @@ Left empty for the default configuration for VSHN.
 The "Ignore entries pattern" takes precedence over this pattern.
 <3> These fields work the same as the fields with the same names for the "Claim To Group" mapper.
 Make sure these fields are configured the same for the "Claim To Group" and "Claim To Attribute" mappers if you want to match attribute values to group names.
+
+
+== (Optional) Configure as Default Identity Provider
+
+You have the option to set Keycloak as the default identity provider, which will make the {idp} automatically redirect to Keycloak.
+This can be helpful if you only have a single identity provider and no local users.
+
+
+. Select the desired realm in {idp}
+. Go to "Authentication > Flows"
+. Select flow "Browser"
++
+NOTE: If xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[role-based access control] was enabled, you might need to configure this for flow "Browser Rbac" instead.
+
+. Select "Actions > Config" on the "Identity Provider Redirector" sub-flow to configure a default identity provider
++
+[source]
+----
+Alias = indentity-provider-redirector-config
+Default Identity Provider = vshn <1>
+----
+<1> The alias of the configured identity provider
