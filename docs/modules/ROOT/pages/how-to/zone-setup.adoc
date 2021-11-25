@@ -139,43 +139,46 @@ parameters:
         remoteWrite:
           - name: appuio-metering
             url: http://thanos-receive.appuio-metering-thanos-receiver.svc:19291/api/v1/receive
+            headers:
+              THANOS-TENANT: '${cluster:name}' <1>
             writeRelabelConfigs:
               - sourceLabels: ['__name__']
-                regex: '(container_memory_usage_bytes|kube_pod_container_resource_requests|kube_persistentvolumeclaim_resource_requests_storage_bytes)' <1>
+                regex: '(container_memory_usage_bytes|kube_pod_container_resource_requests|kube_persistentvolumeclaim_resource_requests_storage_bytes)' <2>
                 action: keep
 
   appuio_metering_thanos_receiver:
     namespace: appuio-metering-thanos-receiver
-    cluster_kubernetes_version: '${dynamic_facts:kubernetesVersion:major}.${dynamic_facts:kubernetesVersion:minor}' <2>
+    cluster_kubernetes_version: '${dynamic_facts:kubernetesVersion:major}.${dynamic_facts:kubernetesVersion:minor}' <3>
     commonConfig:
       volumeClaimTemplate:
         spec:
-          storageClassName: ssd <3>
+          storageClassName: ssd <4>
       # Override default security context for all components
       securityContext: {}
     objectStorageConfig:
       type: S3
       config:
-        bucket: '${cluster:name}-appuio-metering' <4>
-        endpoint: objects.lpg.cloudscale.ch <5>
-        region: lpg <5>
-        access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_access_key}' <6>
-        secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_secret_key}' <6>
+        bucket: '${cluster:name}-appuio-metering' <5>
+        endpoint: objects.lpg.cloudscale.ch <6>
+        region: lpg <6>
+        access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_access_key}' <7>
+        secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/s3_secret_key}' <7>
     query:
       enabled: false # we don't need the querier on the zones
     receive:
       enabled: true
       replicas: 2
 ----
-<1> The set of metrics to collect (as an RE2 regex)
-<2> The cluster's Kubernetes version.
+<1> Send extra `THANOS-TENANT` header so that Thanos Receiver sets a useful `tenant_id` label on the received metrics.
+<2> The set of metrics to collect (as an RE2 regex)
+<3> The cluster's Kubernetes version.
 The example makes use of the `kubernetesVersion` dynamic fact reported by Steward on the cluster.
-<3> The storage class to use for the PVCs for the Thanos Receiver.
+<4> The storage class to use for the PVCs for the Thanos Receiver.
 We highly recommend using a storage class suitable for database workloads.
-<4> The name of the bucket created in the previous step
-<5> The S3 endpoint and region for the bucket
+<5> The name of the bucket created in the previous step
+<6> The S3 endpoint and region for the bucket
 Adjust for zones which are not on cloudscale.ch in region LPG.
-<6> The S3 credentials for the bucket.
+<7> The S3 credentials for the bucket.
 Adjust the secret references so they point to the Vault secret that's used for the cluster's registry bucket.
 
 . Compile and push the cluster catalog
