@@ -10,8 +10,8 @@ This guide describes the steps required to turn an OpenShift 4 cluster into an {
 ----
 Client ID = c-cluster-id <1>
 Access Type = confidential
-Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO-Cloud
-Base URL = https://console.apps.cluster-id.tld/
+Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO
+Base URL = https://console.cluster-id.tld/
 
 [ Authentication Flow Overrides ]
 Browser Flow = browser rbac <2>
