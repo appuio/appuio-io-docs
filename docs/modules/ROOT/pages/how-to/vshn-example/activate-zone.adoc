@@ -4,6 +4,9 @@ NOTE: This guide is targeted at VSHN employees.
 
 . Add the cluster as a new client to {idp} as described in xref:how-to/zone-setup.adoc#_configure_keycloak[Configure Keycloak].
 
+. Create an S3 bucket for xref:references/architecture/metering.adoc[APPUiO metering] which can be accessed using the same credentials as the cluster's registry bucket.
+Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
+
 . Add the Commodore class to your cluster:
 +
 [source,yaml]
