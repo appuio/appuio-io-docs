@@ -144,7 +144,7 @@ Make sure these fields are configured the same for the "Claim To Group" and "Cla
 
 == (Optional) Configure as Default Identity Provider
 
-You have the option to set Keycloak as the default identity provider, which will make the {idp} automatically redirect to Keycloak.
+You have the option to set the brokered Keycloak as the default identity provider, which will make the {idp} automatically redirect to brokered Keycloak.
 This can be helpful if you only have a single identity provider and no local users.
 
 
