@@ -131,20 +131,21 @@ Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
 [source,yaml]
 ----
 applications:
-  - thanos
+  - thanos as appuio-metering-thanos-receiver
 parameters:
   openshift4_monitoring:
     configs:
       prometheusK8s:
         remoteWrite:
           - name: appuio-metering
-            url: http://thanos-receive.syn-thanos.svc:19291/api/v1/receive
+            url: http://thanos-receive.appuio-metering-thanos-receiver.svc:19291/api/v1/receive
             writeRelabelConfigs:
               - sourceLabels: ['__name__']
                 regex: '(container_memory_usage_bytes|kube_pod_container_resource_requests|kube_persistentvolumeclaim_resource_requests_storage_bytes)' <1>
                 action: keep
 
-  thanos:
+  appuio_metering_thanos_receiver:
+    namespace: appuio-metering-thanos-receiver
     cluster_kubernetes_version: '${dynamic_facts:kubernetesVersion:major}.${dynamic_facts:kubernetesVersion:minor}' <2>
     commonConfig:
       volumeClaimTemplate:
