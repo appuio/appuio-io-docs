@@ -91,8 +91,8 @@ The filter uses the following heuristic:
 
 These are `ClusterRole` resources which are bound to a subject by a namespaced `RoleBinding`:
 
-`org-view`:: View (read only) access to an organization
-`org-admin`:: Admin (read / write) access to an organization
+`appuio-organization-viewer`:: View (read only) access to an organization
+`appuio-organization-admin`:: Admin (read / write) access to an organization
 
 By default, creating organizations can be done by all authenticated users.
 
@@ -106,7 +106,7 @@ All members of an organization are configured in an `OrganizationMembers` resour
 apiVersion: appuio.io/v1
 kind: OrganizationMembers
 metadata:
-  name: acme-corp-members
+  name: members
   namespace: org-acme-corp
 spec:
   userRefs: <1>
