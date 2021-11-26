@@ -28,9 +28,6 @@ It must be possible to integrate various different backend systems which impleme
 
 == Relevant requirements
 
-* xref:references/quality-requirements/maintainability/portal-api-modularity.adoc[Portal API Modularity]
-* xref:references/quality-requirements/reliability/portal-api-data-recoverability.adoc[Portal API Data Recoverability]
-* xref:references/quality-requirements/performance/portal-api-data-freshness.adoc[Portal API Data Freshness]
 * xref:references/quality-requirements/portability/adapters.adoc[Foreign Components as Adapters]
 
 == Proposals
