@@ -1,0 +1,70 @@
+= Install a cluster for {product}
+
+:managed-ocp4: APPUiO Managed OpenShift 4
+
+== Starting situation and prerequisites
+
+* See the {managed-ocp4} install guide for your cloud provider
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_starting_situation[cloudscale.ch]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_starting_situation[Exoscale]
+
+== Cluster installation
+
+. Register the new cluster in Lieutenant.
+
+. Configure the desired zone name
++
+[source,bash]
+----
+export APPUIO_CLOUD_ZONE="<zone name>" <1>
+----
+<1> Replace with the desired zone name
+
+. Work through the following sections of the install guide for your cloud provider
++
+* cloudscale.ch
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_configure_input[Configure input]
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_bootstrap_bucket[Set up S3 bucket for cluster bootstrap]
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_upload_coreos_image[Upload Red Hat CoreOS image]
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_set_vault_secrets[Set secrets in Vault]
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_configure_installer[Configure the OpenShift Installer]
++
+* Exoscale
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_configure_input[Configure input]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_create_iam_keys[Create restricted Exoscale IAM keys for the LBs and object storage]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_bootstrap_bucket[Set up S3 bucket for cluster bootstrap]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_upload_coreos_image[Upload Red Hat CoreOS image]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_set_vault_secrets[Set secrets in Vault]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_configure_installer[Configure the OpenShift Installer]
+
+
+. Adjust the installer config for {product}
++
+[source,bash]
+----
+yq -i eval -i ".metadata.name = \"${APPUIO_CLOUD_ZONE}\"" \
+  "${INSTALLER_DIR}/install-config.yaml"
+----
+
+. Work through the following sections of the install guide for your cloud provider
++
+* cloudscale.ch
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_run_installer[Run the OpenShift Installer]
+** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_terraform_cluster_config[Terraform Cluster Config]
+* Exoscale
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_run_installer[Run the OpenShift Installer]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_terraform_cluster_config[Terraform Cluster Config]
+
+. Adjust the Terraform cluster config
++
+[source,bash,subs="attributes+"]
+----
+yq -i eval '.classes += ["global.apps.appuio-cloud-zone"]'
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.cluster_name = \"${APPUIO_CLOUD_ZONE}\" \
+  "${CLUSTER_ID}.yml"
+----
+
+. Work through the rest of the install guide for your cloud provider
++
+* xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_compile_catalog[cloudscale.ch]
+* xref:oc4:ROOT:how-tos/exoscale/install.adoc#_compile_catalog[Exoscale]
