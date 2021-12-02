@@ -20,6 +20,7 @@
 * Functional Requirements
 
 ** xref:appuio-cloud:ROOT:references/functional-requirements/portal.adoc[Portal]
+** xref:appuio-cloud:ROOT:references/functional-requirements/billing.adoc[Billing and Reporting]
 
 * Quality Requirements
 

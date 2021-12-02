@@ -1,0 +1,68 @@
+= Billing and Reporting
+
+NOTE: This page is currently very VSHN specific and references the https://products.docs.vshn.ch/products/appuio/cloud/pricing.html[price model].
+
+== Example Invoice
+
+This is how an invoice for APPUiO Cloud would look like:
+
+[cols="4,1,1,1,1,1", options="header", stripes="hover"]
+|===
+|Description
+|Quantity
+|Unit of Measure
+|Unit Price
+|Discount
+|Total
+
+6+e|*Compute*
+
+a|
+*Zone*: cloudscale.ch LPG 2 +
+*Namespace*: my-cool-app-prod
+|234
+|MiB
+|0.001273
+|0 %
+|332
+
+a|
+*Zone*: Exoscale GVA 1 +
+*Namespace*: my-cool-app-test
+|234
+|MiB
+|0.001273
+|0 %
+|332
+
+6+e|*Persistent Storage (PVC)*
+
+|
+*Zone*: Exoscale GVA 1 +
+*Namespace*: my-cool-app-test
+|10
+|GiB
+|1
+|0 %
+|100
+
+|===
+
+Questions / Ideas:
+
+* Unclear atm how the units are actually billed / look like
+* Invoice: aggregated view. Attached a detailed report (Pod level, PVC level)
+
+Notes from discussion:
+
+* Pricelist needs to be versioned
+* Dashboard for end-user
+* Multi-step process to combine all the data -> ETL (Extract Transform Load)
+** Source data combined with business rules gives the result, business rules can change and be applied to the source data again
+* Transaction-based, every minute is one
+
+Input for data generation:
+
+* Measurement
+* CRM (Customer database)
+* Pricelist
