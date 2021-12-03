@@ -20,26 +20,32 @@ This is how an invoice for APPUiO Cloud would look like:
 a|
 *Zone*: cloudscale.ch LPG 2 +
 *Namespace*: my-cool-app-prod
-|234
-|MiB
+
+Total minutes: 43'200 minutes
+|14554.6875
+|GiB
 |0.001273
 |0 %
-|332
+|18.53
 
 a|
 *Zone*: Exoscale GVA 1 +
 *Namespace*: my-cool-app-test
-|234
-|MiB
+
+Total minutes: 43'200 minutes
+|14554.6875
+|GiB
 |0.001273
 |0 %
-|332
+|18.53
 
 6+e|*Persistent Storage (PVC)*
 
-|
+a|
 *Zone*: Exoscale GVA 1 +
 *Namespace*: my-cool-app-test
+
+Total minutes: 43'200 minutes
 |10
 |GiB
 |1
@@ -51,6 +57,7 @@ a|
 Questions / Ideas:
 
 * Unclear atm how the units are actually billed / look like
+* MiB might be an unreadable number, we convert it to GiB
 * Invoice: aggregated view. Attached a detailed report (Pod level, PVC level)
 
 Notes from discussion:
