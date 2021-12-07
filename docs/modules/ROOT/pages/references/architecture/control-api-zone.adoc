@@ -14,19 +14,19 @@ metadata:
 data:
   displayName: cloudscale.ch LPG 0
   features:
-    openshift-version: "4.8"
-    kubernetes-version: "1.21"
-    sdn: OVN-Kubernetes
+    openshiftVersion: "4.8"
+    kubernetesVersion: "1.21"
+    sdnPlugin: OVN-Kubernetes
   urls:
     console: https://console.cloudscale-lpg-0.appuio.cloud/
-    kubernetes-api: https://api.cloudscale-lpg-0.appuio.cloud:6443/
+    kubernetesAPI: https://api.cloudscale-lpg-0.appuio.cloud:6443/
     registry: https://registry.cloudscale-lpg-0.appuio.cloud
     logging: https://logging.cloudscale-lpg-0.appuio.cloud/
   cname: cname.cloudscale-lpg-0.appuio.cloud
-  default-app-domain: apps.cloudscale-lpg-0.appuio.cloud
-  gateway-ips:
+  defaultAppDomain: apps.cloudscale-lpg-0.appuio.cloud
+  gatewayIPs:
   - 185.98.123.122
-  cloud-provider:
+  cloudProvider:
     name: cloudscale.ch
     zones:
     - lpg1
