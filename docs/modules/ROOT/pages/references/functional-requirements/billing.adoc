@@ -1,10 +1,27 @@
 = Billing and Reporting
 
-NOTE: This page is currently very VSHN specific and references the https://products.docs.vshn.ch/products/appuio/cloud/pricing.html[price model].
+NOTE: This page is currently very VSHN specific and targets the https://products.docs.vshn.ch/products/appuio/cloud/pricing.html[APPUiO Cloud price model].
+
+Each organization gets an invoice, containing all items of the organization in a summarized format.
+Detailed information can be looked up in the {portal}.
+
+== Features
+
+A list of features the system should have:
+
+* Versioned price lists, including a default price list
+* Custom price plan per organization
+* Discounting
+* Pre-Payment / Credit Management / Credit Vouchers
+* Invoice payment by credit-card (Automated / Manually)
+* Access to current running costs (Dashboard)
+* Access to invoices (PDF)
 
 == Example Invoice
 
-This is how an invoice for APPUiO Cloud would look like:
+.Example invoice for APPUiO Cloud
+====
+_Invoice period: 1.1. - 31.1. (44'640 minutes, timezone UTC)._
 
 [cols="4,1,1,1,1,1", options="header", stripes="hover"]
 |===
@@ -13,63 +30,143 @@ This is how an invoice for APPUiO Cloud would look like:
 |Unit of Measure
 |Unit Price
 |Discount
-|Total
+|Total (Rounded)
 
 6+e|*Compute*
 
 a|
 *Zone*: cloudscale.ch LPG 2 +
-*Namespace*: my-cool-app-prod
+*Namespace*: my-app-prod
 
-Total minutes: 43'200 minutes
-|14554.6875
-|GiB
-|0.001273
+Usage:
+
+* Min: 128 MiB
+* Max: 1034 MiB
+* Avg: 585.66 MiB
+
+|7028
+|MiB
+|0.0000012432
 |0 %
-|18.53
+|0.01
 
 a|
 *Zone*: Exoscale GVA 1 +
-*Namespace*: my-cool-app-test
+*Namespace*: my-app-test
 
-Total minutes: 43'200 minutes
-|14554.6875
-|GiB
-|0.001273
+Usage:
+
+* Min: 302 MiB
+* Max: 3990 MiB
+* Avg: 1689.2 MiB
+
+|16892
+|MiB
+|0.0000009043
 |0 %
-|18.53
+|0.02
 
 6+e|*Persistent Storage (PVC)*
 
 a|
 *Zone*: Exoscale GVA 1 +
-*Namespace*: my-cool-app-test
+*Namespace*: my-app-test
 
-Total minutes: 43'200 minutes
-|10
-|GiB
-|1
-|0 %
+Avg usage: 10 GiB
 |100
+|GiB
+|0.000081
+|0 %
+|0.01
+
+5+e|*Total*
+|*0.04*
 
 |===
+====
 
-Questions / Ideas:
+See <<Data for Example Invoice>> below for where these numbers are coming from.
 
-* Unclear atm how the units are actually billed / look like
-* MiB might be an unreadable number, we convert it to GiB
-* Invoice: aggregated view. Attached a detailed report (Pod level, PVC level)
+== Data for ERP
 
-Notes from discussion:
+TIP: This is targeting Odoo.
 
-* Pricelist needs to be versioned
-* Dashboard for end-user
-* Multi-step process to combine all the data -> ETL (Extract Transform Load)
-** Source data combined with business rules gives the result, business rules can change and be applied to the source data again
-* Transaction-based, every minute is one
+To be able to create an invoice in Odoo, a bunch of data needs to be prepared and the be sent to Odoo.
 
-Input for data generation:
+=== Per Invoice
 
-* Measurement
-* CRM (Customer database)
-* Pricelist
+Partner ID:: Corresponding to the Organization.
+Account ID:: Hardcoded to 49.
+Currency ID:: Hardcoded to 6 (CHF).
+Invoice date:: Date of the invoice.
+Journal ID:: Hardcoded to 1.
+Name:: Name of the invoice.
+Payment term:: Hardcoded to 3.
+State:: Draft.
+User ID:: The ID of the user who created the invoice.
+
+=== Per Line Item
+
+Account ID:: Hardcoded to 602.
+Product ID:: Product ID in Odoo.
+Tax ID:: Hardcoded to `[(6, 0, [43])]`.
+Category ID:: ID of item category (Compute, Persistent Storage (PVC), ...).
+Quantity:: Quantity of the item consumed.
+Discount:: Applicable discount.
+Description:: Full description of line item.
+Unit of measure:: Unit
+
+== Data for Example Invoice
+
+Compute Zone: cloudscale.ch LPG 2::
+[%header,format=tsv]
+|===
+minute	namespace	pod	mib	chf
+1	my-app-prod	myapp-1	128	0.0001591296
+2	my-app-prod	myapp-1	323	0.0004015536
+3	my-app-prod	myapp-1	443	0.0005507376
+4	my-app-prod	myapp-1	345	0.000428904
+5	my-app-prod	myapp-1	564	0.0007011648
+5	my-app-prod	myjob-1	1034	0.0012854688
+6	my-app-prod	myapp-1	563	0.0006999216
+7	my-app-prod	myapp-1	765	0.000951048
+8	my-app-prod	myapp-1	877	0.0010902864
+8	my-app-prod	myjob-2	356	0.0004425792
+9	my-app-prod	myapp-1	865	0.001075368
+10	my-app-prod	myapp-1	765	0.000951048
+			7028	0.0087372096
+|===
+
+Compute Zone: Exoscale GVA 1::
+[%header,format=tsv]
+|===
+minute	namespace	pod	mib	chf
+1	my-app-test	mytestapp-12	302	0.0003754464
+2	my-app-test	mytestapp-13	659	0.0008192688
+3	my-app-test	mytestapp-14	344	0.0004276608
+4	my-app-test	mytestapp-15	328	0.0004077696
+5	my-app-test	mytestapp-16	944	0.0011735808
+6	my-app-test	mytestapp-18	1023	0.0012717936
+7	my-app-test	mytestapp-19	2599	0.0032310768
+8	my-app-test	mytestapp-20	3990	0.004960368
+9	my-app-test	mytestapp-22	3500	0.0043512
+10	my-app-test	mytestapp-23	3203	0.0039819696
+			16892	0.0152754356
+|===
+
+Storage Zone: Exoscale GVA 1::
+[%header,format=tsv]
+|===
+minute	namespace	pvc	storageclass	gib	chf
+1	my-app-test	mypvc-1	RWO	10	0.00081
+2	my-app-test	mypvc-1	RWO	10	0.00081
+3	my-app-test	mypvc-1	RWO	10	0.00081
+4	my-app-test	mypvc-1	RWO	10	0.00081
+5	my-app-test	mypvc-1	RWO	10	0.00081
+6	my-app-test	mypvc-1	RWO	10	0.00081
+7	my-app-test	mypvc-1	RWO	10	0.00081
+8	my-app-test	mypvc-1	RWO	10	0.00081
+9	my-app-test	mypvc-1	RWO	10	0.00081
+10	my-app-test	mypvc-1	RWO	10	0.00081
+				100	0.0081
+|===
