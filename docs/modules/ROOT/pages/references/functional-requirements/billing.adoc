@@ -32,55 +32,48 @@ _Invoice period: 1.1. - 31.1. (44'640 minutes, timezone UTC)._
 |Discount
 |Total (Rounded)
 
-6+e|*Compute*
+6+|*Zone: cloudscale.ch LPG 2 - Namespace: my-app-prod*
 
-a|
-*Zone*: cloudscale.ch LPG 2 +
-*Namespace*: my-app-prod
+a|Compute
 
-Usage:
-
-* Min: 128 MiB
-* Max: 1034 MiB
-* Avg: 585.66 MiB
+Min: 128 MiB +
+Max: 1034 MiB +
+Avg: 585.66 MiB
 
 |7028
 |MiB
-|0.0000012432
+|CHF 0.0000012432
 |0 %
-|0.01
+>|CHF 0.01
 
-a|
-*Zone*: Exoscale GVA 1 +
-*Namespace*: my-app-test
+6+>|*Subtotal*: CHF 0.01
 
-Usage:
+6+|*Zone: Exoscale GVA 1 - Namespace: my-app-test*
 
-* Min: 302 MiB
-* Max: 3990 MiB
-* Avg: 1689.2 MiB
+a|Compute
+
+Min: 302 MiB +
+Max: 3990 MiB +
+Avg: 1689.2 MiB
 
 |16892
 |MiB
-|0.0000009043
+|CHF 0.0000009043
 |0 %
-|0.02
+>|CHF 0.02
 
-6+e|*Persistent Storage (PVC)*
-
-a|
-*Zone*: Exoscale GVA 1 +
-*Namespace*: my-app-test
+a|Persistent Storage (PVC) - RWO
 
 Avg usage: 10 GiB
 |100
 |GiB
-|0.000081
+|CHF 0.000081
 |0 %
-|0.01
+>|CHF 0.01
 
-5+e|*Total*
-|*0.04*
+6+>|*Subtotal*: CHF 0.03
+
+6+>e|*Total*: *CHF 0.04*
 
 |===
 ====
