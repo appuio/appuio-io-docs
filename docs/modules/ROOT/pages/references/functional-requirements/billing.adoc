@@ -103,8 +103,9 @@ User ID:: The ID of the user who created the invoice.
 Account ID:: Hardcoded to 602.
 Product ID:: Product ID in Odoo.
 Tax ID:: Hardcoded to `[(6, 0, [43])]`.
-Category ID:: ID of item category (Compute, Persistent Storage (PVC), ...).
+Category ID:: ID of item category.
 Quantity:: Quantity of the item consumed.
+Price:: Price per item.
 Discount:: Applicable discount.
 Description:: Full description of line item.
 Unit of measure:: Unit
