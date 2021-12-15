@@ -1,0 +1,7 @@
+= Data model and data flow for Billing
+
+[abstract]
+====
+xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains the data collection for billing relevant data works.
+This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
+====

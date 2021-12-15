@@ -11,6 +11,7 @@
 ** xref:appuio-cloud:ROOT:references/architecture/namespace-ownership.adoc[Namespace ownership]
 ** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage]
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[Metrics of interest]
+** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[Data model and flow for Billing]
 ** xref:appuio-cloud:ROOT:references/architecture/control-api.adoc[Control API]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-org.adoc[Organization]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-user.adoc[User]
