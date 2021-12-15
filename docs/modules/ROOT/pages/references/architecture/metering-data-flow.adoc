@@ -12,3 +12,16 @@ Second that data must be enriched.
 That enrichment involves looking up prices and discounts from price tables.
 It also includes matching the identifiers from the source (Prometheus) with the identifiers from the targed system.
 Third it must ingest that data into the target system.
+
+Key features of this component are:
+
+* I uses the Promehteus Query API as its source.
+* I allows to inegrate any billing/ERP system as its target.
+  In order to achieve this, it must be loosle coupled.
+* Execution is idempotent.
+  If run twice for a given time frame with the same configuration, the result is the same.
+  If however run again with a different configuration, the results reflect the changes made.
+  This is so that errors in the past can easily be fixed.
+* Time aware configuration
+  Every configuration with the power to chnage the output, is made time aware.
+  This means that this config has timestamps attached denoting from when and until when that config is valid.
