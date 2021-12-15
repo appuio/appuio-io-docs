@@ -5,3 +5,10 @@
 xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains the data collection for billing relevant data works.
 This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
 ====
+
+The core of this part of the system has three responsibilites.
+First it must fetch the required data from the input system.
+Second that data must be enriched.
+That enrichment involves looking up prices and discounts from price tables.
+It also includes matching the identifiers from the source (Prometheus) with the identifiers from the targed system.
+Third it must ingest that data into the target system.
