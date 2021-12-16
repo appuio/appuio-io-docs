@@ -138,3 +138,40 @@ All billed items of that namespace, will be groupbed together on the resulting i
 
 // TODO Dimension Item is not used for billing.
 // It might come in handy for usage reporting in the UI should we choose to tap into this system for that purpse.
+
+== Data flow
+
+== Query phase
+
+In the query phase, the Prometheus API gets queried and the results get written to the facts table.
+If records in the dimesnion tables are missing, they get created as needed.
+The created dimension records might be inclomplete.
+They will get completed in the next phase.
+
+From an orchestration perspective, a master job gets created in the desired interval.
+The master job looks at the query table and identify the queries that apply to the time window at hand.
+For each query, at job for that specific query gets started.
+
+The query job then fetches the data from Prometheus and writes the results into the facts table.
+Table locking is required to prevent two query jobs running in paralell from creating the same dimension records.
+
+The exection intervals for this phase can be in the range of minutes, hours or maybe days.
+
+== Enrichment phase
+
+The query phase potentially has created dimesnion records that are lacking information.
+In the enrichment phase, one or several jobs communicate with the target system to get that missing data.
+This might result in create some helper records in the target system.
+For example to get a target id of a category, such a category might have to be created first in the target system.
+
+The exectuion interval for this phase can be less than the one of the query phase.
+It must however run successfully at least once before the next phase can be run.
+
+== Ingestion phase
+
+Here the actuall invoices and line items get created in the target system.
+This usually is run once after a billing period has concluded.
+For example, at the beginning of a month to generate the invoices of the previous month.
+Thanks to the enrichment phase, jobs in this phase can just query the intermediate storage and have all data available to create the invoices.
+
+Depending on the sample of the intermediate storage, aggregations must be made (sum all records for the requested month).
