@@ -25,3 +25,80 @@ Key features of this component are:
 * Time aware configuration
   Every configuration with the power to chnage the output, is made time aware.
   This means that this config has timestamps attached denoting from when and until when that config is valid.
+
+== System idea
+
+This is an https://de.wikipedia.org/wiki/ETL-Prozess[ETL process].
+The extract and load part are well isolated and have only a dependency to their source/target system.
+The transform part on the other hand needs to bring parts of both the source and the target togehter.
+Instead of having one single ETL process, a multi stage model with an intermediate persistence will be used.
+The first stage fetches the data from the source into that intermediate storage.
+The second stage enriches that data by bringing in missing pieces from the target system.
+The third stage then ingests the data into the target system.
+This is done to keep this loosley coupled and thus simplify writing and maintaing the code base.
+It also allows to easily replace the code that talks to the target system.
+That is in expectation for an change of the billing/ERP systems used due to a change and or for reselling purposes.
+
+Many aspects on how this system work are expected to change over time.
+Examples are the price for a given product, granted discounts are valid only for a defined time window.
+The system deals with them by assigning timestamps to those data records.
+The timestamp `from` denotes the earliest point in time that records becomes valid.
+The timestamp `until` denotes the lates point in time that record was valid.
+If eighter is left blank, that reocrds is unbound in that direction.
+So a record can be made valid from the beginning up until a certain time, while an other becomes valid up until further notice from that time on.
+Validation/constraints needs to ensure, no overlapping time ranges can be defined.
+
+Identifiers on the source and the target system are not nessesarily the same.
+On the source, the billing entity might be identified by the string `acme-corp`.
+While on the target, that same billing entity might be identifed by the integer `42`.
+In order to bring those two worlds together, the intermediate storage contains lookup tables holding both, the source and the target identifiers.
+
+It often happens that the same product gets sold at different prices and discounts can be granted in general or for a given time period.
+Also, the scope can variy.
+Maby a billing entity gets a different price but only for a specific instance of a product.
+A discount might be granted to everybody for a given time period or only to a single billing entity.
+In order to support this — and even more constelation — the source and target matching gets used.
+
+On the source, all relevant information is available as labels (dimesnions) on a timeseries.
+The query extracting that data, then concatenates those dimensions in to a source identifier for a product or a discount.
+Finding a matching record in the intermediate storage is then a multi step process.
+First, the whole string will be used.
+If no record could be found, then one segment gets dropped from the end.
+The process is then repeated until a record is found or only one segment is left.
+If the last segment is reached without a record found, a record will be created.
+
+Discounts and products are timed objects.
+
+.Examples
+****
+The following assumes the source contains metrics about workload in a Kubernetes namespace named _curly-snow-5598_.
+The billing entity is denoted by a label named `tenant_id` with the value _acme-corp_.
+There is also a label `cluster_id` to denote the cluster where that workload runs which has the value _c-appuio-cloudsclae-lpg-2_.
+The product that is billed is the used memory and is refered to as _appuio_cloud_memory_.
+
+The source identifier for both the product and the discount would then be:
+
+`appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
+
+Following the above algorithm, there could now be a product or discount records with the following source identifier:
+
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
+   Applies to only that single namespace
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp`
+   Applies to all workload of that customer on that cluster.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`
+   Applies to all workload on that cluster.
+* `appuio_cloud_memory`
+   Applies to everything.
+
+// TODO It could also make sense to apply somethig to all clusters for a given customer `appuio_cloud_memory:acme-corp`.
+****
+
+The system is supposed to handle different products.
+It is asumed, that the data required to bill one product, can be forumlated with a single PromQL query.
+
+Queries are timed objects.
+
+Some items contain a name or descrption that is to be injested into the target system.
+Some of those texts are supposed to be dynamic.
+To enable this, they are treated as templates and the dynamic parts get inserted wile creating the records on the target system.
