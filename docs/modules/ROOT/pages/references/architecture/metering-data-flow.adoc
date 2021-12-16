@@ -78,20 +78,20 @@ The product that is billed is the used memory and is refered to as _appuio_cloud
 
 The source identifier for both the product and the discount would then be:
 
-`appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
+`appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598`
 
 Following the above algorithm, there could now be a product or discount records with the following source identifier:
 
 * `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
    Applies to only that single namespace
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp`
+* `appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2`
    Applies to all workload of that customer on that cluster.
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`
-   Applies to all workload on that cluster.
+* `appuio_cloud_memory:acme-corp`
+   Applies to all workload of that customer.
 * `appuio_cloud_memory`
    Applies to everything.
 
-// TODO It could also make sense to apply somethig to all clusters for a given customer `appuio_cloud_memory:acme-corp`.
+// TODO It could also make sense to apply somethig to all clusters for all customers `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`.
 ****
 
 The system is supposed to handle different products.
@@ -175,3 +175,353 @@ For example, at the beginning of a month to generate the invoices of the previou
 Thanks to the enrichment phase, jobs in this phase can just query the intermediate storage and have all data available to create the invoices.
 
 Depending on the sample of the intermediate storage, aggregations must be made (sum all records for the requested month).
+
+== Example
+
+=== Initial state
+
+.Dimension Query
+|===
+| id
+| name
+| description
+| query
+| unit
+
+| 1
+| appuio_cloud_memory
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| …
+| MiB
+|===
+
+.Dimension Product
+|===
+| id
+| source
+| target
+| amount
+| from
+| until
+
+| 1
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-1
+| 0.0002248931
+| null
+| null
+|===
+
+.Dimension Discount
+|===
+| id
+| source
+| discount
+| from
+| until
+
+| 1
+| appuio_cloud_memory
+| 0
+| null
+| null
+|===
+
+In the target system, a record exists for a tenant with the id `22457`.
+That record has a field that contains the source referenc with the value `acme-corp`
+
+All the other dimenstions are empty.
+
+== Query phase
+
+[source, Prometheus query result]
+----
+{
+  query="appuio_cloud_memory",
+  tenant="acme-corp",
+  category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
+  product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
+}
+1035892736 1639040942
+----
+
+.Fact
+|===
+| date_time_id
+| query_id
+| tenant_id
+| category_id
+| product_id
+| discount_id
+| quantity
+
+| 1
+| 1
+| 1
+| 1
+| 1
+| 1
+| 1035892736
+|===
+
+.Dimesnion Date Time
+|===
+| id
+| timestamp
+| year
+| month
+| day
+| hour
+| minute
+
+| 1
+| 1639040942
+| 2021
+| 12
+| 09
+| 10
+| 09
+|===
+
+.Dimension Query
+|===
+| id
+| name
+| description
+| query
+| unit
+
+| 1
+| appuio_cloud_memory
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| …
+| MiB
+|===
+
+.Dimension Tenant
+|===
+| id
+| source
+| target
+
+| 1
+| acme-corp
+| null
+|===
+
+.Dimesnion Category
+|===
+| id
+| source
+| target
+
+| 1
+| c-appuio-cloudscale-lpg-2:curly-snow-5598
+| null
+|===
+
+
+.Dimension Product
+|===
+| id
+| source
+| target
+| amount
+| from
+| until
+
+| 1
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-1
+| 18367
+| 0.0002248931
+| null
+| null
+|===
+
+.Dimension Discount
+|===
+| id
+| source
+| discount
+| from
+| until
+
+| 1
+| appuio_cloud_memory
+| 0
+| null
+| null
+|===
+
+=== Enrichment phase
+
+.Fact
+|===
+| date_time_id
+| query_id
+| tenant_id
+| category_id
+| product_id
+| discount_id
+| quantity
+
+| 1
+| 1
+| 1
+| 1
+| 1
+| 1
+| 1035892736
+|===
+
+.Dimesnion Date Time
+|===
+| id
+| timestamp
+| year
+| month
+| day
+| hour
+| minute
+
+| 1
+| 1639040942
+| 2021
+| 12
+| 09
+| 10
+| 09
+|===
+
+.Dimension Query
+|===
+| id
+| name
+| description
+| query
+| unit
+
+| 1
+| appuio_cloud_memory
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| …
+| MiB
+|===
+
+.Dimension Tenant
+|===
+| id
+| source
+| target
+
+| 1
+| acme-corp
+| *22457*
+|===
+
+.Dimesnion Category
+|===
+| id
+| source
+| target
+
+| 1
+| c-appuio-cloudscale-lpg-2:curly-snow-5598
+| *19588*
+|===
+
+To get the target category id, a category record was created at the target system.
+
+.Target Category
+|===
+| ID
+| Description
+
+| 19588
+| Zone: cloudscale.ch - LPG 2, namespace: curly-snow-5598
+|===
+
+The target specific code has a way to parse the category source string and transform it to something that resembles the above example.
+
+.Dimension Product
+|===
+| id
+| source
+| target
+| amount
+| from
+| until
+
+| 1
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-1
+| 0.0002248931
+| null
+| null
+|===
+
+.Dimension Discount
+|===
+| id
+| source
+| discount
+| from
+| until
+
+| 1
+| appuio_cloud_memory
+| 0
+| null
+| null
+|===
+
+=== Ingestion phase
+
+The intermediate tables are no longer touched so they are left out for brevity.
+The tables below are an example based on Odoo.
+
+
+.Invoice
+|===
+| ID
+| Partner ID
+| Account ID
+| Invoice Date
+| Journal ID
+| Name
+| Payment Term
+| State
+| User ID
+
+| 10730 (auto incremented primary key)
+| 22457 (the target from dimesnion tenant)
+| 49 (constant)
+| 2022-01-01
+| 1 (constant)
+| APPUiO Cloud December 2021 (specific to the job that created this invoice)
+| 3 (constant)
+| Draft (constant)
+| ???
+|===
+
+.Line Item
+|===
+| Invoice ID
+| Account ID
+| Product ID
+| Tax ID
+| quantity
+| Discount
+| Description
+| Unit of measure
+| Amount
+
+| 10730
+| 612 (constant)
+| 18367
+| [(6, 0, [43])] (constant)
+| 19588 (target from the dimension category
+| 1035892736 (summed quantity from fact for the given time span)
+| 0 (discount from the dimesnion discount)
+| "Compute (min: …, avg: …, max: …)" (description from dimension query with some values interpolated)
+| MiB (unit from dimension query)
+| Amount (amount from dimension product)
+|===
