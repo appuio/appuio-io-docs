@@ -102,3 +102,39 @@ Queries are timed objects.
 Some items contain a name or descrption that is to be injested into the target system.
 Some of those texts are supposed to be dynamic.
 To enable this, they are treated as templates and the dynamic parts get inserted wile creating the records on the target system.
+
+== Data model
+
+image::system/data-model-billing.drawio.svg[]
+
+[NOTE]
+====
+Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
+However, it is not the only choice.
+It can and has to be adapted according the the storage technology chosen for implementation.
+====
+
+At the center of the model is the fact.
+A fact represents a sampled amount of something that is billed.
+The fact can have the same sampling rate as its source.
+It also can be an aggregation of a smaller sampling rate.
+For ingestion into the taget, the fact will be aggregated to a single line item.
+The value of the fact is the observed quantity to be billed.
+
+The query holds the PromQL query string used to generate fatcs.
+It also holds meta data associated with the fact like the unit and the descrption to be shown for the line item on the invoice.
+The descrption is a templated string.
+
+The product holds the amount to be charged per unit.
+Its source identifer is a segmented match as explained in <<System idea>>.
+This is effectivly the price table.
+
+The discount holds a percentage to be discounted.
+Its source identifer is a segmented match as explained in <<System idea>>.
+
+Category allows to group line items together.
+Taking the example of {product}, a category is a namespace on a specific cluster.
+All billed items of that namespace, will be groupbed together on the resulting invoice.
+
+// TODO Dimension Item is not used for billing.
+// It might come in handy for usage reporting in the UI should we choose to tap into this system for that purpse.
