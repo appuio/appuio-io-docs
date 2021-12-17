@@ -30,7 +30,7 @@ Key features of this component are:
 
 This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process].
 The extract and load part are well isolated and have only a dependency to their source/target system.
-The transform part on the other hand needs to bring parts of both the source and the target togehter.
+The transform part on the other hand needs to bring parts of both the source and the target together.
 Instead of having one single ETL process, a multi stage model with an intermediate persistence will be used.
 The first stage fetches the data from the source into that intermediate storage.
 The second stage enriches that data by bringing in missing pieces from the target system.
@@ -43,9 +43,9 @@ Many aspects of how this system works are expected to change over time.
 For example, the price for a given product and any discounts are valid only for a defined time window.
 The system deals with them by assigning timestamps to those data records.
 The timestamp `from` denotes the earliest point in time that records becomes valid.
-The timestamp `until` denotes the lates point in time that record was valid.
+The timestamp `until` denotes the latest point in time that record was valid.
 If either is left blank, that record is unbound in that direction.
-So a record can be made valid from the beginning up until a certain time, while an other becomes valid up until further notice from that time on.
+So a record can be made valid from the beginning up until a certain time, while another record becomes valid up until further notice from that time on.
 The system needs to implement constraints and validations to ensure that no overlapping time ranges can be defined.
 
 Identifiers on the source and the target system aren't necessarily the same.
@@ -122,12 +122,12 @@ For ingestion into the taget, the fact will be aggregated to a single line item.
 The value of the fact is the observed quantity to be billed.
 
 The query holds the PromQL query string used to generate facts.
-It also holds meta data associated with the fact like the unit and the descrption to be shown for the line item on the invoice.
-The descrption is a templated string.
+It also holds meta data associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
+The description is a rendered string from a template.
 
 The product holds the amount to be charged per unit.
 Its source identifer is a segmented match as explained in <<System idea>>.
-This is effectivly the price table.
+This is effectively the price table.
 
 The discount holds a percentage to be discounted.
 Its source identifer is a segmented match as explained in <<System idea>>.
@@ -141,7 +141,7 @@ All billed items of that namespace will be grouped together on the resulting inv
 
 == Data flow
 
-== Query phase
+=== Query phase
 
 In the query phase, the Prometheus API gets queried and the results get written to the facts table.
 If records in the dimension tables are missing, they get created as needed.
@@ -164,8 +164,8 @@ In the enrichment phase, one or several jobs communicate with the target system 
 It's possible that this phase creates some helper records in the target system.
 For example, in order to get a target id of a category, this category may have to be created in the target system first.
 
-The exectuion interval for this phase can be less than the one of the query phase.
-It must however run successfully at least once before the next phase can be run.
+The execution interval for this phase can be less than the one of the query phase.
+However, it must run successfully at least once before the next phase can be run.
 
 == Ingestion phase
 
@@ -241,10 +241,10 @@ Depending on the sample interval in the intermediate storage, aggregations must 
 |===
 
 In the target system, a record exists for a tenant with the id `22457`.
-That record has a field that contains the source referenc with the value `acme-corp`
+That record has a field that contains the source reference with the value `acme-corp`
 Also a product record exists with the id `18367`
 
-All the other dimenstions are empty.
+All the other dimensions are empty.
 
 === Query phase
 
@@ -283,7 +283,7 @@ All the other dimenstions are empty.
 | 1035892736
 |===
 
-.Dimesnion Date Time
+.Dimension Date Time
 [cols="1,5"]
 |===
 | id
@@ -422,7 +422,7 @@ All the other dimenstions are empty.
 | 1035892736
 |===
 
-.Dimesnion Date Time
+.Dimension Date Time
 [cols="1,5"]
 |===
 | id
@@ -560,7 +560,7 @@ The tables below are an example based on Odoo.
 | 10730 (auto incremented primary key)
 
 | Partner ID
-| 22457 (the target from dimesnion tenant)
+| 22457 (the target from dimension tenant)
 
 | Account ID
 | 49 (constant)
