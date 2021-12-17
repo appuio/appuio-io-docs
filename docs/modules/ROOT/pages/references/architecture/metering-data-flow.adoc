@@ -1,10 +1,10 @@
 = Data model and data flow for Billing
 
 [abstract]
-====
+--
 xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works.
 This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
-====
+--
 
 The core of this part of the system has three responsibilites.
 First it must fetch the required data from the input system.
@@ -48,7 +48,7 @@ If either is left blank, that record is unbound in that direction.
 So a record can be made valid from the beginning up until a certain time, while an other becomes valid up until further notice from that time on.
 The system needs to implement constraints and validations to ensure that no overlapping time ranges can be defined.
 
-Identifiers on the source and the target system are not necessarily the same.
+Identifiers on the source and the target system aren't necessarily the same.
 On the source, the billing entity might be identified by the string `acme-corp`.
 However, on the target, that same billing entity might be identified by the integer `42`.
 In order to bring those two worlds together, the intermediate storage contains lookup tables holding both the source and target identifiers.
@@ -57,7 +57,7 @@ It often happens that the same product gets sold at different prices and discoun
 Also, the scope can variy.
 For example, it's possible that a billing entity gets a different price but only for a specific instance of a product.
 A discount might be granted to everybody for a given time period or only to a single billing entity.
-In order to support these — and even more constellations — the source and target matching gets used.
+In order to support these—and even more constellations—the source and target matching gets used.
 
 On the source, all relevant information is available as labels (dimensions) on a timeseries.
 The query extracting the data from the source concatenates those dimensions into a source identifier for a product or a discount.
@@ -74,7 +74,7 @@ Discounts and products are timed objects.
 The following assumes the source contains metrics about workload in a Kubernetes namespace named _curly-snow-5598_.
 The billing entity is denoted by a label named `tenant_id` with the value _acme-corp_.
 There is also a label `cluster_id` to denote the cluster where that workload runs which has the value _c-appuio-cloudscale-lpg-2_.
-The product that is billed is the used memory and is refered to as _appuio_cloud_memory_.
+The product that's billed is the used memory and is refered to as _appuio_cloud_memory_.
 
 The source identifier for both the product and the discount would then be:
 
@@ -99,9 +99,9 @@ It is assumed that the data required to bill one product can be formulated with 
 
 Queries are timed objects.
 
-Some items contain a name or description that is to be ingested into the target system.
+Some items contain a name or description that's to be ingested into the target system.
 Some of those texts are supposed to be dynamic.
-To enable this, they are treated as templates and the dynamic parts get inserted wile creating the records on the target system.
+To enable this, they're treated as templates and the dynamic parts get inserted wile creating the records on the target system.
 
 == Data model
 
@@ -110,12 +110,12 @@ image::system/data-model-billing.drawio.svg[]
 [NOTE]
 ====
 Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
-However, it is not the only choice.
+However, it's not the only choice.
 It can and has to be adapted according the the storage technology chosen for implementation.
 ====
 
 At the center of the model is the fact.
-A fact represents a sampled amount of something that is billed.
+A fact represents a sampled amount of something that's billed.
 The fact can have the same sampling rate as its source.
 It also can be an aggregation of a smaller sampling rate.
 For ingestion into the taget, the fact will be aggregated to a single line item.
@@ -181,57 +181,72 @@ Depending on the sample interval in the intermediate storage, aggregations must 
 === Initial state
 
 .Dimension Query
+[cols="1,5"]
 |===
 | id
-| name
-| description
-| query
-| unit
-
 | 1
+
+| name
 | appuio_cloud_memory
+
+| description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
 | …
+
+| unit
 | MiB
 |===
 
 .Dimension Product
+[cols="1,5"]
 |===
 | id
-| source
-| target
-| amount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory:c-appuio-cloudscale-lpg-1
+
+| target
+| 18367
+
+| amount
 | 0.0002248931
+
+| from
 | null
+
+| until
 | null
 |===
 
 .Dimension Discount
+[cols="1,5"]
 |===
 | id
-| source
-| discount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory
+
+| discount
 | 0
+
+| from
 | null
+
+| until
 | null
 |===
 
 In the target system, a record exists for a tenant with the id `22457`.
 That record has a field that contains the source referenc with the value `acme-corp`
+Also a product record exists with the id `18367`
 
 All the other dimenstions are empty.
 
-== Query phase
+=== Query phase
 
 [source, Prometheus query result]
 ----
@@ -240,288 +255,365 @@ All the other dimenstions are empty.
   tenant="acme-corp",
   category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
   product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
-}
-1035892736 1639040942
+} 1035892736 1639040942
 ----
 
 .Fact
+[cols="1,5"]
 |===
 | date_time_id
-| query_id
-| tenant_id
-| category_id
-| product_id
-| discount_id
-| quantity
+| 1
 
+| query_id
 | 1
+
+| tenant_id
 | 1
+
+| category_id
 | 1
+
+| product_id
 | 1
+
+| discount_id
 | 1
-| 1
+
+| quantity
 | 1035892736
 |===
 
 .Dimesnion Date Time
+[cols="1,5"]
 |===
 | id
-| timestamp
-| year
-| month
-| day
-| hour
-| minute
-
 | 1
+
+| timestamp
 | 1639040942
+
+| year
 | 2021
+
+| month
 | 12
+
+| day
 | 09
+
+| hour
 | 10
+
+| minute
 | 09
 |===
 
 .Dimension Query
+[cols="1,5"]
 |===
 | id
-| name
-| description
-| query
-| unit
-
 | 1
+
+| name
 | appuio_cloud_memory
+
+| description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
 | …
+
+| unit
 | MiB
 |===
 
 .Dimension Tenant
+[cols="1,5"]
 |===
 | id
-| source
-| target
-
 | 1
+
+| source
 | acme-corp
+
+| target
 | null
 |===
 
 .Dimension Category
+[cols="1,5"]
 |===
 | id
-| source
-| target
-
 | 1
+
+| source
 | c-appuio-cloudscale-lpg-2:curly-snow-5598
+
+| target
 | null
 |===
 
 
 .Dimension Product
+[cols="1,5"]
 |===
 | id
-| source
-| target
-| amount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory:c-appuio-cloudscale-lpg-2
+
+| target
 | 18367
+
+| amount
 | 0.0002248931
+
+| from
 | null
+
+| until
 | null
 |===
 
 .Dimension Discount
+[cols="1,5"]
 |===
 | id
-| source
-| discount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory
+
+| discount
 | 0
+
+| from
 | null
+
+| until
 | null
 |===
 
 === Enrichment phase
 
 .Fact
+[cols="1,5"]
 |===
 | date_time_id
-| query_id
-| tenant_id
-| category_id
-| product_id
-| discount_id
-| quantity
+| 1
 
+| query_id
 | 1
+
+| tenant_id
 | 1
+
+| category_id
 | 1
+
+| product_id
 | 1
+
+| discount_id
 | 1
-| 1
+
+| quantity
 | 1035892736
 |===
 
 .Dimesnion Date Time
+[cols="1,5"]
 |===
 | id
-| timestamp
-| year
-| month
-| day
-| hour
-| minute
-
 | 1
+
+| timestamp
 | 1639040942
+
+| year
 | 2021
+
+| month
 | 12
+
+| day
 | 09
+
+| hour
 | 10
+
+| minute
 | 09
 |===
 
 .Dimension Query
+[cols="1,5"]
 |===
 | id
-| name
-| description
-| query
-| unit
-
 | 1
+
+| name
 | appuio_cloud_memory
+
+| description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
 | …
+
+| unit
 | MiB
 |===
 
 .Dimension Tenant
+[cols="1,5"]
 |===
 | id
-| source
-| target
-
 | 1
+
+| source
 | acme-corp
+
+| target
 | *22457*
 |===
 
 .Dimension Category
+[cols="1,5"]
 |===
 | id
-| source
-| target
-
 | 1
+
+| source
 | c-appuio-cloudscale-lpg-2:curly-snow-5598
+
+| target
 | *19588*
 |===
 
 To get the target category id, a category record was created in the target system.
 
 .Target Category
+[cols="1,5"]
 |===
 | ID
-| Description
-
 | 19588
+
+| Description
 | Zone: cloudscale.ch - LPG 2, namespace: curly-snow-5598
 |===
 
 The target specific code has a way to parse the category source string and transform it to something that resembles the above example.
 
 .Dimension Product
+[cols="1,5"]
 |===
 | id
-| source
-| target
-| amount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory:c-appuio-cloudscale-lpg-2
+
+| target
+| 18367
+
+| amount
 | 0.0002248931
+
+| from
 | null
+
+| until
 | null
 |===
 
 .Dimension Discount
+[cols="1,5"]
 |===
 | id
-| source
-| discount
-| from
-| until
-
 | 1
+
+| source
 | appuio_cloud_memory
+
+| discount
 | 0
+
+| from
 | null
+
+| until
 | null
 |===
 
 === Ingestion phase
 
-The intermediate tables are no longer touched so they are left out for brevity.
+The intermediate tables are no longer touched so they're left out for brevity.
 The tables below are an example based on Odoo.
 
 
 .Invoice
+[cols="1,5"]
 |===
 | ID
-| Partner ID
-| Account ID
-| Invoice Date
-| Journal ID
-| Name
-| Payment Term
-| State
-| User ID
-
 | 10730 (auto incremented primary key)
+
+| Partner ID
 | 22457 (the target from dimesnion tenant)
+
+| Account ID
 | 49 (constant)
+
+| Invoice Date
 | 2022-01-01
+
+| Journal ID
 | 1 (constant)
+
+| Name
 | APPUiO Cloud December 2021 (specific to the job that created this invoice)
+
+| Payment Term
 | 3 (constant)
+
+| State
 | Draft (constant)
+
+| User ID
 | ???
 |===
 
 .Line Item
+[cols="1,5"]
 |===
 | Invoice ID
-| Account ID
-| Product ID
-| Tax ID
-| quantity
-| Discount
-| Description
-| Unit of measure
-| Amount
-
 | 10730
+
+| Account ID
 | 612 (constant)
+
+| Product ID
 | 18367
+
+| Tax ID
 | [(6, 0, [43])] (constant)
+
+| Category ID
 | 19588 (target from the dimension category
+
+| quantity
 | 1035892736 (summed quantity from fact for the given time span)
+
+| Discount
 | 0 (discount from the dimesnion discount)
+
+| Description
 | "Compute (min: …, avg: …, max: …)" (description from dimension query with some values interpolated)
+
+| Unit of measure
 | MiB (unit from dimension query)
-| Amount (amount from dimension product)
+
+| Amount
+| 0.0002248931 (amount from dimension product)
 |===
