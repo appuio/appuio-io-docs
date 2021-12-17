@@ -85,9 +85,9 @@ Following the above algorithm, there could now be product or discount records wi
 * `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
    Applies to only that single namespace
 * `appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2`
-   Applies to all workload of that customer on that cluster.
+   Applies to all workload of that organization on that cluster.
 * `appuio_cloud_memory:acme-corp`
-   Applies to all workload of that customer.
+   Applies to all workload of that organization.
 * `appuio_cloud_memory`
    Applies to everything.
 
