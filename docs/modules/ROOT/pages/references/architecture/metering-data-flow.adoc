@@ -6,12 +6,12 @@ xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resourc
 This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
 --
 
-The core of this part of the system has three responsibilites.
-First it must fetch the required data from the input system.
-Second that data must be enriched.
+The core of this part of the system has three responsibilities.
+First, it must fetch the required data from the input system.
+Second, that data must be enriched.
 That enrichment involves looking up prices and discounts from price tables.
 It also includes matching the identifiers from the source (Prometheus) with the identifiers from the target system.
-Third it must ingest that data into the target system.
+Third, it must ingest that data into the target system.
 
 Key features of this component are:
 
@@ -22,7 +22,7 @@ Key features of this component are:
   If run twice for a given time frame with the same configuration, the result is the same.
   However, if run again with a different configuration, the results reflect the changes made.
   This ensures that errors in the past can easily be fixed.
-* Time aware configuration
+* Time aware configuration.
   Every configuration with the power to change the output, is made time aware.
   This means that this config has timestamps attached denoting from when and until when that config is valid.
 
@@ -31,7 +31,7 @@ Key features of this component are:
 This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process].
 The extract and load part are well isolated and have only a dependency to their source/target system.
 The transform part on the other hand needs to bring parts of both the source and the target together.
-Instead of having one single ETL process, a multi stage model with an intermediate persistence will be used.
+Instead of having one single ETL process, a multistage model with an intermediate persistence will be used.
 The first stage fetches the data from the source into that intermediate storage.
 The second stage enriches that data by bringing in missing pieces from the target system.
 The third stage then ingests the data into the target system.
@@ -54,27 +54,27 @@ However, on the target, that same billing entity might be identified by the inte
 In order to bring those two worlds together, the intermediate storage contains lookup tables holding both the source and target identifiers.
 
 It often happens that the same product gets sold at different prices and discounts can be granted in general or for a given time period.
-Also, the scope can variy.
+Also, the scope can vary.
 For example, it's possible that a billing entity gets a different price but only for a specific instance of a product.
 A discount might be granted to everybody for a given time period or only to a single billing entity.
 In order to support these—and even more constellations—the source and target matching gets used.
 
-On the source, all relevant information is available as labels (dimensions) on a timeseries.
+On the source, all relevant information is available as labels (dimensions) on a time series.
 The query extracting the data from the source concatenates those dimensions into a source identifier for a product or a discount.
-After that, finding a matching record in the intermediate storage is a multi step process:
+After that, finding a matching record in the intermediate storage is a multistep process:
 First, the full identifier is looked up in the intermediate storage.
 If no record is found for the full identifier, one segment gets dropped from the end.
-This lookup process is repeated until a record is found or only one segment is left.
+This lookup process is repeated until a record is found, or only one segment is left.
 If the last segment is reached without finding an existing record, a new record will be created.
 
-Discounts and products are timed objects.
+_Discounts and products are timed objects._
 
 .Examples
 ****
 The following assumes the source contains metrics about workload in a Kubernetes namespace named _curly-snow-5598_.
 The billing entity is denoted by a label named `tenant_id` with the value _acme-corp_.
 There is also a label `cluster_id` to denote the cluster where that workload runs which has the value _c-appuio-cloudscale-lpg-2_.
-The product that's billed is the used memory and is refered to as _appuio_cloud_memory_.
+The product that's billed is the used memory and is referred to as _appuio_cloud_memory_.
 
 The source identifier for both the product and the discount would then be:
 
@@ -91,13 +91,13 @@ Following the above algorithm, there could now be product or discount records wi
 * `appuio_cloud_memory`
    Applies to everything.
 
-// TODO It could also make sense to apply somethig to all clusters for all customers `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`.
+// TODO It could also make sense to apply something to all clusters for all customers `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`.
 ****
 
 The system is supposed to handle different products.
 It is assumed that the data required to bill one product can be formulated with a single PromQL query.
 
-Queries are timed objects.
+_Queries are timed objects._
 
 Some items contain a name or description that's to be ingested into the target system.
 Some of those texts are supposed to be dynamic.
@@ -111,41 +111,41 @@ image::system/data-model-billing.drawio.svg[]
 ====
 Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
 However, it's not the only choice.
-It can and has to be adapted according the the storage technology chosen for implementation.
+It can and has to be adapted according the storage technology chosen for implementation.
 ====
 
 At the center of the model is the fact.
 A fact represents a sampled amount of something that's billed.
 The fact can have the same sampling rate as its source.
 It also can be an aggregation of a smaller sampling rate.
-For ingestion into the taget, the fact will be aggregated to a single line item.
+For ingestion into the target, the fact will be aggregated to a single line item.
 The value of the fact is the observed quantity to be billed.
 
 The query holds the PromQL query string used to generate facts.
-It also holds meta data associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
+It also holds metadata associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
 The description is a rendered string from a template.
 
 The product holds the amount to be charged per unit.
-Its source identifer is a segmented match as explained in <<System idea>>.
+Its source identifier is a segmented match as explained in <<System idea>>.
 This is effectively the price table.
 
 The discount holds a percentage to be discounted.
-Its source identifer is a segmented match as explained in <<System idea>>.
+Its source identifier is a segmented match as explained in <<System idea>>.
 
-Category allows to group line items together.
+Category allows grouping line items together.
 Taking the example of {product}, a category is a namespace on a specific cluster.
 All billed items of that namespace will be grouped together on the resulting invoice.
 
 // TODO Dimension Item is not used for billing.
-// It might come in handy for usage reporting in the UI should we choose to tap into this system for that purpse.
+// It might come in handy for usage reporting in the UI should we choose to tap into this system for that purpose.
 
 == Data flow
 
 === Query phase
 
-In the query phase, the Prometheus API gets queried and the results get written to the facts table.
+In the query phase, the Prometheus API gets queried, and the results get written to the facts table.
 If records in the dimension tables are missing, they get created as needed.
-The created dimension records might be inclomplete.
+The created dimension records might be incomplete.
 They will get completed in the next phase.
 
 From an orchestration perspective, a master job gets created in the desired interval.
@@ -155,7 +155,7 @@ For each identified query, a job performing that query gets created.
 Each query job fetches the data from Prometheus and writes its results into the facts table.
 Table locking is required to prevent two query jobs running in parallel from creating the same dimension records.
 
-The exection intervals for this phase can be in the range of minutes, hours or maybe days.
+The execution intervals for this phase can be in the range of minutes, hours or maybe days.
 
 == Enrichment phase
 
@@ -170,8 +170,8 @@ However, it must run successfully at least once before the next phase can be run
 == Ingestion phase
 
 Here the actual invoices and line items get created in the target system.
-This usually is run once after a billing period has concluded.
-For example, at the beginning of a month to generate the invoices of the previous month.
+This is usually run once after a billing period has concluded.
+For example, at the beginning of a month to generate the invoices for the previous month.
 Thanks to the enrichment phase, jobs in this phase can just query the intermediate storage and have all data available to create the invoices.
 
 Depending on the sample interval in the intermediate storage, aggregations must be made (sum all records for the requested month).
@@ -549,7 +549,7 @@ The target specific code has a way to parse the category source string and trans
 
 === Ingestion phase
 
-The intermediate tables are no longer touched so they're left out for brevity.
+The intermediate tables are no longer touched, so they're left out for brevity.
 The tables below are an example based on Odoo.
 
 
@@ -600,13 +600,13 @@ The tables below are an example based on Odoo.
 | [(6, 0, [43])] (constant)
 
 | Category ID
-| 19588 (target from the dimension category
+| 19588 (target from the dimension category)
 
 | quantity
 | 1035892736 (summed quantity from fact for the given time span)
 
 | Discount
-| 0 (discount from the dimesnion discount)
+| 0 (discount from the dimension discount)
 
 | Description
 | "Compute (min: …, avg: …, max: …)" (description from dimension query with some values interpolated)
