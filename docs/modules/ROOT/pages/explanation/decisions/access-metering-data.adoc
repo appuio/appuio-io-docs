@@ -1,0 +1,42 @@
+= Access metering data to run reports
+
+== Problem
+
+As outlined in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into an instance of Thanos (Prometheus API).
+That data is supposed to be used to generate invoices.
+It might also be used to show cost reports on the {portal}.
+
+The Prometheus data is missing information.
+For example prices and discounts.
+This data has to be augmented using another source.
+
+== Proposals
+
+. Directly use the Prometheus API
++
+The Prometheus API allows to get results for a single point in time.
+It also allows to query all results within a given time range with a data point as defined by a given interval.
+
+. Use of an intermediate storage
++
+The Prometheus data is queried regularly and stored into an intermediate storage.
+That intermediate storage could then also contain data about pricing and discounts.
+
+== Decision
+
+Use of an intermediate storage
+
+== Rationale
+
+Prometheus queries are restricted in how many data points can be processes.
+The queries required for our billing model are quite complex.
+It is not possible to run them once for a who billing interval (currently one month).
+Experiments have shown, that the query exceeds the maximum execution time.
+In addition, even with a fairly small data set, memory usage of the querier went up as high as 20GiB.
+
+Even if the query was run for smaller time ranges, the execution time was in the order of several seconds.
+While this is not an issue for invoicing, it most certainly is for reports accessible to a user.
+
+Simplifying those queries might be possible by using recording rules.
+xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[Retention time for invoicing] outlines our need to change queries after the fact.
+This prohibits the use of recording rules.
