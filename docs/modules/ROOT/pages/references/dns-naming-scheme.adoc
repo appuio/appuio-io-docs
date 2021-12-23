@@ -18,7 +18,7 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 | Hosting the marketing homepage for {product}
 
 |`id.appuio.cloud`
-|identity provider for {product}
+| Identity provider for {product}
 
 |`my.appuio.cloud`
 | Frontend to manage cross zone concerns
@@ -28,6 +28,12 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 
 | `api.<zone>.appuio.cloud`
 | Kubernetes API endpoint (e.g. for KubeConfig)
+
+| `logging.<zone>.appuio.cloud`
+| Frontend for the OpenShift logging service (Kibana)
+
+| `registry.<zone>.appuio.cloud`
+| Container registry
 
 | `cname.<zone>.appuio.cloud`
 | The DNS entry where users can point CNAME entries to
