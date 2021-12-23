@@ -19,19 +19,13 @@ apiVersion: appuio.io/v1
 kind: Organization
 metadata:
   name: acme-corp <1>
-  annotations:
-    organization.appuio.io/namespace: org-acme-corp <2>
 spec:
-  displayName: Acme Corp. <3>
+  displayName: Acme Corp. <2>
 ----
 Field mapping from the represented `Namespace` resource:
 
-<1> `metadata.labels[appuio.io/metadata.name]`
-<2> `metadata.name`
-<3> `metadata.annotations[organization.appuio.io/display-name]`
-
-An https://book.kubebuilder.io/reference/generating-crd.html#additional-printer-columns[additional printer column] can help to identify the associated namespace resource name.
-This is useful when working with organization-scoped objects which are available in the organization's namespace.
+<1> `metadata.name`
+<2> `metadata.annotations[organization.appuio.io/display-name]`
 
 .Original resource
 [source,yaml]
@@ -39,17 +33,14 @@ This is useful when working with organization-scoped objects which are available
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: org-acme-corp <1>
+  name: acme-corp
   labels:
-    appuio.io/resource.type: organization <2>
-    appuio.io/metadata.name: acme-corp <3>
+    appuio.io/resource.type: organization <1>
   annotations:
-    organization.appuio.io/display-name: Acme Corp. <4>
+    organization.appuio.io/display-name: Acme Corp. <2>
 ----
-<1> Resource name, prefixed with `org-` to circumvent possible name collision
-<2> Identify resource type, used by the API server to filter for namespaces representing organizations
-<3> `metadata.name` of the virtual `Organization` object
-<4> Reflected in the `Organization` object as `spec.displayName`
+<1> Identify resource type, used by the API server to filter for namespaces representing organizations
+<2> Reflected in the `Organization` object as `spec.displayName`
 
 == Labels and Annotations
 
@@ -64,11 +55,6 @@ metadata:
 |label
 |`v1/Namespace`
 |Identifies the resource type in the scope of the {controlapi}
-
-|`appuio.io/metadata.name`
-|label
-|`v1/Namespace`
-|`metadata.name` of the virtual resource
 
 |`organization.appuio.io/display-name`
 |annotation
