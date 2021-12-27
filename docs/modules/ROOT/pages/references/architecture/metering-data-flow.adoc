@@ -61,11 +61,18 @@ In order to support these—and even more constellations—the source and target
 
 On the source, all relevant information is available as labels (dimensions) on a time series.
 The query extracting the data from the source concatenates those dimensions into a source identifier for a product or a discount.
-After that, finding a matching record in the intermediate storage is a multistep process:
+After that, finding a matching record in the intermediate storage is a multi step process:
 First, the full identifier is looked up in the intermediate storage.
 If no record is found for the full identifier, one segment gets dropped from the end.
 This lookup process is repeated until a record is found, or only one segment is left.
 If the last segment is reached without finding an existing record, a new record will be created.
+
+This builds a strict hierarchy.
+Sometimes the order of levels is obvious.
+Sometimes settling on a single order is not possible as two conflicting orders will be used.
+The solution would be to store the same price and or discount several times.
+To remove the need for that data duplication, the lookup process also checks for wild card versions.
+Every segment except for the first and the last one also get replaced by an asterisk (in all combination).
 
 _Discounts and products are timed objects._
 
@@ -78,20 +85,26 @@ The product that's billed is the used memory and is referred to as _appuio_cloud
 
 The source identifier for both the product and the discount would then be:
 
-`appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598`
+`appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
 
 Following the above algorithm, there could now be product or discount records with the following source identifiers:
 
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:ame-corp:curly-snow-5598`
-   Applies to only that single namespace
-* `appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2`
-   Applies to all workload of that organization on that cluster.
-* `appuio_cloud_memory:acme-corp`
-   Applies to all workload of that organization.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:*:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:*:acme-corp:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on any cluster.
+* `appuio_cloud_memory:*:*:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by any tenant on any cluster.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp`
+  Applies to all namespaces owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:*:acme-corp`
+  Applies to all namespaces owned by tenant _acme-corp_ on any cluster.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`
+  Applies to all namespaces owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
 * `appuio_cloud_memory`
-   Applies to everything.
-
-// TODO It could also make sense to apply something to all clusters for all customers `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`.
+  Applies to all namespaces owned by any tenant on any cluster.
 ****
 
 The system is supposed to handle different products.
