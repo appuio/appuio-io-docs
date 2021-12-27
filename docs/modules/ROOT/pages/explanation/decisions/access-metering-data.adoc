@@ -1,0 +1,49 @@
+= Access metering data to run reports
+
+== Problem
+
+As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://thanos.io[Thanos] instance.
+Thanos provides a query API which is guaranteed to be compatible with the Prometheus 2.x API.
+The collected data is intended to be used to generate invoices.
+In addition, the data may also be used to show cost reports on the {portal}.
+
+It's important to note that the Prometheus data is missing information, for example prices and discounts.
+Therefore, the collected metering data has to be augmented with information provided by another source.
+
+== Proposals
+
+. Directly use the Prometheus API
++
+The Prometheus API allows to get results for a single point in time.
+It also allows to query all results within a given time range with a data point as defined by a given interval.
++
+Data collect by Prometheus do not contain information about prices and discounts.
+Adding them though an exporter is not a suitable solution.
+Sometimes we need to do changes/fixes to prices and discounts in retrospect.
+This is not possible on Prometheus time series.
+Consequently, they would have to be fetched from a different location and merged into the data at runtime.
+The missing data could be fetched from the ERP system or any other location that seems suitable for the task.
+
+. Use of an intermediate storage
++
+The Prometheus data is queried regularly, aggregated, enriched with product data and stored into an intermediate database.
+That intermediate storage could then also contain data about pricing and discounts.
+
+== Decision
+
+Use of an intermediate storage
+
+== Rationale
+
+Prometheus queries are restricted in how many data points can be processed.
+The queries required for the billing model are quite complex.
+It's not possible to run them once for a whole billing interval (currently one month).
+Experiments have shown, that the query exceeds the maximum execution time.
+In addition, even with a fairly small data set, memory usage of the Thanos Querier went up as high as 20GiB.
+
+Even if the query was run for smaller time ranges, the execution time was in the order of several seconds.
+While this is not an issue for invoicing, it most certainly is for reports accessible to a user.
+
+Simplifying those queries might be possible by using recording rules.
+xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[Retention time for invoicing] outlines the need to change queries after the fact.
+This prohibits the use of recording rules.

@@ -15,3 +15,4 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
 ** xref:appuio-cloud:ROOT:explanation/decisions/control-api.adoc[{controlapi}]
 ** xref:appuio-cloud:ROOT:explanation/decisions/unit-prefixes.adoc[Unit prefixes]
+** xref:appuio-cloud:ROOT:explanation/decisions/access-metering-data.adoc[Access metering data]
