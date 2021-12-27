@@ -2,12 +2,13 @@
 
 == Problem
 
-As outlined in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into an instance of Thanos (Prometheus API).
-That data is supposed to be used to generate invoices.
-It might also be used to show cost reports on the {portal}.
+As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://thanos.io[Thanos] instance.
+Thanos provides a query API which is guaranteed to be compatible with the Prometheus 2.x API.
+The collected data is intended to be used to generate invoices.
+In addition, the data may also be used to show cost reports on the {portal}.
 
-The Prometheus data is missing information, for example prices and discounts.
-This data has to be augmented using another source.
+It's important to note that the Prometheus data is missing information, for example prices and discounts.
+Therefore, the collected metering data has to be augmented with information provided by another source.
 
 == Proposals
 
@@ -36,7 +37,7 @@ Use of an intermediate storage
 
 Prometheus queries are restricted in how many data points can be processed.
 The queries required for the billing model are quite complex.
-It's not possible to run them once for a who billing interval (currently one month).
+It's not possible to run them once for a whole billing interval (currently one month).
 Experiments have shown, that the query exceeds the maximum execution time.
 In addition, even with a fairly small data set, memory usage of the Thanos Querier went up as high as 20GiB.
 
