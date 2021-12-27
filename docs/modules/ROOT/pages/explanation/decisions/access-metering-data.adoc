@@ -15,6 +15,13 @@ This data has to be augmented using another source.
 +
 The Prometheus API allows to get results for a single point in time.
 It also allows to query all results within a given time range with a data point as defined by a given interval.
++
+Data collect by Prometheus do not contain information about prices and discounts.
+Adding them though an exporter is not a suitable solution.
+Sometimes we need to do changes/fixes to prices and discounts in retrospect.
+This is not possible on Prometheus time series.
+Consequently, they would have to be fetched from a different location and merged into the data at runtime.
+The missing data could be fetched from the ERP system or any other location that seems suitable for the task.
 
 . Use of an intermediate storage
 +
