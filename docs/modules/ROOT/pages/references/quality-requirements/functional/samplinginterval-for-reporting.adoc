@@ -1,0 +1,24 @@
+= Sampling interval in the intermediate metering storage
+
+Source::
+Adapter running reports on the metering data
+
+Stimulus::
+Runs a report
+
+Environment::
+{global}
+
+Artifact::
+Intermediate metering storage
+
+Response::
+One sample per hour
+
+Rationale::
+The fact table initially will be used for generate invoices.
+Invoices are generated monthly and one value per month would be enough.
+In future, the fact table will also be used for other use cases.
+For example to run reports from the {ui}.
+For such cases, a higher resolution is desirable.
+One hour seems to be a good middle ground between resolution and data usage.
