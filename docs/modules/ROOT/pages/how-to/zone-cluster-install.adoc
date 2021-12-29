@@ -60,7 +60,21 @@ yq -i eval -i ".metadata.name = \"${APPUIO_CLOUD_ZONE}\"" \
 [source,bash,subs="attributes+"]
 ----
 yq -i eval '.classes += ["global.apps.appuio-cloud-zone"]'
-yq -i eval ".parameters.openshift4_terraform.terraform_variables.cluster_name = \"${APPUIO_CLOUD_ZONE}\" \
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.cluster_name = \"${APPUIO_CLOUD_ZONE}\"" \
+  "${CLUSTER_ID}.yml"
+----
++
+.For cloudscale.ch
+[source,bash]
+----
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_flavor = \"plus-24\"" \
+  "${CLUSTER_ID}.yml"
+----
++
+.For Exoscale
+[source,bash]
+----
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_size = \"Huge\"" \
   "${CLUSTER_ID}.yml"
 ----
 
