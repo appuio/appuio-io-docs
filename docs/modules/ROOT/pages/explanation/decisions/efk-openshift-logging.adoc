@@ -21,7 +21,7 @@ Custom Solution using Loki::
 There were some prototypes using https://grafana.com/oss/loki[Loki] for cluster logging https://git.vshn.net/syn/commodore-components/synsights-logging[synsights-logging (internal)]
 Loki allows us querying storage used by tenant.
 This way we can implement retention policies by storage size and not only by time.
-Cheaper to run than than ES.
+Cheaper to run than ES.
 Performant and has good visualization (Grafana).
 +
 Integration of Loki into the ElasticSearch console and into concepts like OpenShift Projects would require quite a bit of engineering.
