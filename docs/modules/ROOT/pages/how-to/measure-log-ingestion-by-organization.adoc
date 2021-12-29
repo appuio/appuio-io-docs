@@ -15,19 +15,25 @@ This guide helps finding organizations with higher than expected log volumes.
 
 . Use the following query to measure log ingestion by organization.
 +
-[source]
+[source,PromQL]
 ----
 sum by(organization, namespace, cluster_id) (
   label_replace(
-    (
-      sum (
-        label_replace(
-          increase(log_collected_bytes_total{job="fluentd"}[24h]),
-          "namespace", "$1", "exported_namespace", "(.*)"
-        )
-      ) by (namespace)
-    ) * on (namespace) group_right() kube_namespace_labels{label_appuio_io_organization!=""},
-    "organization", "$1", "label_appuio_io_organization", "(.*)"
+    increase(log_collected_bytes_total[24h]),
+    "namespace",
+    "$1",
+    "exported_namespace",
+    "(.*)"
+  )
+  *
+  on (namespace)
+  group_left(organization)
+  label_replace(
+    kube_namespace_labels{label_appuio_io_organization!=""},
+    "organization",
+    "$1",
+    "label_appuio_io_organization",
+    "(.*)"
   )
 )
 ----
