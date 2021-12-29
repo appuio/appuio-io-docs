@@ -16,7 +16,7 @@ Response::
 One sample per hour
 
 Rationale::
-The fact table initially will be used for generate invoices.
+The fact table will initially be used for generate invoices.
 Invoices are generated monthly and one value per month would be enough.
 In future, the fact table will also be used for other use cases.
 For example to run reports from the {ui}.
