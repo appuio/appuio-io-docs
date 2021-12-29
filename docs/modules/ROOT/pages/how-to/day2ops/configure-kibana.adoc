@@ -1,0 +1,28 @@
+= Configure Kibana Index Patterns
+
+This guide describes how to configure Kibana index patterns.
+This must be done once after installing the OpenShift EFK logging stack.
+
+== Prerequisites
+
+* Administrator access to the {zone}
+
+== Configure Kibana Index Patterns
+
+. Navigate to https://logging.apps.CLUSTER_DOMAIN or click "Logging" in the console app drawer.
+
+. Acknowledge the single sign-on page.
+
+. Enter `app*` under **Index pattern** and click **Next Step**.
++
+image:how-to/kibana/add-index-pattern-step-1.png[]
+
+. Choose `@timestamp` under **Time Filter field name** and click **Create index pattern**.
++
+image:how-to/kibana/add-index-pattern-step-2.png[]
+
+. A new index pattern should have been created and the result should look like this:
++
+image:how-to/kibana/add-index-pattern-result.png[]
+
+. Click **Create index pattern** and repeat the process with `infra*` as index pattern.
