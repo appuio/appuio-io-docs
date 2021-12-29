@@ -1,0 +1,33 @@
+= Measure Log Ingestion by Organization
+
+This guide describes how to measure log ingestion by organization.
+
+NOTE: In xref:appuio-cloud:ROOT:explanation/decisions/efk-openshift-logging.adoc[RedHat OpenShift Logging (EFK) Stack as Logging Solution] we decided to offer Elasticsearch on a fair-use policy.
+This guide helps finding organizations with higher than expected log volumes.
+
+== Prerequisites
+
+* Administrator access to the {zone}
+
+== Measure Log Ingestion by Organization
+
+. Navigate to **Observe** -> **Metrics** in the sidebar of the OpenShift console.
+
+. Use the following query to measure log ingestion by organization.
++
+[source]
+----
+sum by(organization, namespace, cluster_id) (
+  label_replace(
+    (
+      sum (
+        label_replace(
+          increase(log_collected_bytes_total{job="fluentd"}[24h]),
+          "namespace", "$1", "exported_namespace", "(.*)"
+        )
+      ) by (namespace)
+    ) * on (namespace) group_right() kube_namespace_labels{label_appuio_io_organization!=""},
+    "organization", "$1", "label_appuio_io_organization", "(.*)"
+  )
+)
+----
