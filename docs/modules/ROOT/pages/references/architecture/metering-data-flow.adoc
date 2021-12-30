@@ -182,10 +182,7 @@ The master job looks at the query table and identifies the queries that apply to
 For each identified query, a job performing that query gets created.
 
 Each query job fetches the data from Prometheus and writes its results into the facts table.
-// TODO(sg): is this what we want to happen here?
-// I assume we don't want duplicate facts for a query and timestamp.
-// Additionally, do we drop/replace records or update them in place when queries are run again to fix mistakes?
-If the facts table already contains results for the query job's query and timestamp, those records are dropped and replaced with the new results.
+If the facts table already contains results for the query job's query and timestamp, those records are updated or dropped and replaced with the new results.
 Table locking is required to prevent two query jobs running in parallel from creating the same dimension records.
 
 The execution intervals for this phase can be in the range of minutes, hours or maybe days.
