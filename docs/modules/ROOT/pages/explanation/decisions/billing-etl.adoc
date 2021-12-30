@@ -1,0 +1,44 @@
+= No off-the-shelf ETL processor for metering and billing
+
+== Problem
+
+We describe an ETL process in xref:references/architecture/metering-data-flow.adoc[data model and data flow for billing].
+To implement this process we can use an off-the-shelf ETL processing framework (ETL processor) or create custom tools.
+
+== Relevant requirements
+
+* The billing process reads data from the Prometheus API
+* The billing process has an intermediate storage (see <<_relevant_decisions>>)
+
+== Relevant decisions
+
+* In xref:explanation/decisions/access-metering-data.adoc[Access metering data] we decided that we don't directly read metering data from the Prometheus API.
+
+== Proposals
+
+There's two approaches we could take to implement the billing process:
+
+[qanda]
+
+Off-the-shelf ETL processor::
+We setup an off-the-shelf ETL processor (for example https://www.singer.io[Singer], https://airbyte.io[Airbyte] or https://nifi.apache.org/[Apache NiFi]) to implement our billing process.
+We implement the billing process in the framework provided by the ETL processor.
+
+Custom implementation of our ETL process::
+We implement the billing process as a collection of custom tools which operate on a shared relational database which acts as a https://en.wikipedia.org/wiki/Data_warehouse[data warehouse].
+
+
+== Decision
+
+We create a custom implementation of our ETL process for billing.
+
+== Rationale
+
+Most off-the-shelf ETL processors don't natively support ingesting data from a Prometheus API.
+
+Some ETL processors are aimed at non-programmers and their primary way to implement processes is a graphical programming interface.
+Other processors mainly provide a job scheduling, execution and monitoring platform and provide the user with toolkits to develop custom tools which model their process.
+
+In conclusion, it's unlikely that we'd significantly reduce the complexity of implementing the business logic of the billing process by using an off-the-shelf ETL processor.
+
+NOTE: There will be a future decision regarding the scheduling, execution and monitoring platform for the billing process.
