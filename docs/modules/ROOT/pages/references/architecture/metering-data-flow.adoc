@@ -153,20 +153,20 @@ At the center of the model is the fact.
 A fact represents a sampled amount of a billed item (such as memory usage for a single namespace).
 The sampling rate for facts is one hour.
 For ingestion into the target, facts belonging to the same billed item are aggregated to a single line item.
-The value of the fact is the observed quantity to be billed.
+The value (field `quantity`) of the fact is the observed quantity to be billed.
 
-The date time holds the date and time the fact applies to.
-The timestamp is the unix time stamp while the other fields are filled accordingly.
-For example `1640656800` translates to year 2021, month 12, day 28 and hour 3.
+Records in the "date time" table indicate date and time of facts.
+The field `timestamp` is a Unix timestamp, and the values of the other fields correspond to the value of `timestamp` in UTC.
+For example, `1640656800` translates to year 2021, month 12, day 28 and hour 3.
 
 [IMPORTANT]
 ====
-The fact table quantity applies to the observed usage of one hour.
-Consequently, the time record refers to the time range of its value plus one hour.
-This is different to how the PromQL queries handle time.
-There, time refers to when the query got executed.
-The aggregation over time functions then aggregate from that time into the past.
-For that reason, there is a one hour difference between the time sent to the Prometheus API and the date time dimension created from it.
+The field `quantity` of records in the fact table corresponds to the aggregated usage over one hour.
+Fact records are linked to the "date time" record indicating the start of the hour-long period they cover.
+
+Notably, this differs from how the Prometheus query interface handles time ranges.
+Prometheus's aggregation functions only support aggregating data which is older than the query's timestamp.
+Therefore, we need to provide the timestamp for the end of the period that we want to query to Prometheus.
 ====
 
 The query holds the PromQL query string used to generate facts.
@@ -196,6 +196,15 @@ They will get completed in the next phase.
 From an orchestration perspective, a master job is created in the desired interval.
 The master job looks at the query table and identifies the queries that apply to the time window at hand.
 For each identified query, a job performing that query is created.
+
+[IMPORTANT]
+====
+Query jobs are invoked with a timestamp that indicates the end of the time window that they need to query.
+This allows query jobs to invoke the Prometheus query API with the provided timestamp.
+
+However, to create the resulting entry in the fact table, query jobs need to compute the timestamp for the start of the query window.
+To perform this calculation, query jobs need to know (or be called with) the query window size.
+====
 
 Each query job fetches the data from Prometheus and writes its results into the facts table.
 If the facts table already contains results for the query job's query and timestamp, those records are updated or dropped and replaced with the new results.
