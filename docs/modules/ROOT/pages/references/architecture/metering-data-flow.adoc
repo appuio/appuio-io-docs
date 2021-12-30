@@ -155,6 +155,20 @@ The sampling rate for facts is one hour.
 For ingestion into the target, facts belonging to the same billed item are aggregated to a single line item.
 The value of the fact is the observed quantity to be billed.
 
+The date time holds the date and time the fact applies to.
+The timestamp is the unix time stamp while the other fields are filled accordingly.
+For example `1640656800` translates to year 2021, month 12, day 28 and hour 3.
+
+[IMPORTANT]
+====
+The fact table quantity applies to the observed usage of one hour.
+Consequently, the time record refers to the time range of its value plus one hour.
+This is different to how the PromQL queries handle time.
+There, time refers to when the query got executed.
+The aggregation over time functions then aggregate from that time into the past.
+For that reason, there is a one hour difference between the time sent to the Prometheus API and the date time dimension created from it.
+====
+
 The query holds the PromQL query string used to generate facts.
 It also holds metadata associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
 The description is a rendered string from a template.
