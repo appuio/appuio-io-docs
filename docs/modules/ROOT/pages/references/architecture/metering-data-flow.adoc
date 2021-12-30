@@ -143,12 +143,13 @@ image::system/data-model-billing.drawio.svg[]
 Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
 However, it's not the only choice.
 It can and has to be adapted according the storage technology chosen for implementation.
+
+Fields that are marked in **bold** are part a single unique constraint group for that table.
 ====
 
 At the center of the model is the fact.
 A fact represents a sampled amount of something that's billed.
-The fact can have the same sampling rate as its source.
-It also can be an aggregation of a smaller sampling rate.
+The facts sampling rate will be one hour.
 For ingestion into the target, the fact will be aggregated to a single line item.
 The value of the fact is the observed quantity to be billed.
 
@@ -166,9 +167,6 @@ Its source identifier is a segmented match as explained in <<System idea>>.
 The category allows grouping line items together.
 Taking the example of {product}, a category is a namespace on a specific cluster.
 All billed items of that namespace will be grouped together on the resulting invoice.
-
-// TODO Dimension Item is not used for billing.
-// It might come in handy for usage reporting in the UI should we choose to tap into this system for that purpose.
 
 == Data flow
 
