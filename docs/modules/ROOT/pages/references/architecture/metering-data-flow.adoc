@@ -1,0 +1,675 @@
+= Data model and data flow for Billing
+
+[abstract]
+--
+xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works.
+This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
+--
+
+The core of this part of the system has three responsibilities.
+First, it must fetch the required data from the input system.
+Second, that data must be enriched.
+That enrichment involves looking up prices and discounts from price tables.
+It also includes matching the identifiers from the source (Prometheus) with the identifiers from the target system.
+Third, it must ingest that data into the target system.
+
+Key features of this component are:
+
+* It uses the Prometheus Query API as its source.
+* It allows to integrate any billing/ERP system as its target.
+  In order to achieve this, it must be loosely coupled.
+* Execution is idempotent.
+  If run twice for a given time frame with the same configuration, the result is the same.
+  However, if run again with a different configuration, the results reflect the changes made.
+  This ensures that errors in the past can easily be fixed.
+* Time-aware configuration.
+  Every configuration with the power to change the output is made time-aware.
+  This means that this config has timestamps attached denoting from when and until when that config is valid.
+
+== System idea
+
+This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process].
+The extract and load part are well isolated and only have a dependency to their source/target system.
+In contrast, the transform part needs to bring information from both the source and the target together.
+Instead of having one single ETL process, a multistage model with an intermediate persistence will be used.
+The first stage fetches the data from the source into that intermediate storage.
+The second stage enriches that data by bringing in missing pieces from the target system.
+The third stage then ingests the data into the target system.
+
+This architecture is chosen to easily accommodate ingesting the data into different target systems.
+Additionally, the rather loose coupling simplifies writing and maintaining the code base.
+We take into account ease of replacing for code that talks to the target system to accommodate replacing the billing/ERP system and reselling of {product}.
+
+Many aspects of this system are expected to change over time.
+For example, the price for a given product and any discounts are valid only for a defined time window.
+The system deals with them by assigning timestamps to those data records.
+The timestamp `from` denotes the earliest point in time that records becomes valid.
+The timestamp `until` denotes the latest point in time that record was valid.
+If either is left blank, that record is unbounded in that direction.
+
+By not making either timestamp mandatory, both records which are valid from the beginning up until a certain time, and records which are valid until further notice can be defined.
+To avoid ambiguous data points, the system must implement constraints and validations to ensure that no overlapping time ranges can be defined.
+
+Identifiers on the source and the target system aren't necessarily the same.
+On the source, the billing entity might be identified by the string `acme-corp`.
+However, on the target, that same billing entity might be identified by the integer `42`.
+In order to bring those two worlds together, the intermediate storage contains lookup tables holding both the source and target identifiers.
+
+It often happens that the same product gets sold at different prices and discounts can be granted in general or for a given time period.
+Also, the scope can vary.
+For example, it's possible that a billing entity gets a different price but only for a specific instance of a product.
+A discount might be granted to everybody for a given time period or only to a single billing entity.
+In order to support these—and even more constellations—the source and target matching gets used.
+
+On the source, all relevant information is available as labels (dimensions) on a time series.
+The query extracting the data from the source concatenates those dimensions into a source identifier for a product or a discount.
+After that, finding a matching record in the intermediate storage is a multi step process:
+First, the full identifier is looked up in the intermediate storage.
+If no record is found for the full identifier, one segment gets dropped from the end.
+This lookup process is repeated until a record is found, or only one segment is left.
+If the last segment is reached without finding an existing record, a new record will be created.
+
+[NOTE]
+====
+It's expected that those new records won't be complete.
+Either the system will add missing information to those records in the enrichment phase, or manual intervention will be required to complete the records.
+====
+
+The lookup process -- as described -- builds a strict hierarchy.
+For some use cases, this hierarchy, where zones are less specific than tenants, matches product variants.
+For example, the described hierarchy easily allows specifying different prices per {zone}.
+However, for other use cases, the hierarchy requires the same product or discount to be defined multiple times.
+For example, this is the case if we want to grant a tenant a discount on all zones.
+With the strict hierarchy, we'd have to create a record of this discount for each zone.
+
+To eliminate the need for duplicate product or discount records, the lookup process also supports wild cards for segments.
+The enhanced lookup process will also search for records where any segments except the first and last one are replaced by a literal asterisk (in all combinations).
+Note that the lookup process doesn't support partial wild cards for individual segments.
+Either a segment holds the value generated by the query or a single asterisk.
+
+One iteration of the enhanced lookup process differs from the strictly hierarchical process described above as follows:
+If no record is found for the identifier, the identifier's intermediate segments are successively replaced by asterisks.
+First a single segment is replaced by an asterisk, then two, etc., until all intermediate segments have been replaced by asterisks.
+We always replace segments with asterisks from right to left.
+A lookup is made for each combination of asterisks.
+If no record is found for any combination of asterisks, a segment from the end of the identifier is dropped and the full iteration is repeated.
+
+_Discounts and products are timed objects._
+
+.Examples
+****
+The following assumes the source contains metrics about workload in a Kubernetes namespace named _curly-snow-5598_.
+The billing entity is denoted by a label named `tenant_id` with the value _acme-corp_.
+There is also a label `cluster_id` to denote the cluster where that workload runs which has the value _c-appuio-cloudscale-lpg-2_.
+The product that's billed is the used memory and is referred to as _appuio_cloud_memory_.
+
+The source identifier produced by the query (used for both the product and the discount) would then be:
+
+`appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
+
+Following the enhanced algorithm, we query product or discount records with the following source identifiers (listed in query order):
+
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:*:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:*:acme-corp:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on any cluster.
+* `appuio_cloud_memory:*:*:curly-snow-5598`
+  Applies to namespace _curly-snow-5598_ owned by any tenant on any cluster.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp`
+  Applies to all namespaces owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory:*:acme-corp`
+  Applies to all namespaces owned by tenant _acme-corp_ on any cluster.
+* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`
+  Applies to all namespaces owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
+* `appuio_cloud_memory`
+  Applies to all namespaces owned by any tenant on any cluster.
+****
+
+The system is supposed to handle different products.
+We assume that the data required to bill one product can be generated with a single PromQL query.
+
+_Queries are timed objects._
+
+Some items contain a name or description that's to be ingested into the target system.
+Some of those texts are supposed to be dynamic.
+To enable this, they're treated as templates and the dynamic parts get inserted wile creating the records on the target system.
+
+== Data model
+
+image::system/data-model-billing.drawio.svg[]
+
+[NOTE]
+====
+Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
+However, it's not the only choice.
+It can and has to be adapted according the storage technology chosen for implementation.
+
+Fields that are marked in **bold** are part a single unique constraint group for that table.
+====
+
+At the center of the model is the fact.
+A fact represents a sampled amount of a billed item (such as memory usage for a single namespace).
+The sampling rate for facts is one hour.
+For ingestion into the target, facts belonging to the same billed item are aggregated to a single line item.
+The value (field `quantity`) of the fact is the observed quantity to be billed.
+
+Records in the "date time" table indicate date and time of facts.
+The field `timestamp` is a Unix timestamp, and the values of the other fields correspond to the value of `timestamp` in UTC.
+For example, `1640656800` translates to year 2021, month 12, day 28 and hour 3.
+
+[IMPORTANT]
+====
+The field `quantity` of records in the fact table corresponds to the aggregated usage over one hour.
+Fact records are linked to the "date time" record indicating the start of the hour-long period they cover.
+
+Notably, this differs from how the Prometheus query interface handles time ranges.
+Prometheus's aggregation functions only support aggregating data which is older than the query's timestamp.
+Therefore, we need to provide the timestamp for the end of the period that we want to query to Prometheus.
+====
+
+The query holds the PromQL query string used to generate facts.
+It also holds metadata associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
+The description is a rendered string from a template.
+
+The product holds the amount to be charged per unit.
+Its source identifier is a segmented match as explained in <<System idea>>.
+This is effectively the price table.
+
+The discount holds a percentage to be discounted.
+Its source identifier is a segmented match as explained in <<System idea>>.
+
+The category allows grouping line items together.
+Taking the example of {product}, a category is a namespace on a specific cluster.
+All billed items of that namespace will be grouped together on the resulting invoice.
+
+== Data flow
+
+=== Query phase
+
+In the query phase, the Prometheus API is queried, and the results are written to the facts table.
+If records in the dimension tables are missing, they're created as needed.
+The created dimension records might be incomplete.
+They will get completed in the next phase.
+
+From an orchestration perspective, a master job is created in the desired interval.
+The master job looks at the query table and identifies the queries that apply to the time window at hand.
+For each identified query, a job performing that query is created.
+
+[IMPORTANT]
+====
+Query jobs are invoked with a timestamp that indicates the end of the time window that they need to query.
+This allows query jobs to invoke the Prometheus query API with the provided timestamp.
+
+However, to create the resulting entry in the fact table, query jobs need to compute the timestamp for the start of the query window.
+To perform this calculation, query jobs need to know (or be called with) the query window size.
+====
+
+Each query job fetches the data from Prometheus and writes its results into the facts table.
+If the facts table already contains results for the query job's query and timestamp, those records are updated or dropped and replaced with the new results.
+Table locking is required to prevent two query jobs running in parallel from creating the same dimension records.
+
+The execution interval for this phase is in the range of minutes, hours or possibly days.
+
+== Enrichment phase
+
+The query phase may have created dimension records that are incomplete.
+In the enrichment phase, one or several jobs communicate with the target system to create or fetch any missing information in dimension records.
+It's possible that this phase creates new records in the target system.
+For example, in order to get the target id of a category, this category may need to be created in the target system first.
+
+This phase doesn't necessarily need to be executed as frequently the <<_query_phase,query phase>>.
+However, the enrichment must be completed successfully at least once before the <<_ingestion_phase,ingestion phase>> can be run.
+
+== Ingestion phase
+
+In this phase, the actual invoices and line items are created in the target system.
+The ingestion is usually executed once after a billing period has concluded.
+For example, ingestion can be executed at the beginning of a month to generate the invoices for the previous month.
+Thanks to the enrichment phase, jobs in this phase only need to query the intermediate storage to retrieve all the data which is required to create invoices.
+
+Depending on the sample interval in the intermediate storage, the ingestion phase must aggregate records retrieved from the intermediate storage.
+For example, the ingestion job may need to sum all records belonging to a single billed item for the requested month.
+
+== Example
+
+=== Initial state
+
+.Dimension Query
+[cols="1,5"]
+|===
+| id
+| 1
+
+| name
+| appuio_cloud_memory
+
+| description
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
+| …
+
+| unit
+| MiB
+|===
+
+.Dimension Product
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-1
+
+| target
+| 18367
+
+| amount
+| 0.0002248931
+
+| from
+| null
+
+| until
+| null
+|===
+
+.Dimension Discount
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory
+
+| discount
+| 0
+
+| from
+| null
+
+| until
+| null
+|===
+
+In the target system, a record exists for a tenant with the id `22457`.
+That record has a field that contains the source reference with the value `acme-corp`
+Also a product record exists with the id `18367`
+
+All the other dimensions are empty.
+
+=== Query phase
+
+[source, Prometheus query result]
+----
+{
+  query="appuio_cloud_memory",
+  tenant="acme-corp",
+  category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
+  product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
+} 1035892736 1639040942
+----
+
+.Fact
+[cols="1,5"]
+|===
+| date_time_id
+| 1
+
+| query_id
+| 1
+
+| tenant_id
+| 1
+
+| category_id
+| 1
+
+| product_id
+| 1
+
+| discount_id
+| 1
+
+| quantity
+| 1035892736
+|===
+
+.Dimension Date Time
+[cols="1,5"]
+|===
+| id
+| 1
+
+| timestamp
+| 1639040942
+
+| year
+| 2021
+
+| month
+| 12
+
+| day
+| 09
+
+| hour
+| 10
+
+| minute
+| 09
+|===
+
+.Dimension Query
+[cols="1,5"]
+|===
+| id
+| 1
+
+| name
+| appuio_cloud_memory
+
+| description
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
+| …
+
+| unit
+| MiB
+|===
+
+.Dimension Tenant
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| acme-corp
+
+| target
+| null
+|===
+
+.Dimension Category
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| c-appuio-cloudscale-lpg-2:curly-snow-5598
+
+| target
+| null
+|===
+
+
+.Dimension Product
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-2
+
+| target
+| 18367
+
+| amount
+| 0.0002248931
+
+| from
+| null
+
+| until
+| null
+|===
+
+.Dimension Discount
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory
+
+| discount
+| 0
+
+| from
+| null
+
+| until
+| null
+|===
+
+=== Enrichment phase
+
+.Fact
+[cols="1,5"]
+|===
+| date_time_id
+| 1
+
+| query_id
+| 1
+
+| tenant_id
+| 1
+
+| category_id
+| 1
+
+| product_id
+| 1
+
+| discount_id
+| 1
+
+| quantity
+| 1035892736
+|===
+
+.Dimension Date Time
+[cols="1,5"]
+|===
+| id
+| 1
+
+| timestamp
+| 1639040942
+
+| year
+| 2021
+
+| month
+| 12
+
+| day
+| 09
+
+| hour
+| 10
+
+| minute
+| 09
+|===
+
+.Dimension Query
+[cols="1,5"]
+|===
+| id
+| 1
+
+| name
+| appuio_cloud_memory
+
+| description
+| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+
+| query
+| …
+
+| unit
+| MiB
+|===
+
+.Dimension Tenant
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| acme-corp
+
+| target
+| *22457*
+|===
+
+.Dimension Category
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| c-appuio-cloudscale-lpg-2:curly-snow-5598
+
+| target
+| *19588*
+|===
+
+To get the target category id, a category record was created in the target system.
+
+.Target Category
+[cols="1,5"]
+|===
+| ID
+| 19588
+
+| Description
+| Zone: cloudscale.ch - LPG 2, namespace: curly-snow-5598
+|===
+
+The target specific code has a way to parse the category source string and transform it to something that resembles the above example.
+
+.Dimension Product
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory:c-appuio-cloudscale-lpg-2
+
+| target
+| 18367
+
+| amount
+| 0.0002248931
+
+| from
+| null
+
+| until
+| null
+|===
+
+.Dimension Discount
+[cols="1,5"]
+|===
+| id
+| 1
+
+| source
+| appuio_cloud_memory
+
+| discount
+| 0
+
+| from
+| null
+
+| until
+| null
+|===
+
+=== Ingestion phase
+
+The intermediate tables are no longer touched, so they're left out for brevity.
+The tables below are an example based on Odoo.
+
+
+.Invoice
+[cols="1,5"]
+|===
+| ID
+| 10730 (auto incremented primary key)
+
+| Partner ID
+| 22457 (the target from dimension tenant)
+
+| Account ID
+| 49 (constant)
+
+| Invoice Date
+| 2022-01-01
+
+| Journal ID
+| 1 (constant)
+
+| Name
+| APPUiO Cloud December 2021 (specific to the job that created this invoice)
+
+| Payment Term
+| 3 (constant)
+
+| State
+| Draft (constant)
+
+| User ID
+| ???
+|===
+
+.Line Item
+[cols="1,5"]
+|===
+| Invoice ID
+| 10730
+
+| Account ID
+| 612 (constant)
+
+| Product ID
+| 18367
+
+| Tax ID
+| [(6, 0, [43])] (constant)
+
+| Category ID
+| 19588 (target from the dimension category)
+
+| quantity
+| 1035892736 (summed quantity from fact for the given time span)
+
+| Discount
+| 0 (discount from the dimension discount)
+
+| Description
+| "Compute (min: …, avg: …, max: …)" (description from dimension query with some values interpolated)
+
+| Unit of measure
+| MiB (unit from dimension query)
+
+| Amount
+| 0.0002248931 (amount from dimension product)
+|===
