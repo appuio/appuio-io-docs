@@ -12,9 +12,8 @@ kind: User
 metadata:
   name: bec0d928-2ae2-4cec-94a0-5f72f12b8b39 <1>
 spec:
-  displayName: Kate Demo
-  email: kate@demo.com
-  defaultOrganizationRef: acme-corp
+  preferences:
+    defaultOrganizationRef: acme-corp
 status: <2>
   displayName: Kate Demo
   username: kate.demo

@@ -109,5 +109,5 @@ status:
     Only one of the two parameters are allowed:
 
     * `id` must match `metadata.name` of an existing `User` resource
-    * `username` must match `spec.username` from an existing `User` resource
+    * `username` must match `status.username` from an existing `User` resource
 <2> This is resolved by the xref:explanation/system/details-adapters.adoc[adapter]
