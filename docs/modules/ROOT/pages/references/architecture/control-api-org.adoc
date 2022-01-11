@@ -77,7 +77,7 @@ The filter uses the following heuristic:
 We use standard Kubernetes role-based access control for `Organizations` with two distinct differences.
 
 . Access needs to be granted for `organizations` resources in API group `rbac.appuio.io` and not for resources in API group `organization.appuio.io`.
-Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`-
+Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`.
 Similarly to `Namespaces`, permissions configured by a `Role` in namespace `foo` only affects `Organization` `foo`.
 
 . For `list` and `watch` verbs the API server will only return resources that the user also has permission to `get`
@@ -87,7 +87,7 @@ Similarly to `Namespaces`, permissions configured by a `Role` in namespace `foo`
 ====
 The `rbac.appuio.io` API group allows us to delegate access control to the aggregate API server.
 With the new API group we can still use the powerful RBAC engine of Kubernetes, while bypassing the Kubernetes API server's access control.
-
+As a consequence, by introducing this logical RBAC group, no custom code needs to be written in order to implement the access control required for multi-tenancy.
 The Kubernetes API server will still perform classical access control for `organizations.organization.appuio.io` resources.
 In practice any user is allowed to perform any action on `organizations.organization.appuio.io` and access control is handled by the aggregate API server.
 ====
