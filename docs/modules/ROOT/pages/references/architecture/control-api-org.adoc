@@ -15,7 +15,7 @@ It is assumed that the `Organization` resource is used for all operations, the r
 .Virtual resource
 [source,yaml]
 ----
-apiVersion: appuio.io/v1
+apiVersion: organization.appuio.io/v1
 kind: Organization
 metadata:
   name: acme-corp <1>
@@ -74,25 +74,22 @@ The filter uses the following heuristic:
 
 == Access Control
 
-Access control for `Organizations` uses standard Kubernetes RBAC rules, but `Organizations` are represented by two different resources.
+We use standard Kubernetes role-based access control for `Organizations` with two distinct differences.
 
-. The `organizations.organizations.appuio.io` resource is the cluster-scoped resource we actually access.
-The access control for this resource is done by the Kubernetes API server.
-RBAC works the same as for any other cluster-scoped resources and can be configured through `ClusterRoles` and `ClusterRoleBindings`.
-
-. The `organizations.rbac.appuio.io` resource is a custom namespace-scoped resource known only to the `Organization` API server, which is only used for access control.
-Being namespace-scoped, permissions can also be configured through `Roles` and `RoleBindings`.
+. Access needs to be granted for `organizations` resources in API group `rbac.appuio.io` and not for resources in API group `organization.appuio.io`.
+Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`-
 Similarly to `Namespaces`, permissions configured by a `Role` in namespace `foo` only affects `Organization` `foo`.
 
-A user can only perform an action on an `Organization`, if the action is allowed on both of these resources.
-The `list` and `watch` verbs are special cases and the API server will only return resources that the user also has permission to `get`
+. For `list` and `watch` verbs the API server will only return resources that the user also has permission to `get`
 
-In practice this means, we will allow any user to perform any action on `organizations.organizations.appuio.io` and manage access to `Organizations` through `organizations.rbac.appuio.io`.
 
 [NOTE]
 ====
-This trick of using `organizations.rbac.appuio.io` allows us to handle and especially delegate access to `Organizations` on a namespace level.
-So we can allow users to configure access without having to expose `ClusterRoleBindings`.
+The `rbac.appuio.io` API group allows us to delegate access control to the aggregate API server.
+With the new API group we can still use the powerful RBAC engine of Kubernetes, while bypassing the Kubernetes API server's access control.
+
+The Kubernetes API server will still perform classical access control for `organizations.organization.appuio.io` resources.
+In practice any user is allowed to perform any action on `organizations.organization.appuio.io` and access control is handled by the aggregate API server.
 ====
 
 === Generated RBAC
