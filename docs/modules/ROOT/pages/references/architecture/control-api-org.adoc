@@ -15,7 +15,7 @@ It is assumed that the `Organization` resource is used for all operations, the r
 .Virtual resource
 [source,yaml]
 ----
-apiVersion: appuio.io/v1
+apiVersion: organization.appuio.io/v1
 kind: Organization
 metadata:
   name: acme-corp <1>
@@ -42,7 +42,7 @@ metadata:
 <1> Identify resource type, used by the API server to filter for namespaces representing organizations
 <2> Reflected in the `Organization` object as `spec.displayName`
 
-== Labels and Annotations
+.Labels and Annotations
 
 [cols="2,1,1,3",options="header"]
 |===
@@ -63,7 +63,7 @@ metadata:
 
 |===
 
-== Resource filter
+=== Resource filter
 
 The virtual resource is a filtered view of `Namespaces`.
 The filter uses the following heuristic:
@@ -71,16 +71,71 @@ The filter uses the following heuristic:
 * API version: `v1`
 * Kind: `Namespace`
 * Label: `appuio.io/resource-type=organization`
-* Subject is bound to one of the defined `ClusterRole` resources.
 
-== RBAC and Cluster roles
+== Access Control
 
-These are `ClusterRole` resources which are bound to a subject by a namespaced `RoleBinding`:
+We use standard Kubernetes role-based access control for `Organizations` with two distinct differences.
+
+. Access needs to be granted for `organizations` resources in API group `rbac.appuio.io` and not for resources in API group `organization.appuio.io`.
+Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`.
+Similarly to `Namespaces`, permissions configured by a `Role` in namespace `foo` only affects `Organization` `foo`.
+
+. For `list` and `watch` verbs the API server will only return resources that the user also has permission to `get`
+
+
+[NOTE]
+====
+The `rbac.appuio.io` API group allows us to delegate access control to the aggregate API server.
+With the new API group we can still use the powerful RBAC engine of Kubernetes, while bypassing the Kubernetes API server's access control.
+As a consequence, by introducing this logical RBAC group, no custom code needs to be written in order to implement the access control required for multi-tenancy.
+The Kubernetes API server will still perform classical access control for `organizations.organization.appuio.io` resources.
+In practice any user is allowed to perform any action on `organizations.organization.appuio.io` and access control is handled by the aggregate API server.
+====
+
+=== Generated RBAC
+
+By default there are two `ClusterRoles` that configure access for organization members
 
 `appuio-organization-viewer`:: View (read only) access to an organization
-`appuio-organization-admin`:: Admin (read / write) access to an organization
++
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: appuio-organization-viewer
+rules:
+- apiGroups: ["rbac.appuio.io"]
+  resources: ["organizations"]
+  verbs: ["get"]
+...
+# Get and list permission for other resources
+----
 
-By default, creating organizations can be done by all authenticated users.
+`appuio-organization-admin`:: Admin (read / write) access to an organization
++
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: appuio-organization-admin
+rules:
+- apiGroups: ["rbac.appuio.io"]
+  resources: ["organizations"]
+  verbs: ["get", "patch", "edit"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["rolebindings"]
+  verbs: ["get", "list", "watch", "patch", "edit", "delete"]
+...
+# Edit permission for other resources
+----
+
+Creating, listing, and watching organizations can be done by all authenticated users.
+
+When creating an `Organization`, a `RoleBinding` in the created `Namespace` is generated.
+This `RoleBinding` assigns the `appuio-organization-admin` `ClusterRole` to the creating user.
+This allows the creator to manage the new `Organization` and assign permissions to new members.
 
 == Organization Membership
 
