@@ -24,7 +24,7 @@ Key features of this component are:
   This ensures that errors in the past can easily be fixed.
 * Time-aware configuration.
   Every configuration with the power to change the output is made time-aware.
-  This means that this config has timestamps attached denoting from when and until when that config is valid.
+  This means that this config has time ranges attached denoting from when and until when that config is valid.
 
 == System idea
 
@@ -42,12 +42,12 @@ We take into account ease of replacing for code that talks to the target system 
 
 Many aspects of this system are expected to change over time.
 For example, the price for a given product and any discounts are valid only for a defined time window.
-The system deals with them by assigning timestamps to those data records.
-The timestamp `from` denotes the earliest point in time that records becomes valid.
-The timestamp `until` denotes the latest point in time that record was valid.
-If either is left blank, that record is unbounded in that direction.
+The system deals with them by assigning time ranges to those data records.
+The time range `during` denotes the earliest point and the latest point in time that records becomes valid.
 
-By not making either timestamp mandatory, both records which are valid from the beginning up until a certain time, and records which are valid until further notice can be defined.
+To define records which are valid from the beginning up until a certain time, and records which are valid until further notice, https://www.postgresql.org/docs/13/datatype-datetime.html#DATATYPE-DATETIME-SPECIAL-TABLE[`(-)infinity`] can be used.
+The database holds whether the lower and upper bounds are inclusive or exclusive.
+By default the lower range is inclusive, the upper is exclusive `[lower,upper)`.
 To avoid ambiguous data points, the system must implement constraints and validations to ensure that no overlapping time ranges can be defined.
 
 Identifiers on the source and the target system aren't necessarily the same.
@@ -270,11 +270,8 @@ For example, the ingestion job may need to sum all records belonging to a single
 | amount
 | 0.0002248931
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 .Dimension Discount
@@ -289,11 +286,8 @@ For example, the ingestion job may need to sum all records belonging to a single
 | discount
 | 0
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 In the target system, a record exists for a tenant with the id `22457`.
@@ -425,11 +419,8 @@ All the other dimensions are empty.
 | amount
 | 0.0002248931
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 .Dimension Discount
@@ -444,11 +435,8 @@ All the other dimensions are empty.
 | discount
 | 0
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 === Enrichment phase
@@ -577,11 +565,8 @@ The target specific code has a way to parse the category source string and trans
 | amount
 | 0.0002248931
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 .Dimension Discount
@@ -596,11 +581,8 @@ The target specific code has a way to parse the category source string and trans
 | discount
 | 0
 
-| from
-| null
-
-| until
-| null
+| during
+| [-Infinity,Infinity)
 |===
 
 === Ingestion phase
