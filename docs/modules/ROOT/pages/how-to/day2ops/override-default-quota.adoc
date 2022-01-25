@@ -36,6 +36,11 @@ For resources containing a forward slash, you will need to substitute it for an 
 For example: `resourcequota.appuio.io/organization-objects.openshift.io_imagestreams: "40"`.
 ====
 
+[TIP]
+====
+Based on how Kyverno implements policies which generate resources, it may take a few minutes for overrides to be applied in the actual `ResourceQuota` or `LimitRange` object.
+====
+
 === Examples
   
 .Update the allowed number of pods in the namespace `restless-wave` to `100`
