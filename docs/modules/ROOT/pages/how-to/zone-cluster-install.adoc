@@ -27,6 +27,7 @@ export APPUIO_CLOUD_ZONE="<zone name>" <1>
 ** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_bootstrap_bucket[Set up S3 bucket for cluster bootstrap]
 ** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_upload_coreos_image[Upload Red Hat CoreOS image]
 ** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_set_vault_secrets[Set secrets in Vault]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_prepare_cluster_repository[Prepare Cluster Repository]
 ** xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_configure_installer[Configure the OpenShift Installer]
 +
 * Exoscale
@@ -35,6 +36,7 @@ export APPUIO_CLOUD_ZONE="<zone name>" <1>
 ** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_bootstrap_bucket[Set up S3 bucket for cluster bootstrap]
 ** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_upload_coreos_image[Upload Red Hat CoreOS image]
 ** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_set_vault_secrets[Set secrets in Vault]
+** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_prepare_cluster_repository[Prepare Cluster Repository]
 ** xref:oc4:ROOT:how-tos/exoscale/install.adoc#_configure_installer[Configure the OpenShift Installer]
 
 
@@ -59,7 +61,7 @@ yq -i eval -i ".metadata.name = \"${APPUIO_CLOUD_ZONE}\"" \
 +
 [source,bash,subs="attributes+"]
 ----
-yq -i eval '.classes += ["global.apps.appuio-cloud-zone"]'
+yq -i eval '.classes += ["global.apps.appuio-cloud-zone"]' "${CLUSTER_ID}.yml"
 yq -i eval ".parameters.openshift4_terraform.terraform_variables.cluster_name = \"${APPUIO_CLOUD_ZONE}\"" \
   "${CLUSTER_ID}.yml"
 ----
