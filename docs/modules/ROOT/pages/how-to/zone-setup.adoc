@@ -183,3 +183,45 @@ Adjust the secret references so they point to the Vault secret that's used for t
 
 . Compile and push the cluster catalog
 . Wait for ArgoCD to sync the changes
+
+== Add Cluster to Status Page
+
+. Login to Statuspal
+. Select `APPUiO Cloud` status page
+. Create a service for the {zone}
+. Create the following other services and select the previously created {zone} service as their parent:
+
+.. OpenShift Console
+... Description: URL to the OpenShift Console
+... Select `Statuspal monitoring`
+... Method: `HEAD`
+... Ping url: URL to the OpenShift Console
+... Check `Automatically create incident`
+... Check `Pause monitoring during maintenances`
+
+.. OpenShift / Kubernetes API
+... Description: URL to the OpenShift / Kubernetes API
+... Select `Statuspal monitoring`
+... Method: `GET`
+... Ping url: URL to the OpenShift / Kubernetes API + `/healthz`
+... Check `Automatically create incident`
+... Check `Pause monitoring during maintenances`
+
+.. Image Registry
+... Description: URL to the Image Registry
+... Select `Statuspal monitoring`
+... Method: `HEAD`
+... Ping url: URL to the Image Registry
+... Check `Automatically create incident`
+... Check `Pause monitoring during maintenances`
+
+.. Logging
+... Description: URL to the Logging
+... Select `Statuspal monitoring`
+... Method: `HEAD`
+... Ping url: URL to the Logging + `/app/kibana`
+... Check `Automatically create incident`
+... Check `Pause monitoring during maintenances`
+
+.. Networking
+.. Ingress
