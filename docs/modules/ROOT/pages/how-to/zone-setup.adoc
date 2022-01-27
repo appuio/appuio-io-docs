@@ -188,6 +188,8 @@ Adjust the secret references so they point to the Vault secret that's used for t
 
 . Login to Statuspal
 . Select `APPUiO Cloud` status page
++
+TIP: You need `Admin` rights on the "APPUiO Cloud" status page to be able to add new services.
 . Create a service for the {zone}
 . Create the following other services and select the previously created {zone} service as their parent:
 
