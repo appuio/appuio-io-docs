@@ -21,64 +21,117 @@ A list of features the system should have:
 
 .Example invoice for APPUiO Cloud
 ====
-_Invoice period: 1.1. - 31.1. (44'640 minutes, timezone UTC)._
-
-[cols="4,1,1,1,1,1", options="header", stripes="hover"]
+[cols="4,1,1,1", options="header", stripes="hover"]
 |===
 |Description
 |Quantity
-|Unit of Measure
-|Unit Price
-|Discount
-|Total (Rounded)
+|Price
+|Total
 
-6+|*Zone: cloudscale.ch LPG 2 - Namespace: my-app-prod*
+4+|*Zone: cloudscale.ch - LPG 2 - Namespace: my-app-prod*
 
 a|Compute
 
-Min: 128 MiB +
-Max: 1034 MiB +
-Avg: 585.66 MiB
+Qty: 16602449.13 MiB-Minutes +
+Average Usage: 371.91 MiB / Minute +
+Unit Price: CHF 0.0000012432 / MiB / Minute
 
-|7028
-|MiB
-|CHF 0.0000012432
-|0 %
->|CHF 0.01
+|1
+|CHF 20.64
+>|CHF 20.64
 
-6+>|*Subtotal*: CHF 0.01
+a|Persistent Storage
 
-6+|*Zone: Exoscale GVA 1 - Namespace: my-app-test*
+Storage Type: RWX [cephfs-fspool-cluster] +
+Qty: 130500.00 GiB-Minutes +
+Average Usage: XX GiB / Minute +
+Unit Price: 0.0000710000 / GiB / Minute
+
+|1
+|CHF 9.27
+>|CHF 9.27
+
+a|Persistent Storage
+
+Storage Type: RWO (SSD) [ssd] +
+Qty: 43500.00 GiB-Minutes +
+Average Usage: XX GiB / Minute +
+Unit Price: 0.0000090000 / GiB / Minute
+
+|1
+|CHF 0.39
+>|CHF 0.39
+
+a|Service Type LoadBalancer
+
+Qty: 105944.00 Service-Minutes +
+Average Usage: XX Service(s) / Minute +
+Unit Price: 0.0004629630 / Service / Minute
+
+|1
+|CHF 49.05
+>|CHF 49.05
+
+4+>|*Subtotal*: CHF 79.35
+
+4+|*Zone: Exoscale - CH-GVA-2 0 - Namespace: my-app-test*
 
 a|Compute
 
-Min: 302 MiB +
-Max: 3990 MiB +
-Avg: 1689.2 MiB
+Qty: 12532687.78 MiB-Minutes +
+Average Usage: XX GiB / Minute +
+Unit Price: CHF 0.0000012432 / MiB / Minute +
+Discount: 10%
 
-|16892
-|MiB
-|CHF 0.0000009043
-|0 %
->|CHF 0.02
+|1
+|CHF 15.58
+>|CHF 15.58
 
-a|Persistent Storage (PVC) - RWO
+a|Persistent Storage
 
-Avg usage: 10 GiB
-|100
-|GiB
-|CHF 0.000081
-|0 %
->|CHF 0.01
+Storage Type: RWX +
+Qty: 101736.00 GiB-Minutes +
+Average Usage: XX GiB / Minute +
+Unit Price: CHF 0.0000710000 / GiB / Minute +
+Discount: 10%
 
-6+>|*Subtotal*: CHF 0.03
+|1
+|CHF 7.22
+>|CHF 7.22
 
-6+>e|*Total*: *CHF 0.04*
+a|Persistent Storage
+
+Storage Type: RWO (SSD) +
+Qty: 271672.00 GiB-Minutes +
+Average Usage: XX GiB / Minute +
+Unit Price: CHF 0.0000090000 / GiB / Minute +
+Discount: 10%
+
+|1
+|CHF 2.45
+>|CHF 2.45
+
+a|Service Type LoadBalancer
+
+Qty: 92371.00 Service-Minutes +
+Average Usage: XX Service(s) / Minute +
+Unit Price: CHF 0.0004629630 / Service / Minute +
+Discount: 10%
+
+|1
+|CHF 42.76
+>|CHF 42.76
+
+4+>|*Subtotal*: CHF 68.01
+4+>|
+4+>|*Total without VAT*: *CHF 147.36*
+4+>|*VAT*: *CHF 11.35*
+4+>e|*Total*: *CHF 158.71*
 
 |===
 ====
 
-See <<Data for Example Invoice>> below for where these numbers are coming from.
+The numbers do not necessarily represent a real world example!
 
 == Data for ERP
 
