@@ -19,6 +19,6 @@ Response measure::
 The organization to which the namespace belongs is granted the `admin` Role in the new namespace
 
 Rationale::
-Namespace ownership must not be tied to individuals but to the organization.
+Namespace ownership is not tied to individuals but to the organization.
 We consider giving all organization members `admin` permissions in new namespaces to be a safe default.
 In contrast to OpenShift's default for projects of only granting the creator `admin` permissions, our default prevents that team members are left unable to access a namespace if the namespace creator forgets to adjust the permissions.
