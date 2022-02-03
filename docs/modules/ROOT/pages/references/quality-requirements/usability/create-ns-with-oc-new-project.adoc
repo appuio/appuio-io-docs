@@ -1,0 +1,23 @@
+= Creating OpenShift projects
+
+Source::
+Developer
+
+Stimulus::
+Creates new OpenShift project
+
+Environment::
+Any {zone}
+
+Artifact::
+`oc` / OpenShift web console
+
+Response::
+Project created
+
+Response measure::
+Project (and associated namespace) belongs to the user's default organization
+
+Rationale::
+To enable an OpenShift native experience.
+Developers should be able to create projects in the OpenShift web console or with `oc new-project bar` as if they're on their own OpenShift cluster.
