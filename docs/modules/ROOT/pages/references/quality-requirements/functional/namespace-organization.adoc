@@ -24,7 +24,7 @@ Rationale::
 All user namespaces must be associated with an organization for billing purposes.
 If users don't specify an explicit namespace by adding label `appuio.io/organization` on the namespace object, the namespace is created in their default organization.
 
-== Creating a namespace without an explicit organization label
+== Creating a Project
 
 Source::
 Developer
