@@ -45,6 +45,7 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/organization-arbitrary-name.adoc[Arbitrary organization name]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[Metrics scope for invoicing]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-serviceaccount.adoc[Creating namespaces with ServiceAccount tokens]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-oc-new-project.adoc[Creating OpenShift projects]
 
 ** Security
 *** xref:appuio-cloud:ROOT:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]
