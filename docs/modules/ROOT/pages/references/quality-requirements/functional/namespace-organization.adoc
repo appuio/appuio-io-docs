@@ -1,0 +1,73 @@
+= User namespaces belong to an organization
+
+== Creating a namespace without an explicit organization label
+
+Source::
+Developer
+
+Stimulus::
+Creates a new namespace
+
+Environment::
+{zone}
+
+Artifact::
+kubectl
+
+Response::
+Namespace is created
+
+Response measure::
+Namespace belongs to the user's default organization
+
+Rationale::
+All user namespaces must be associated with an organization for billing purposes.
+If users don't specify an explicit namespace by adding label `appuio.io/organization` on the namespace object, the namespace is created in their default organization.
+
+== Creating a namespace without an explicit organization label
+
+Source::
+Developer
+
+Stimulus::
+Creates a new OpenShift project
+
+Environment::
+{zone}
+
+Artifact::
+oc / OpenShift web console
+
+Response::
+Project is created
+
+Response measure::
+Project (and its associated namespace) belongs to the user's default organization
+
+Rationale::
+All user namespaces must be associated with an organization for billing purposes.
+Since users don't have a way to specify an explicit organization when creating OpenShift projects, all namespaces created through OpenShift projects are associated with the user's default organization.
+
+== Creating a namespace with an explicit organization label
+
+Source::
+Developer
+
+Stimulus::
+Creates a new namespace with label `appuio.io/organization=purple-fox`
+
+Environment::
+{zone}
+
+Artifact::
+kubectl
+
+Response::
+Namespace is created if and only if the user is part of organization `purple-fox`
+
+Response measure::
+Namespace belongs to organization `purple-fox`
+
+Rationale::
+All user namespaces must be associated with an organization for billing purposes.
+Users are only allowed to create namespaces for organizations to which they belong
