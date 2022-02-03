@@ -29,6 +29,7 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-invoicing.adoc[Sampling interval for invoicing]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/amplinginterval-for-collecti.adoc[Sampling interval for collecting metering data]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-reportig.adoc[Sampling interval in the intermediate metering storage]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/namespace-organization.adoc[User namespaces belong to an organization]
 
 ** Performance
 *** xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-create-time.adoc[Time to create Namespace]
