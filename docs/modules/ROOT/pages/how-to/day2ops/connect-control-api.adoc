@@ -1,0 +1,135 @@
+= Connect to APPUiO Control API
+
+== Prerequisites
+
+* https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl]
+* https://github.com/int128/kubelogin#setup[kubectl oidc-login plugin]
+
+
+== Connect to Production Control API
+
+. Configure access to the production instance of the APPUiO control API, by running the following command to add it to your current kubeconfig.
++
+[source,bash]
+----
+server="https://api.appuio.cloud/"
+oidc_url="https://id.appuio.cloud/auth/realms/appuio-cloud"
+client_id="appuio-control-api"
+
+kubectl config set-cluster control-api-production --server=$server
+kubectl config set-credentials control-api-production \
+  --exec-api-version=client.authentication.k8s.io/v1beta1 \
+  --exec-command=kubectl \
+  --exec-arg=oidc-login \
+  --exec-arg=get-token \
+  --exec-arg=--oidc-issuer-url=$oidc_url \
+  --exec-arg=--oidc-client-id=$client_id \
+  --exec-arg=--oidc-extra-scope="email offline_access profile openid"
+kubectl config set-context control-api-production --cluster=control-api-production --user=control-api-production
+kubectl config use-context control-api-production
+----
++
+Alternatively you can copy the following complete configuration
++
+[source,yaml]
+----
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://api.appuio.cloud/
+  name: control-api
+contexts:
+- context:
+    cluster: control-api
+    namespace: default
+    user: oidc-user
+  name: Default
+current-context: Default
+kind: Config
+preferences: {}
+users:
+- name: oidc-user
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - oidc-login
+      - get-token
+      - --oidc-issuer-url=https://id.appuio.cloud/auth/realms/appuio-cloud
+      - --oidc-client-id=appuio-control-api
+      - --oidc-extra-scope=email offline_access profile openid
+      command: kubectl
+      env: null
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+----
+
+. List available Zones 
++
+[source,bash]
+----
+kubectl get zones
+----
++
+A browser window should open, where you can log in with your VSHN account.
+
+
+[NOTE]
+====
+Configure access to the integration instance of the APPUiO control API works similarly.
+Run the following command to add it to your current kubeconfig.
+
+[source,bash]
+----
+server="https://api-integration.apps.cloudscale-lpg-2.appuio.cloud/"
+oidc_url="https://id.dev.appuio.cloud/auth/realms/appuio-cloud-dev"
+client_id="appuio-control-api"
+
+kubectl config set-cluster control-api-integration --server=$server
+kubectl config set-credentials control-api-integration \
+  --exec-api-version=client.authentication.k8s.io/v1beta1 \
+  --exec-command=kubectl \
+  --exec-arg=oidc-login \
+  --exec-arg=get-token \
+  --exec-arg=--oidc-issuer-url=$oidc_url \
+  --exec-arg=--oidc-client-id=$client_id \
+  --exec-arg=--oidc-extra-scope="email offline_access profile openid"
+kubectl config set-context control-api-integration --cluster=control-api-integration --user=control-api-integration
+kubectl config use-context control-api-integration
+----
+
+Alternatively you can copy the following complete configuration
+
+[source,yaml]
+----
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://api-integration.apps.cloudscale-lpg-2.appuio.cloud/
+  name: control-api
+contexts:
+- context:
+    cluster: control-api
+    namespace: default
+    user: oidc-user
+  name: Default
+current-context: Default
+kind: Config
+preferences: {}
+users:
+- name: oidc-user
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - oidc-login
+      - get-token
+      - --oidc-issuer-url=https://id.dev.appuio.cloud/auth/realms/appuio-cloud-dev
+      - --oidc-client-id=appuio-control-api
+      - --oidc-extra-scope=email offline_access profile openid
+      command: kubectl
+      env: null
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+----
+====
