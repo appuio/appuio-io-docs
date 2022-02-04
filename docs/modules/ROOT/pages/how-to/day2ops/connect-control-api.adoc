@@ -73,10 +73,12 @@ kubectl get zones
 +
 A browser window should open, where you can log in with your VSHN account.
 
-== Connect to Integration Control API
 
-. Configure access to the integration instance of the APPUiO control API, by running the following command to add it to your current kubeconfig.
-+
+[NOTE]
+====
+Configure access to the integration instance of the APPUiO control API works similarly.
+Run the following command to add it to your current kubeconfig.
+
 [source,bash]
 ----
 server="https://api-integration.apps.cloudscale-lpg-2.appuio.cloud/"
@@ -95,9 +97,9 @@ kubectl config set-credentials control-api-integration \
 kubectl config set-context control-api-integration --cluster=control-api-integration --user=control-api-integration
 kubectl config use-context control-api-integration
 ----
-+
+
 Alternatively you can copy the following complete configuration
-+
+
 [source,yaml]
 ----
 apiVersion: v1
@@ -130,13 +132,4 @@ users:
       interactiveMode: IfAvailable
       provideClusterInfo: false
 ----
-
-. List available Zones 
-+
-[source,bash]
-----
-kubectl get zones
-----
-+
-A browser window should open, where you can log in with your test LDAP account.
-
+====
