@@ -20,7 +20,7 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 |`id.appuio.cloud`
 | Identity provider for {product}
 
-|`my.appuio.cloud`
+|`portal.appuio.cloud`
 | Frontend to manage cross zone concerns
 
 | `console.<zone>.appuio.cloud`
