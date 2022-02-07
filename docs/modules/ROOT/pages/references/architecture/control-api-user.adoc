@@ -10,17 +10,18 @@ TIP: This resource implements the xref:references/functional-requirements/portal
 apiVersion: appuio.io/v1
 kind: User
 metadata:
-  name: bec0d928-2ae2-4cec-94a0-5f72f12b8b39 <1>
+  name: kate.demo <1>
 spec:
   preferences:
     defaultOrganizationRef: acme-corp
 status: <2>
+  id: bec0d928-2ae2-4cec-94a0-5f72f12b8b39
   displayName: Kate Demo
   username: kate.demo
   email: kate@demo.com
   defaultOrganizationRef: acme-corp
 ----
-<1> User ID in Keycloak
+<1> Username in Keycloak
 <2> Reflects actual configuration from adapter and exposes read-only fields
 
 == Access control
@@ -32,27 +33,27 @@ For each `User` object, a `ClusterRole` and `ClusterRoleBinding` is generated in
 ----
 kind: ClusterRole
 metadata:
-  name: bec0d928-2ae2-4cec-94a0-5f72f12b8b39-owner
+  name: kate.demo-owner
 rules:
   - apiGroups: ["appuio.io"]
     resources: ["users"]
-    resourceNames: ["bec0d928-2ae2-4cec-94a0-5f72f12b8b39"]
+    resourceNames: ["kate.demo"]
     verbs: ["get", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: bec0d928-2ae2-4cec-94a0-5f72f12b8b39-owner
+  name: kate.demo-owner
 subjects:
   - kind: User
-    name: appuio#bec0d928-2ae2-4cec-94a0-5f72f12b8b39 <1>
+    name: appuio#kate.demo <1>
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: bec0d928-2ae2-4cec-94a0-5f72f12b8b39-owner
+  name: kate.demo-owner
   apiGroup: rbac.authorization.k8s.io
 ----
 <1> This depends on the API server configuration: +
-    `oidc-username-claim=sub` and `oidc-username-prefix=appuio#`
+    `oidc-username-claim=preferred_username` and `oidc-username-prefix=appuio#`
 
 By default, only the subject which is the owner of the `User` object gets edit rights.
