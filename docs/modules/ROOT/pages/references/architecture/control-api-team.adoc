@@ -15,19 +15,15 @@ metadata:
 spec:
   displayName: My Super Team 1
   userRefs: <2>
-  - id: bec0d928-2ae2-4cec-94a0-5f72f12b8b39
-  - username: peter.muster
+  - name: kate.demo
+  - name: peter.muster
 status:
   resolvedUserRefs: <3>
-  - id: bec0d928-2ae2-4cec-94a0-5f72f12b8b39
-    username: kate.demo
-  - id: 508a9160-977c-4c57-963f-c7b511c4ecc5
-    username: peter.muster
+  - name: kate.demo
+  - name: peter.muster
 ----
 <1> The organizations namespace
-<2> References to one or more xref:references/architecture/control-api-user.adoc[`User`] resource. +
-    Only one of the two parameters are allowed:
-
-    * `id` must match `metadata.name` of an existing `User` resource
-    * `username` must match `status.username` from an existing `User` resource
-<3> This resolved by the xref:explanation/system/details-adapters.adoc[adapter]
+<2> References to one or more xref:references/architecture/control-api-user.adoc[`User`] resource. 
+    The `name` field must match `metadata.name` of an existing `User` resource.
+<3> This is resolved by the xref:explanation/system/details-adapters.adoc[adapter]. 
+    May only contain a subset of users if the adapter is unable to add some users.
