@@ -1,0 +1,7 @@
+= Kyverno policies used by {product}
+
+We use Kyverno as the xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[policy engine] and xref:appuio-cloud:ROOT:explanation/decisions/kyverno-generator.adoc[resource generator] in {product}.
+
+We manage all Kyverno policies for {product} in the https://hub.syn.tools/appuio-cloud/index.html[appuio-cloud Commodore component].
+
+The component documentation contains https://hub.syn.tools/appuio-cloud/references/policies/index.html[reference documentation for each policy] and a high-level explanation of https://hub.syn.tools/appuio-cloud/explanations/policies.html[how the different policies interact] to implement the requirements documented for {product}.
