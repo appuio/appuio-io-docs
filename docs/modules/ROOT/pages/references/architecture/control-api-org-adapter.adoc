@@ -31,6 +31,13 @@ It is helpful if the IdP has some notion of groups and sub-groups which can be c
 * The IdP **should** have a notion of groups and sub-groups containing users which can be added as claims in the OIDC token.
 * The IdP **should** provide means to on-board new users to APPUiO Cloud.
 
+[example]
+====
+The VSHN-managed APPUiO Cloud instance uses https://www.keycloak.org/[Keycloak] as the identity provider.
+
+User are brokered in through the existing LDAP userbase and assigned to Keycloak groups representing organizations and sub-groups of these groups represent teams.
+The group membership information is then present as a claim in the OIDC token provided to {zone}s and the {controlapi}.
+====
 
 == Organization Adapter
 
@@ -120,3 +127,16 @@ If this feature is provided
 * When the group is deleted through the IdP, the adapter **should** remove the corresponding `Team` resource.
 
 
+[example]
+====
+The VSHN-managed APPUiO Cloud instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter].
+
+The adapter is a Kubernetes Operator that creates and manages Keycloak groups and sub-groups that correlate to `Organization` and `Team` resources.
+A per {zone} deployed https://github.com/redhat-cop/group-sync-operator[Group Sync Operator] then synchronizes group memberships from the Keycloak groups to OpenShift.
+
+The adapter also imports Keycloak users as `User` resources.
+Changes to the `User` resource's `spec` is added to the Keycloak user's attributes.
+These attributes are then synced to the {zone}s by the https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller].
+
+The Keycloak adapter also supports periodic imports of new Keycloak groups as `Organizations`.
+====
