@@ -1,0 +1,71 @@
+= Custom Operator 
+
+== Problem
+
+The Keycloak Organization Adapter maps the in-cluster resources to Keycloak groups and users.
+
+.Goals
+
+* Map `Organization` / `OrganizationMembers` resource to top level groups in Keycloak
+** Create group if `Organization exits
+** Manage group members based on `OrganizationMembers`
+** Import existing groups as `Organization`/`OrganizationMembers`
+* Map `Teams` to sub-groups in Keycloak
+** Create sub-group if Team exits
+** Manage sub-group members based on Team
+** Import existing sub-groups as Team ￼
+* Map User resources to users in Keycloak
+** Set preferences
+** Import existing Keycloak user as `User`
+
+.Non-Goals
+
+* Operational management of Keycloak (e.g. create and manage realms)
+
+
+== Proposals
+
+=== Option 1: Crossplane
+
+Using the Crossplane ecosystem we can reuse a lot of existing resources.
+
+The current OrganizationMembers, Team, and User CRDs are converted to XRDs.
+We write compositions for each of them to map them to Keycloak resources provided by a Crossplane provider.
+The Crossplane provider can be generated using Terrajet.
+
+.Pro
+
+* Reduce amount of custom code
+* Simplifies writing plugins as just a composition
+
+.Con
+
+* Resource import needs to be handles separately
+* Introduces Crossplane as dependency and increases operational complexity
+* Less flexibility / potential unforeseen roadblock
+
+=== Option 2: Custom Controller
+
+We write a custom controller using kubebuilder.
+We can reuse a lot of insight from the group sync operator.
+
+.Pro
+
+* Very flexible
+* We have experience writing controllers against Keycloak
+* Good testability
+
+.Con
+
+* Additional custom Go code and added code complexity
+* Big upfront investment to build new Organization Adapter
+
+
+== Decision
+
+We decided to write a custom controller.
+
+== Rational
+
+The Crossplane data model does just not quite fit our requirements.
+We would most likely need to write custom code for the resource import anyway, especially for `User` resources.

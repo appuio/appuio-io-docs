@@ -18,4 +18,5 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/access-metering-data.adoc[Access metering data]
 ** xref:appuio-cloud:ROOT:explanation/decisions/efk-openshift-logging.adoc[RHOL EFK logging stack]
 ** xref:appuio-cloud:ROOT:explanation/decisions/billing-etl.adoc[No off-the-shelf ETL processor for metering and billing]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-adapter.adoc[Keycloak Organization Adapter]
 * xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[Kyverno policies used by {product}]
