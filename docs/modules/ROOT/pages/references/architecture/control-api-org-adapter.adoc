@@ -1,7 +1,7 @@
 = {controlapi}: Organization Adapter and Identity Provider
 
-At the core of APPUiO Cloud user management is an OIDC enabled **Identity Provider (IdP)** that stores the identity of every APPUiO Cloud user and provides OIDC tokens to authenticate users to {zone}s and the {controlapi}.
-For the VSHN-managed APPUiO Cloud instance and throughout parts of this documentations this IdP is https://www.keycloak.org/[Keycloak], but in general this could be any IdP with OIDC integration.
+At the core of {product} user management is an OIDC enabled **Identity Provider (IdP)** that stores the identity of every {product} user and provides OIDC tokens to authenticate users to {zone}s and the {controlapi}.
+For the VSHN-managed {product} instance and throughout parts of this documentations this IdP is https://www.keycloak.org/[Keycloak], but in general this could be any IdP with OIDC integration.
 
 Regardless of what IdP is being used the {controlapi} needs to be able to manage organizations, teams, as well as user preferences.
 The interaction between the state in the {controlapi}, represented by `User`, `Team`, and `Organization` resources, is managed by the **Organization Adapter**.
@@ -19,25 +19,25 @@ In this document, such keywords are highlighted using **bold** font.
 
 == Identity Provider
 
-For APPUiO Cloud the two main features of the IdP is that it provides the user identities for every APPUiO Cloud user and that it authenticates them to {zone}s and the {controlapi}.
+For {product} the two main features of the IdP is that it provides the user identities for every {product} user and that it authenticates them to {zone}s and the {controlapi}.
 That means the {controlapi} is not authoritative for users but get its user information from the IdP.
 
 [NOTE]
 It is helpful if the IdP has some notion of groups and sub-groups which can be correlated to organizations and teams, but such a data model is not strictly required.
 
-* The IdP **must** hold the identities of APPUiO Cloud users.
-* The IdP **must** provide OIDC tokens authenticating APPUiO Cloud users to {zone}s.
-* The IdP **must** provide OIDC tokens authenticating APPUiO Cloud users to the {controlapi}.
+* The IdP **must** hold the identities of {product} users.
+* The IdP **must** provide OIDC tokens authenticating {product} users to {zone}s.
+* The IdP **must** provide OIDC tokens authenticating {product} users to the {controlapi}.
 * The IdP **should** have a notion of groups and sub-groups containing users which can be added as claims in the OIDC token.
-* The IdP **should** provide means to on-board new users to APPUiO Cloud.
+* The IdP **should** provide means to on-board new users to {product}.
 
-[example]
-====
-The VSHN-managed APPUiO Cloud instance uses https://www.keycloak.org/[Keycloak] as the identity provider.
+.Identity Provider at VSHN
+****
+The VSHN-managed {product} instance uses https://www.keycloak.org/[Keycloak] as the identity provider.
 
 User are brokered in through the existing LDAP userbase and assigned to Keycloak groups representing organizations and sub-groups of these groups represent teams.
 The group membership information is then present as a claim in the OIDC token provided to {zone}s and the {controlapi}.
-====
+****
 
 == Organization Adapter
 
@@ -126,10 +126,9 @@ If this feature is provided
 * The adapter **must** prevent the deletion externally managed teams through the {controlapi}.
 * When the group is deleted through the IdP, the adapter **should** remove the corresponding `Team` resource.
 
-
-[example]
-====
-The VSHN-managed APPUiO Cloud instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter].
+.Organization Adapter at VSHN
+****
+The VSHN-managed {product} instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter].
 
 The adapter is a Kubernetes Operator that creates and manages Keycloak groups and sub-groups that correlate to `Organization` and `Team` resources.
 A per {zone} deployed https://github.com/redhat-cop/group-sync-operator[Group Sync Operator] then synchronizes group memberships from the Keycloak groups to OpenShift.
@@ -139,4 +138,4 @@ Changes to the `User` resource's `spec` is added to the Keycloak user's attribut
 These attributes are then synced to the {zone}s by the https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller].
 
 The Keycloak adapter also supports periodic imports of new Keycloak groups as `Organizations`.
-====
+****
