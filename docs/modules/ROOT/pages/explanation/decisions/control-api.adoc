@@ -21,7 +21,7 @@ Out of scope in this decision is the definition of how adapters and other intern
 
 The {controlapi} has to provide means so that xref:explanation/system/details-ui.adoc[{portal}] can use the same API endpoint as well as other clients, for example a CLI.
 
-It must be possible to integrate various different backend systems which implement the same functionality.
+It must be possible to integrate various different back-end systems which implement the same functionality.
 
 {controlapi} only specifies the interface, the implementation is then specific to the provider of the API.
 
@@ -66,8 +66,8 @@ By design, Kubernetes is a API framework that works with reconciling a desired s
 Business logic or orchestration is asynchronous by nature and this leads to an eventual-consistent behavior of the platform.
 
 Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
-This could mean that the {controlapi} specification is written as CRDs and the backend functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
-Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the backend functionality, which is an SDK designed to especially work with foreign third-party APIs.
+This could mean that the {controlapi} specification is written as CRDs and the back-end functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
+Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the back-end functionality, which is an SDK designed to especially work with foreign third-party APIs.
 
 A dedicated Kubernetes API server will be used for that to not interfere with other workload running on this instance.
 This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster]) or a full-blown Kubernetes cluster.

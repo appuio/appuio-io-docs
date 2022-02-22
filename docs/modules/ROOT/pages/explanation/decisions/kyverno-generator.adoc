@@ -25,7 +25,7 @@ The feature for deviating from defaults resp. the cleanup after changing the def
 
 https://kyverno.io/[Kyverno]::
 Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
-It also supports "generating" policies, e.g. depending on configurable conditions, arbitrary resources can be created.
+It also supports "generating" policies, for example depending on configurable conditions, arbitrary resources can be created.
 
 == Decision
 

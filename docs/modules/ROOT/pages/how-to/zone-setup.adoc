@@ -126,6 +126,9 @@ This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos 
 . Create an S3 bucket which can be accessed using the same credentials as the cluster's registry bucket.
 Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
 
+pass:[<!-- vale Microsoft.GenderBias = NO -->]
+pass:[<!-- vale Openly.GenderBias = NO -->]
+
 . Add configuration for components `openshift4-monitoring` and `thanos`
 +
 [source,yaml]
@@ -180,6 +183,9 @@ We highly recommend using a storage class suitable for database workloads.
 Adjust for zones which are not on cloudscale.ch in region LPG.
 <7> The S3 credentials for the bucket.
 Adjust the secret references so they point to the Vault secret that's used for the cluster's registry bucket.
+
+pass:[<!-- vale Microsoft.GenderBias = YES -->]
+pass:[<!-- vale Openly.GenderBias = YES -->]
 
 . Compile and push the cluster catalog
 . Wait for ArgoCD to sync the changes

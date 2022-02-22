@@ -17,7 +17,7 @@ Therefore, the collected metering data has to be augmented with information prov
 The Prometheus API allows to get results for a single point in time.
 It also allows to query all results within a given time range with a data point as defined by a given interval.
 +
-Data collect by Prometheus do not contain information about prices and discounts.
+Data collect by Prometheus don't contain information about prices and discounts.
 Adding them though an exporter is not a suitable solution.
 Sometimes we need to do changes/fixes to prices and discounts in retrospect.
 This is not possible on Prometheus time series.

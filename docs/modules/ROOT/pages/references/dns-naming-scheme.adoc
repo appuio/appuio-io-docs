@@ -27,7 +27,7 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 | OpenShift console frontend of an {zone}
 
 | `api.<zone>.appuio.cloud`
-| Kubernetes API endpoint (e.g. for KubeConfig)
+| Kubernetes API endpoint (for example for KubeConfig)
 
 | `logging.<zone>.appuio.cloud`
 | Frontend for the OpenShift logging service (Kibana)
@@ -44,7 +44,7 @@ Apps served through am {zone}'s default domain use the subdomain `apps` of a zon
 |===
 
 The content of the `<app>` placeholder is provided by an OpenShift Route object that defaults to the name of the Route object and the namespace it is located in.
-Users are always free to use hostnames under their control (e.g. CNAME entries) to expose their applications running on the platform.
+Users are always free to use hostnames under their control (for example CNAME entries) to expose their applications running on the platform.
 
 What goes into `<zone>` placeholder is covered by the next section.
 

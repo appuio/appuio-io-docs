@@ -17,10 +17,10 @@ TIP: This section only needs to be done once.
 
 . Login to {idp} as Administrator
 . Go to realm `appuio-cloud`
-. Go to "Authentication > Flows"
-. Select flow "Browser" and click "Copy".
-Give the copy a descriptive name, for example "browser rbac".
-. In row "Browser Rbac Forms", select "Actions > Add Flow"
+. Go to menu:Authentication[Flows].
+. Select flow "Browser" and click "Copy."
+Give the copy a descriptive name, for example "browser rbac."
+. In row "Browser Rbac Forms" select menu:Actions[Add Flow].
 +
 [source,subs="attributes+"]
 ----

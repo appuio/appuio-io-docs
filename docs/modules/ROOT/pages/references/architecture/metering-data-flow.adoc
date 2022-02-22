@@ -75,7 +75,7 @@ It's expected that those new records won't be complete.
 Either the system will add missing information to those records in the enrichment phase, or manual intervention will be required to complete the records.
 ====
 
-The lookup process -- as described -- builds a strict hierarchy.
+The lookup process–as described–builds a strict hierarchy.
 For some use cases, this hierarchy, where zones are less specific than tenants, matches product variants.
 For example, the described hierarchy easily allows specifying different prices per {zone}.
 However, for other use cases, the hierarchy requires the same product or discount to be defined multiple times.
@@ -604,7 +604,7 @@ The tables below are an example based on Odoo.
 | 49 (constant)
 
 | Invoice Date
-| 2022-01-01
+| 2022–01–01
 
 | Journal ID
 | 1 (constant)

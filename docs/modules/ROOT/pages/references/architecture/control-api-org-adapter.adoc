@@ -10,12 +10,16 @@ First and foremost the adapter needs to make sure that the information on user p
 This document should give a high level specification of what an APPUiO IdP and its adapter needs to be able to do.
 The implementation details and which part of these requirements are fulfilled by which system might vary.
 
+pass:[<!-- vale Microsoft.Quotes = NO -->]
+
 [NOTE]
 ====
 The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119].
 
 In this document, such keywords are highlighted using **bold** font.
 ====
+
+pass:[<!-- vale Microsoft.Quotes = YES -->]
 
 == Identity Provider
 
@@ -44,7 +48,7 @@ The group membership information is then present as a claim in the OIDC token pr
 As long as the Identity Provider is not custom built, it is very unlikely to be able to interface with the {controlapi}.
 Providing this interface is the job of the Organization Adapter.
 
-This adapter **should** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`. 
+This adapter **should** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`.
 
 
 [NOTE]
@@ -61,7 +65,7 @@ For each `Organization` and the corresponding `OrganizationMembers` resource
 * The adapter **must** make sure that the corresponding `Group` is removed on `Organization` deletion.
 * The organization name **must** also be in the groups claim of the OIDC token provided to the {controlapi} for all organization members.
 
-The adapter **should** provide the option to import existing groups from the IdP. 
+The adapter **should** provide the option to import existing groups from the IdP.
 If this feature is provided
 
 * The adapter **must** create `Organization` resources for groups in the IdP that represent organizations if a corresponding `Organization` does not exist.
@@ -71,7 +75,7 @@ If this feature is provided
 * The adapter **may** mark imported organizations as externally managed.
 
 
-The adapter **may** provide the option to mark one or more `Organizations` as to be managed externally by the IdP. 
+The adapter **may** provide the option to mark one or more `Organizations` as to be managed externally by the IdP.
 This means the `Organization` and `OrganizationMembers` resources are read-only and updated to the state in the external system.
 If this feature is provided
 
@@ -106,7 +110,7 @@ For each `Team` resource
 * The adapter **must** make sure that the corresponding group is removed on `Team` deletion.
 * The prefixed team name **must** also be in the groups claim of the OIDC token provided to the {controlapi} for all team members.
 
-The adapter **should** provide the option to import existing groups from the IdP. 
+The adapter **should** provide the option to import existing groups from the IdP.
 If this feature is provided
 
 * The adapter **must** create `Team` resources for groups in the IdP that represent teams if a corresponding `Team` does not exist.
@@ -116,7 +120,7 @@ If this feature is provided
 * The adapter **may** mark imported teams as externally managed.
 
 
-The adapter **may** provide the option to mark one or more `Teams` as to be managed externally by the IdP. 
+The adapter **may** provide the option to mark one or more `Teams` as to be managed externally by the IdP.
 This means the `Team` resource is read-only and updated to the state in the external system.
 If this feature is provided
 

@@ -1,4 +1,4 @@
-= Custom Operator 
+= Custom Operator
 
 == Problem
 
@@ -20,7 +20,7 @@ The Keycloak Organization Adapter maps the in-cluster resources to Keycloak grou
 
 .Non-Goals
 
-* Operational management of Keycloak (e.g. create and manage realms)
+* Operational management of Keycloak (for example to create and manage realms)
 
 
 == Proposals

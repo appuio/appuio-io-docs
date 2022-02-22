@@ -1,14 +1,14 @@
-= Metrics of interest 
+= Metrics of interest
 :stem:
 
 [abstract]
 --
-The https://products.docs.vshn.ch/products/appuio/cloud/price_model.html[VSHN products documentation] explains the price model for a business oriented audience. 
+The https://products.docs.vshn.ch/products/appuio/cloud/price_model.html[VSHN products documentation] explains the price model for a business oriented audience.
 The following breaks this down to a more technical level.
 --
 
 {product} is designed to be generic at its core.
-This is written from the perspective of VSHN, and it does not necessarily resemble the needs of another company interested to run {product}. 
+This is written from the perspective of VSHN, and it does not necessarily resemble the needs of another company interested to run {product}.
 This should not be an issue.
 The architecture is flexible enough to also cover other business models.
 The only assumption is: metrics are collected on {zone}s using Prometheus.
@@ -30,7 +30,7 @@ Minimal invoiced amounts::
 Allocating compute and storage resources on a Kubernetes cluster binds some resources on the clusters control plane.
 To account for that overhead, a minimal amount will be invoiced even if the effective usage is lower.
 
-== Metric: memory usage
+== Metric: Memory usage
 
 The metrics exporter reports metrics on the level of a single container.
 As defined in xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[Metrics scope for invoicing] it will be invoiced on the level of a Pod.
@@ -61,7 +61,7 @@ Megabyte (stem:[10^6])
 Minium invoiced amount::
 125 MB
 
-== Metric: usage of persistent storage
+== Metric: Usage of persistent storage
 
 Persistent storage gets invoiced based on the requested amount of a `PersistentVolumeClaim` (allocated usage).
 The corresponding metric for this is `kube_persistentvolumeclaim_resource_requests_storage_bytes`.

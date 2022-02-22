@@ -45,6 +45,6 @@ The reasons shoulnd't extend the description of a proposal, only further explain
 
 [TIP]
 ====
-Certain types of decisions do not impact the architecture.
+Certain types of decisions don't impact the architecture.
 In those cases, consider just documenting a definition even if the definition took multiple discussions (for example xref:references/dns-naming-scheme.adoc[DNS Naming Scheme])
 ====

@@ -23,7 +23,7 @@ Policy engine::
 A policy engine, also installed on each {zone}, is enforcing policies that go beyond the capabilities of Kubernetes RBAC.
 
 API Endpoint::
-{product} will be designed "API-first".
+{product} will be designed "API-first."
 This enables different client profiles to interact with the product.
 Clients could be user or command line interfaces and other automation services.
 The endpoint itself will be using foreign services for certain features.

@@ -37,7 +37,7 @@ For the purpose of this guide, we'll use the following names, adjust as needed:
 == Create roles in {idp}
 
 . Select realm {appuio-realm} in {idp}.
-. Create roles with "Roles > Realm Roles > Add Role".
+. Create roles with menu:Roles[Realm Roles > Add Role].
 For our example, we create roles `vshneer-zone-access` and `appuio-zone-access`.
 
 == Configure Identity Provider

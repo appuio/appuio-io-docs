@@ -13,12 +13,12 @@ NOTE: Currently this page has instructions specifically for VSHN AG's {product} 
 == Remove access in control.vshn.net and id.vshn.net
 
 . Remove the service "APPUiO Cloud" from the user in https://control.vshn.net/users[control.vshn.net].
-. Go to "Users > \{username} > Groups" in id.vshn.net, select group "Service APPUiOCloud" and click "Leave".
-. Go to "Users > \{username} > Sessions" in id.vshn.net and terminate the user's session in client `VSHN_to_APPUiO_Cloud`.
+. Go to menu:Users[\{username} > Groups] in id.vshn.net, select group "Service APPUiOCloud" and click "Leave."
+. Go to menu:Users[\{username} > Sessions] in id.vshn.net and terminate the user's session in client `VSHN_to_APPUiO_Cloud`.
 
 == Remove access role from user in {idp}
 
-. Go to "Users > \{username} > Role Mappings" and remove role `appuio-zone-access` from the user
+. Go to menu:Users[\{username} > Role Mappings] and remove role `appuio-zone-access` from the user
 . Switch to tab "Sessions" and logout all {zone} sessions of the user
 . On each {zone} (cluster), remove any `oauthaccesstokens` of the user:
 +

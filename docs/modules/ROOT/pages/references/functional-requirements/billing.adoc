@@ -131,7 +131,7 @@ Discount: 10%
 |===
 ====
 
-The numbers do not necessarily represent a real world example!
+The numbers don't necessarily represent a real world example!
 
 == Data for ERP
 
