@@ -1,0 +1,166 @@
+:from-keycloak: id.appuio.cloud
+:from-realm: appuio-cloud
+:to-keycloak: id.vshn.net
+:to-realm: vshn-realm
+:to-organization-root: organizations
+:cluster-id: c-appuio-cloudscale-lpg-2
+
+= Migrate APPUiO Cloud Between {from-keycloak} to {to-keycloak}
+
+This guide describes the steps required to migrate APPUiO Cloud clusters to the VSHN Keycloak.
+
+== Prerequisites
+
+* `kubectl`
+* `oc`
+* working Commodore setup
+* a checkout of the https://git.vshn.net/syn/commodore-defaults[Global Commodore Defaults]
+
+== Access to required APIs
+
+[source,bash,subs="attributes+"]
+----
+export COMMODORE_API_URL=https://api.syn.vshn.net
+export COMMODORE_API_TOKEN=<lieutenant-api-token>
+
+export VAULT_ADDR=https://vault-prod.syn.vshn.net
+vault login -method=ldap username=<your.name>
+----
+
+== Copy Groups
+
+. Create group "organizations" in https://{to-keycloak}/auth/admin/master/console/#/realms/{to-realm}/groups.
+
+. Create a user for importing groups on https://{to-keycloak}/auth/admin/master/console/#/realms/master/users.
+Add the permissions in the screenshot below.
+. Add a user for exporting groups on https://{from-keycloak}/auth/admin/master/console/#/realms/master/users.
+Add the permissions in the screenshot below.
+
+.Required Permissions
+image::migrate-keycloaks/group-migration-required-permissions.png[]
+
+. Copy groups from {from-keycloak}'s root group to the newly created "organizations" group.
+
+[source,bash,subs="attributes+"]
+----
+git clone git@github.com:bastjan/keycloak-group-migration.git group-migration
+cd group-migration
+
+go run . \
+  -source-host=https://{from-keycloak} \
+  -source-realm={from-realm} \
+  -source-login-realm=master \
+  -source-username=group-export \
+  -source-password=.... \
+  -target-host=https://{to-keycloak} \
+  -target-realm={to-realm} \
+  -target-login-realm=master \
+  -target-username=group-import \
+  -target-password=.... \
+  -target-root-group=organizations
+
+cd -
+----
+
+== Connect Cluster and Portal to new Keycloak
+
+. Create new client with `{cluster-id}` as the name in the target realm.
++
+image::migrate-keycloaks/add-cluster-client.png[]
+
+. Set "Access Type" to "confidential".
++
+image::migrate-keycloaks/access-type-confidential.png[]
+
+. Copy "Valid Redirect URIs", "Base URL", and "Web Origins" over.
++
+image::migrate-keycloaks/copy-urls.png[]
+
+. Save the secret from the "Credentials" tab for later use.
++
+image::migrate-keycloaks/client-secret.png[]
+
+. Update the client secret in vault
++
+[source,bash,subs="attributes+"]
+----
+CLUSTER_ID={cluster-id}
+TENANT_ID=$(curl -sH "Authorization: Bearer ${COMMODORE_API_TOKEN}" ${COMMODORE_API_URL}/clusters/${CLUSTER_ID} | jq -r .tenant)
+
+vault kv put clusters/kv/${TENANT_ID}/${CLUSTER_ID}/oidc/appuio-keycloak \
+  clientSecret=<SECRET_FROM_CREDENTIALS_TAB>
+----
+
+. Create the user "appuio-keycloak-sync" in the "master" realm.
+In the tab "Role Mappings", select the target realm under "Client Roles" and assign the role `view-users`.
++
+image::migrate-keycloaks/sync-user.png[]
+
+. Update the "appuio-keycloak-sync" password in vault
++
+[source,bash,subs="attributes+"]
+----
+vault kv put clusters/kv/${TENANT_ID}/${CLUSTER_ID}/oidc/appuio-keycloak-sync \
+  username=appuio-keycloak-sync \
+  password=<PW>
+----
+
+. Repeat steps for any other clusters.
+
+. Create new client with "appuio-control-api" as the name in the target realm.
+Copy "Valid Redirect URIs" and "Web Origins" over.
+
+=== Update Defaults
+
+. Change to `git@git.vshn.net:syn/commodore-defaults.git` checkout.
+
+. Update global zone
++
+[source,bash,subs="attributes+"]
+----
+KEYCLOAK_HOST={to-keycloak}
+KEYCLOAK_REALM={to-realm}
+
+yq eval -i ".parameters.cloud_portal.helm_values.portal.config.issuer = \"https://${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM}\"" apps/appuio-cloud-global.yml
+----
+
+. Updates zones
++
+[source,bash,subs="attributes+"]
+----
+KEYCLOAK_HOST={to-keycloak}
+KEYCLOAK_REALM={to-realm}
+ORGANIZATIONS_ROOT_GROUP=organizations
+
+yq eval -i ".parameters.openshift4_authentication.identityProviders.appuio_keycloak.openID.issuer = \"https://${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM}\"" apps/appuio-cloud-zone/params.yml
+
+yq eval -i ".parameters.keycloak_attribute_sync_controller.sync_configurations.sync-default-org.url   = \"https://${KEYCLOAK_HOST}\"" apps/appuio-cloud-zone/params.yml
+yq eval -i ".parameters.keycloak_attribute_sync_controller.sync_configurations.sync-default-org.realm = \"${KEYCLOAK_REALM}\"" apps/appuio-cloud-zone/params.yml
+
+yq eval -i ".parameters.group_sync_operator.sync.sync-keycloak-groups.providers.keycloak.keycloak.url   = \"https://${KEYCLOAK_HOST}\"" apps/appuio-cloud-zone/params.yml
+yq eval -i ".parameters.group_sync_operator.sync.sync-keycloak-groups.providers.keycloak.keycloak.realm = \"${KEYCLOAK_REALM}\"" apps/appuio-cloud-zone/params.yml
+yq eval -i ".parameters.group_sync_operator.sync.sync-keycloak-groups.providers.keycloak.keycloak.groups += [\"${ORGANIZATIONS_ROOT_GROUP}\"]" apps/appuio-cloud-zone/params.yml
+yq eval -i ".parameters.group_sync_operator.sync.sync-keycloak-groups.providers.keycloak.keycloak.subGroupJoinStripRootGroups += [\"${ORGANIZATIONS_ROOT_GROUP}\"]" apps/appuio-cloud-zone/params.yml
+----
+
+. Commit and push
+
+. Update https://git.vshn.net/appuio/syn-tenant-repo/-/blob/98620f6f/c-appuio-cloudscale-lpg-2.yml#L284[control-api vcluster oidc-issuer] to `\https://{to-keycloak}/auth/realms/{to-realm}`.
+
+. Compile catalog and push for all APPUiO Cloud clusters.
++
+[source,bash,subs="attributes+"]
+----
+commodore catalog compile -i --push {cluster-id}
+----
+
+== After migration checks
+
+. Check login with `https://portal.appuio.cloud`.
+. Check login with `oc login`.
+. Check admin rights `kubectl --as=cluster-admin get groups`
+. Check attribute-sync logs for errors: `kubectl --as=cluster-admin logs -n syn-keycloak-attribute-sync-controller deploy/keycloak-attribute-sync-controller-manager`
+
+== Cleanup
+
+. Delete group migration users.
