@@ -8,16 +8,18 @@ This guide describes the steps required to turn an OpenShift 4 cluster into an {
 +
 [source]
 ----
-Client ID = c-cluster-id <1>
+Client ID = appuio_<c-cluster-id> <1>
 Access Type = confidential
 Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO
 Base URL = https://console.cluster-id.tld/
 
 [ Authentication Flow Overrides ]
-Browser Flow = browser rbac <2>
+Browser Flow = APPUiO Browser RBAC <2>
 ----
-<1> For each enabled {zone} there shall be its own client using the cluster ID as name.
+<1> For each enabled {zone} there shall be its own client using the cluster ID and the prefix `appuio_` as name.
 <2> See xref:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
+
+NOTE: VSHN uses https://id.vshn.net/auth/admin/master/console[id.vshn.net] as the IDP.
 
 NOTE: VSHN employees can now follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
 
