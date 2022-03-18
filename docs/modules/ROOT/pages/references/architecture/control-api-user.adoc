@@ -38,7 +38,7 @@ rules:
   - apiGroups: ["appuio.io"]
     resources: ["users"]
     resourceNames: ["kate.demo"]
-    verbs: ["get", "update", "patch", "delete"]
+    verbs: ["get", "update", "patch"] <1>
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -46,14 +46,15 @@ metadata:
   name: kate.demo-owner
 subjects:
   - kind: User
-    name: appuio#kate.demo <1>
+    name: appuio#kate.demo <2>
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
   name: kate.demo-owner
   apiGroup: rbac.authorization.k8s.io
 ----
-<1> This depends on the API server configuration: +
+<1> A user can't delete themselves in the current iteration of the API.
+<2> This depends on the API server configuration: +
     `oidc-username-claim=preferred_username` and `oidc-username-prefix=appuio#`
 
 By default, only the subject which is the owner of the `User` object gets edit rights.
