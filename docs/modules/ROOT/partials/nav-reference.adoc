@@ -28,7 +28,7 @@
 * Quality Requirements
 
 ** Functional
-*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoice-retention.adoc[Retention time of metrics used for invoicing]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[Retention time of metrics used for invoicing]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-collecting.adoc[Sampling interval for collecting metering data]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-reporting.adoc[Sampling interval in the intermediate metering storage]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/namespace-organization.adoc[User namespaces belong to an organization]
