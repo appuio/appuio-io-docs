@@ -13,8 +13,8 @@
 [source,bash]
 ----
 server="https://api.appuio.cloud/"
-oidc_url="https://id.appuio.cloud/auth/realms/appuio-cloud"
-client_id="appuio-control-api"
+oidc_url="https://id.vshn.net/auth/realms/vshn-realm"
+client_id="appuio_control-api"
 
 kubectl config set-cluster control-api-production --server=$server
 kubectl config set-credentials control-api-production \
@@ -55,8 +55,8 @@ users:
       args:
       - oidc-login
       - get-token
-      - --oidc-issuer-url=https://id.appuio.cloud/auth/realms/appuio-cloud
-      - --oidc-client-id=appuio-control-api
+      - --oidc-issuer-url=https://id.vshn.net/auth/realms/vshn-realm
+      - --oidc-client-id=appuio_control-api
       - --oidc-extra-scope=email offline_access profile openid
       command: kubectl
       env: null
@@ -64,7 +64,7 @@ users:
       provideClusterInfo: false
 ----
 
-. List available Zones 
+. List available Zones
 +
 [source,bash]
 ----
@@ -82,7 +82,7 @@ Run the following command to add it to your current kubeconfig.
 [source,bash]
 ----
 server="https://api-integration.apps.cloudscale-lpg-2.appuio.cloud/"
-oidc_url="https://id.dev.appuio.cloud/auth/realms/appuio-cloud-dev"
+oidc_url="https://id.test.vshn.net/auth/realms/VSHN-main-dev-realm"
 client_id="appuio-control-api"
 
 kubectl config set-cluster control-api-integration --server=$server
@@ -124,7 +124,7 @@ users:
       args:
       - oidc-login
       - get-token
-      - --oidc-issuer-url=https://id.dev.appuio.cloud/auth/realms/appuio-cloud-dev
+      - --oidc-issuer-url=https://id.test.vshn.net/auth/realms/VSHN-main-dev-realm
       - --oidc-client-id=appuio-control-api
       - --oidc-extra-scope=email offline_access profile openid
       command: kubectl
