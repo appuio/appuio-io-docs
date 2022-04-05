@@ -247,22 +247,37 @@ For example, the ingestion job may need to sum all records belonging to a single
 === Initial state
 
 .Dimension Query
-[cols="1,5"]
+[cols="2,3,3"]
 |===
 | id
 | 1
+| 2
 
 | name
 | appuio_cloud_memory
+| appuio_cloud_memory_requested
 
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 
 | query
+| …
 | …
 
 | unit
 | MiB
+| MiB
+|===
+
+.Sub Query
+[cols="1,5"]
+|===
+| query_id
+| 2
+
+| parent_id
+| 1
 |===
 
 .Dimension Product
