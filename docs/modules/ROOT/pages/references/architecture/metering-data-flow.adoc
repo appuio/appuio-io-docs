@@ -136,6 +136,16 @@ Some items contain a name or description that's to be ingested into the target s
 Some of those texts are supposed to be dynamic.
 To enable this, they're treated as templates and the dynamic parts get inserted wile creating the records on the target system.
 
+A fact can be built from many factors.
+As a result, the result might be hard if impossible to comprehend.
+Being able to display some of those factors, in isolation, can be of help.
+For that, the system knows the concept of sub queries and fact properties.
+
+A query can have any number of sub queries.
+They get run at the same time as the main query.
+The sub query results get attached as properties to the fact of the main query.
+When creating invoices, those properties can be used to build up the description text of a line item.
+
 == Data model
 
 image::system/data-model-billing.drawio.svg[]
