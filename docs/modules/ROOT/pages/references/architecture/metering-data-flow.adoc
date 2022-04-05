@@ -331,11 +331,21 @@ All the other dimensions are empty.
   category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
   product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
 } 1035892736 1639040942
+
+{
+  query="appuio_cloud_memory_requested",
+  tenant="acme-corp",
+  category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
+  product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
+} 5378296 1639040942
 ----
 
 .Fact
 [cols="1,5"]
 |===
+| id
+| 1
+
 | date_time_id
 | 1
 
@@ -356,6 +366,19 @@ All the other dimensions are empty.
 
 | quantity
 | 1035892736
+|===
+
+.Fact Properties
+[cols="1,5"]
+|===
+| fact_id
+| 1
+
+| query_id
+| 2
+
+| quantity
+| 5378296
 |===
 
 .Dimension Date Time
@@ -672,7 +695,7 @@ The tables below are an example based on Odoo.
 | 0 (discount from the dimension discount)
 
 | Description
-| "Compute (min: …, avg: …, max: …)" (description from dimension query with some values interpolated)
+| "Compute (min: …, avg: …, max: …, requested: …)" (description from dimension query with some values, both fact aggregations and properties, interpolated)
 
 | Unit of measure
 | MiB (unit from dimension query)
