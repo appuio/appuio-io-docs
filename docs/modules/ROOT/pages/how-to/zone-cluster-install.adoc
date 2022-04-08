@@ -80,6 +80,38 @@ yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_size = \"
   "${CLUSTER_ID}.yml"
 ----
 
+. Prepare APPUiO Cloud Agent Certificates
++
+[source,bash]
+----
+# Adjust the lifetime as necessary
+lifetime=3650
+
+servicename=webhook-service.appuio-cloud.svc
+openssl req -x509 -newkey rsa:4096 -nodes -keyout webhook.key -out webhook.crt -days ${lifetime} -subj "/CN=$servicename" -addext "subjectAltName = DNS:$servicename"
+----
++
+Store keys in Vault
++
+[source,bash]
+----
+instance=appuio-cloud
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}"
+
+vault kv put "${parent}/${instance}" webhook-key=@webhook.key
+----
++
+Add certificates to cluster config
++
+[source,bash]
+----
+webhookcert=$(cat webhook.crt)
+yq eval -i ".parameters.appuio_cloud.agent.webhook.tls.certificate = \"${webhookcert}\"" \
+  inventory/classes/${TENANT_ID}/${CLUSTER_ID}.yml
+yq eval -i '.parameters.appuio_cloud.agent.webhook.tls.caCertificate = "${appuio_cloud:agent:webhook.tls:certificate}"' \
+  inventory/classes/${TENANT_ID}/${CLUSTER_ID}.yml
+----
+
 . Work through the rest of the install guide for your cloud provider
 +
 * xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_compile_catalog[cloudscale.ch]
