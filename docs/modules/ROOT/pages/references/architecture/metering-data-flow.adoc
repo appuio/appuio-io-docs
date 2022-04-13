@@ -137,13 +137,13 @@ Some of those texts are supposed to be dynamic.
 To enable this, they're treated as templates and the dynamic parts get inserted wile creating the records on the target system.
 
 A fact can be built from many factors.
-As a result, the result might be hard if impossible to comprehend.
-Being able to display some of those factors, in isolation, can be of help.
-For that, the system knows the concept of sub queries and fact properties.
+As a result, it may be hard or impossible to understand how the final fact corresponds to its inputs.
+Being able to display some of those factors, in isolation, can be immensely helpful when trying to understand the final result.
+To allow displaying individual factors which contribute to a fact, the system knows the concept of sub queries and fact properties.
 
 A query can have any number of sub queries.
-They get run at the same time as the main query.
-The sub query results get attached as properties to the fact of the main query.
+All sub queries associated with a query are run at the same time as the main query.
+The sub query results are attached as properties to the fact of the main query.
 When creating invoices, those properties can be used to build up the description text of a line item.
 
 == Data model
