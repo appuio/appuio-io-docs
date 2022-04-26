@@ -116,3 +116,28 @@ yq eval -i '.parameters.appuio_cloud.agent.webhook.tls.caCertificate = "${appuio
 +
 * xref:oc4:ROOT:how-tos/cloudscale/install.adoc#_compile_catalog[cloudscale.ch]
 * xref:oc4:ROOT:how-tos/exoscale/install.adoc#_compile_catalog[Exoscale]
+
+. Add APPUiO Cloud specific CNAMES.
++
+.*For cloudscale.ch*
+Directly add the following CNAMES to the cluster's zone.
++
+[source,bash]
+----
+cname     IN CNAME ingress.${CLUSTER_DOMAIN}.
+console   IN CNAME ingress.${CLUSTER_DOMAIN}.
+registry  IN CNAME ingress.${CLUSTER_DOMAIN}.
+logging   IN CNAME ingress.${CLUSTER_DOMAIN}.
+----
++
+.*For Exoscale*
+We use exoscales managed DNS offering.
+To add the APPUiO Cloud specific CNAMES run the following commands.
++
+[source,bash]
+----
+exo dns add CNAME ${CLUSTER_DOMAIN} -n cname -a ingress.${CLUSTER_DOMAIN}
+exo dns add CNAME ${CLUSTER_DOMAIN} -n console -a ingress.${CLUSTER_DOMAIN}
+exo dns add CNAME ${CLUSTER_DOMAIN} -n registry -a ingress.${CLUSTER_DOMAIN}
+exo dns add CNAME ${CLUSTER_DOMAIN} -n logging -a ingress.${CLUSTER_DOMAIN}
+----
