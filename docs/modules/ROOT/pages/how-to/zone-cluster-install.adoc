@@ -131,7 +131,7 @@ logging   IN CNAME ingress.${CLUSTER_DOMAIN}.
 ----
 +
 .*For Exoscale*
-We use exoscales managed DNS offering.
+We use Exoscale's managed DNS offering.
 To add the APPUiO Cloud specific CNAMES run the following commands.
 +
 [source,bash]
