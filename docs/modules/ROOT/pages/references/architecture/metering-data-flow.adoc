@@ -139,12 +139,13 @@ To enable this, they're treated as templates and the dynamic parts get inserted 
 A fact can be built from many factors.
 As a result, it may be hard or impossible to understand how the final fact corresponds to its inputs.
 Being able to display some of those factors, in isolation, can be immensely helpful when trying to understand the final result.
-To allow displaying individual factors which contribute to a fact, the system knows the concept of sub queries and fact properties.
+To allow displaying individual factors which contribute to a fact, the system knows the concept of sub queries.
 
 A query can have any number of sub queries.
+Only the main query is billable and sub queries just add context.
+Sub queries can't have other sub queries.
 All sub queries associated with a query are run at the same time as the main query.
-The sub query results are attached as properties to the fact of the main query.
-When creating invoices, those properties can be used to build up the description text of a line item.
+When creating invoices, sub query facts can be used to build up the description text of a line item.
 
 == Data model
 
@@ -257,6 +258,10 @@ For example, the ingestion job may need to sum all records belonging to a single
 | appuio_cloud_memory
 | appuio_cloud_memory_requested
 
+| is_subquery
+| FALSE
+| TRUE
+
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 | Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
@@ -341,43 +346,38 @@ All the other dimensions are empty.
 ----
 
 .Fact
-[cols="1,5"]
+[cols="1,3,3"]
 |===
 | id
 | 1
+| 2
 
 | date_time_id
+| 1
 | 1
 
 | query_id
 | 1
+| 2
 
 | tenant_id
+| 1
 | 1
 
 | category_id
 | 1
+| 1
 
 | product_id
+| 1
 | 1
 
 | discount_id
 | 1
+| 1
 
 | quantity
 | 1035892736
-|===
-
-.Fact Properties
-[cols="1,5"]
-|===
-| fact_id
-| 1
-
-| query_id
-| 2
-
-| quantity
 | 5378296
 |===
 
@@ -407,21 +407,30 @@ All the other dimensions are empty.
 |===
 
 .Dimension Query
-[cols="1,5"]
+[cols="2,3,3"]
 |===
 | id
 | 1
+| 2
 
 | name
 | appuio_cloud_memory
+| appuio_cloud_memory_requested
+
+| is_subquery
+| FALSE
+| TRUE
 
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 
 | query
 | …
+| …
 
 | unit
+| MiB
 | MiB
 |===
 
@@ -488,30 +497,40 @@ All the other dimensions are empty.
 |===
 
 === Enrichment phase
-
 .Fact
-[cols="1,5"]
+[cols="1,3,3"]
 |===
+| id
+| 1
+| 2
+
 | date_time_id
+| 1
 | 1
 
 | query_id
 | 1
+| 2
 
 | tenant_id
+| 1
 | 1
 
 | category_id
 | 1
+| 1
 
 | product_id
+| 1
 | 1
 
 | discount_id
 | 1
+| 1
 
 | quantity
 | 1035892736
+| 5378296
 |===
 
 .Dimension Date Time
@@ -540,21 +559,30 @@ All the other dimensions are empty.
 |===
 
 .Dimension Query
-[cols="1,5"]
+[cols="2,3,3"]
 |===
 | id
 | 1
+| 2
 
 | name
 | appuio_cloud_memory
+| appuio_cloud_memory_requested
+
+| is_subquery
+| FALSE
+| TRUE
 
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
+| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 
 | query
 | …
+| …
 
 | unit
+| MiB
 | MiB
 |===
 
