@@ -258,10 +258,6 @@ For example, the ingestion job may need to sum all records belonging to a single
 | appuio_cloud_memory
 | appuio_cloud_memory_requested
 
-| is_subquery
-| FALSE
-| TRUE
-
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 | Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
@@ -417,10 +413,6 @@ All the other dimensions are empty.
 | appuio_cloud_memory
 | appuio_cloud_memory_requested
 
-| is_subquery
-| FALSE
-| TRUE
-
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
 | Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
@@ -568,10 +560,6 @@ All the other dimensions are empty.
 | name
 | appuio_cloud_memory
 | appuio_cloud_memory_requested
-
-| is_subquery
-| FALSE
-| TRUE
 
 | description
 | Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
