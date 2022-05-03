@@ -142,6 +142,7 @@ Being able to display some of those factors, in isolation, can be immensely help
 To allow displaying individual factors which contribute to a fact, the system knows the concept of sub queries.
 
 A query can have any number of sub queries.
+A sub query can only be part of a single main query.
 Only the main query is billable and sub queries just add context.
 Sub queries can't have other sub queries.
 All sub queries associated with a query are run at the same time as the main query.
@@ -254,6 +255,10 @@ For example, the ingestion job may need to sum all records belonging to a single
 | 1
 | 2
 
+| parent_id
+| NULL
+| 1
+
 | name
 | appuio_cloud_memory
 | appuio_cloud_memory_requested
@@ -269,16 +274,6 @@ For example, the ingestion job may need to sum all records belonging to a single
 | unit
 | MiB
 | MiB
-|===
-
-.Sub Query
-[cols="1,5"]
-|===
-| query_id
-| 2
-
-| parent_id
-| 1
 |===
 
 .Dimension Product
@@ -408,6 +403,10 @@ All the other dimensions are empty.
 | id
 | 1
 | 2
+
+| parent_id
+| NULL
+| 1
 
 | name
 | appuio_cloud_memory
@@ -556,6 +555,10 @@ All the other dimensions are empty.
 | id
 | 1
 | 2
+
+| parent_id
+| NULL
+| 1
 
 | name
 | appuio_cloud_memory
