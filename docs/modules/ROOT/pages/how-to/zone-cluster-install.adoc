@@ -79,6 +79,24 @@ yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_flavor = 
 yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_size = \"Huge\"" \
   "${CLUSTER_ID}.yml"
 ----
++
+[NOTE]
+====
+Storage node sizing is predefined for Exoscale in the `global.apps.appuio-cloud-zone` class.
+
+If you want to change the size of the storage node, you can do so with the following commands:
+
+[source,bash]
+----
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.storage_cluster_disk_size = 680 \ <1>
+  "${CLUSTER_ID}.yml"
+
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.storage_count = 4 \ <2>
+  "${CLUSTER_ID}.yml"
+----
+<1> Size in GB
+<2> Nodes
+====
 
 . Prepare APPUiO Cloud Agent Certificates
 +
