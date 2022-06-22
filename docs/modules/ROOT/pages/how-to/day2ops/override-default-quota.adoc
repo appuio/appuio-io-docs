@@ -57,7 +57,7 @@ kubectl --as=cluster-admin annotate namespace restless-wave \
   resourcequota.appuio.io/organization-compute-terminating.requests.cpu=7
 ----
 
-.Update the limit of allwed `configmaps` to `300`
+.Update the limit of allowed `configmaps` to `300`
 [source,bash]
 ----
 kubectl --as=cluster-admin annotate namespace restless-wave \
