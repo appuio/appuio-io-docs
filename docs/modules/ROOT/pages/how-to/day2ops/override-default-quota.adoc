@@ -64,4 +64,13 @@ kubectl --as=cluster-admin annotate namespace restless-wave \
   resourcequota.appuio.io/organization-objects.count_configmaps=300
 ----
 
-
+.Update the CephFS storage quota to `50Gi`
+[source,bash]
+----
+kubectl --as=cluster-admin annotate namespace restless-wave \
+  resourcequota.appuio.io/organization-objects.storageclasses='{"cephfs-fspool-cluster.storageclass.storage.k8s.io/requests.storage": "50Gi"}'
+----
+[IMPORTANT]
+====
+Please make sure to extend the existing annotation value (for example with `kubectl edit ns`), if you want to customize the storage quota for multiple storageclasses.
+====
