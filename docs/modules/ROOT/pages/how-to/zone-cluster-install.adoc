@@ -69,7 +69,7 @@ yq -i eval ".parameters.openshift4_terraform.terraform_variables.cluster_name = 
 .For cloudscale.ch
 [source,bash]
 ----
-yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_flavor = \"plus-24\"" \
+yq -i eval ".parameters.openshift4_terraform.terraform_variables.infra_flavor = \"plus-32-4\"" \
   "${CLUSTER_ID}.yml"
 ----
 +
