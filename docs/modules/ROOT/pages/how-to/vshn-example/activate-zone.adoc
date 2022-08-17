@@ -2,7 +2,26 @@
 
 NOTE: This guide is targeted at VSHN employees.
 
-. Add the cluster as a new client to {idp} as described in xref:how-to/zone-setup.adoc#_configure_keycloak[Configure Keycloak].
+. Add the cluster as a new client to {idp} https://id.vshn.net/auth/admin/master/console[id.vshn.net].
++
+[source]
+----
+Client ID = appuio_<c-cluster-id> <1>
+Access Type = confidential
+Valid Redirect URIs = https://oauth-openshift.apps.cluster-id.tld/oauth2callback/APPUiO
+Base URL = https://console.cluster-id.tld/
+
+[ Authentication Flow Overrides ]
+Browser Flow = Browser With WebAuthn (APPUiO Cloud)
+
+[ Client Scopes -> Default Client Scopes ]
+Assigned Default Client Scopes: Add `appuio_cloud_roles`
+----
+<1> For each enabled {zone} there shall be its own client using the cluster ID and the prefix `appuio_` as name.
+
+[#img-keycloak-default-scopes]
+.Default Client Scopes
+image::keycloak-default-scopes.png[Default Client Scopes,350]
 
 . Create an S3 bucket for xref:references/architecture/metering.adoc[APPUiO metering] which can be accessed using the same credentials as the cluster's registry bucket.
 Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
