@@ -1,4 +1,4 @@
-= Kyverno as policy engine
+= Kyverno and custom validating admission webhooks as policy engine
 
 == Problem
 
@@ -25,13 +25,52 @@ Policies are written in Rego, which is declarative query language suited for wri
 https://kyverno.io/[Kyverno]::
 Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
 
+https://www.kubewarden.io[kubewarden]::
+Kubewarden is a Kubernetes native policy engine which allows users to write policies in general purpose languages.
+Policies are compiled to WebAssembly and loaded into the policy engine as container images.
+
+https://www.jspolicy.com[jsPolicy]::
+Kubewarden is a Kubernetes native policy engine which allows users to write policies in JavaScript/TypeScript.
+Interaction with the Kubernetes API is done through the Kubernetes controller-runtime Go library.
+
+https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[Custom validating admission webhook]::
+It's possible to write custom validating admission webhooks in Go (or other general purpose languages).
+
 == Decision
+
+=== 2022-08-17
+
+* Custom validating admission webhooks
+* Kyverno
+
+=== 2021-07-30
 
 Kyverno
 
 == Rationale
 
+=== 2022-08-17
+
+After a good half year of using Kyverno for all policies in {product}, we've come to the conclusion that some of the policies are too complex to be easily maintainable as Kyverno policies.
+With this realization, we've decided to migrate {product} policies to custom validating admission webhooks.
+Where it makes sense, we'll migrate policies gradually as we need to make changes to them.
+We'll keep Kyverno as an available policy engine for {product}.
+
+We've currently decided against using either kubewarden or jsPolicy as a replacement for Kyverno.
+Kubewarden doesn't provide all the features required for implementing all {product} policies.
+In particular, kubewarden currently only supports a limited set of Kubernetes resources (namespaces, ingresses and services) can be queried from kubewarden policies.
+In contrast, jsPolicy would provide sufficient support to implement all {product} policies.
+However, using jsPolicy has limited advantages over writing policies directly in Go in a custom validating admission webhook.
+
+NOTE: This updated decision doesn't affect the decision on using xref:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator].
+
+=== 2021-07-30
+
 Kyverno doesn't require learning a declarative language compared to OPA.
 Especially writing mutating policies is subjectively easier in Kyverno than with OPA/Rego.
 
 NOTE: Choosing Kyverno as policy engine and resource generator reduces complexity.
+
+== References
+
+* https://github.com/glrf/appuio-jspolicy-demo/blob/master/EVALUATION.md[Detailed evaluation of jsPolicy as a replacement for Kyverno]
