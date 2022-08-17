@@ -2,6 +2,8 @@
 
 This guide describes the steps required to turn an OpenShift 4 cluster into an {zone}.
 
+NOTE: VSHN employees should follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
+
 == Configure Keycloak
 
 . Create a new Keycloak Client with the following settings (leave the others at default value)
@@ -20,8 +22,6 @@ Browser Flow = APPUiO Browser RBAC <2>
 <2> See xref:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
 
 NOTE: VSHN uses https://id.vshn.net/auth/admin/master/console[id.vshn.net] as the IDP.
-
-NOTE: VSHN employees can now follow xref:how-to/vshn-example/activate-zone.adoc[Activate Zone] instead of continuing this guide.
 
 == Configure openshift4-authentication
 
