@@ -6,6 +6,8 @@ NOTE: This guide is targeted at VSHN employees.
 
 * working Commodore setup
 * SMTP server for sending out emails from Keycloak
+* Access to control.cloudscale.ch
+* `vault`
 
 == Configure Cluster
 
@@ -46,3 +48,25 @@ Client Roles = appuio-cloud-realm
 Assigned Roles = view-users
 ----
 <1> The tabs are visible after saving the new user first.
+
+== Configure Cloudscale Metrics Collector
+
+. Login to Vault.
++
+[source,bash]
+----
+export VAULT_ADDR=https://vault-prod.syn.vshn.net
+vault login -method=oidc
+----
+
+. Login to control.cloudscale.ch.
+
+. Create a new API token within the `VSHN AppCat objects-lpg-2` project, give it a memorable name like `cloudscale-metrics-collector` and read-only access.
+
+. Save the token in Vault.
++
+[source,bash]
+----
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/cloudscale-metrics-collector"
+vault kv put "${parent}" token=<the-cloudscale-token>
+----
