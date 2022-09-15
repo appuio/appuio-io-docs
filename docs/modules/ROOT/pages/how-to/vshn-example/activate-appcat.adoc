@@ -1,0 +1,81 @@
+= Activate AppCat On {zone}
+
+This page describes how certain AppCat services can be enabled on a {zone}.
+
+. Check that the there is support for the used cloud provider.
+  See https://github.com/vshn/component-appcat/tree/master/packages.
+
+. Set variables
++
+[source,bash]
+----
+export CLUSTER_ID = <cluster>
+export TENANT_ID = <tenant>
+----
+
+. Login to Vault.
++
+[source,bash]
+----
+export VAULT_ADDR=https://vault-prod.syn.vshn.net
+vault login -method=oidc
+----
+
+. Setup API keys for cloud providers
++
+.Cloudscale
+[%collapsible]
+====
+. Login to control.cloudscale.ch.
+. Create a project using the naming scheme `VSHN AppCat objects-${CLUSTER_ID}`, for example `VSHN AppCat objects-lpg-2`.
+. Create an API token in the new project with a name like `appcat-objects-lpg-2` with write access.
+. Store token in Vault
++
+[source,bash]
+----
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/objectstorage/provider-cloudscale"
+vault kv put "${parent}" token=<the-cloudscale-token>
+----
+====
++
+.Exoscale
+[%collapsible]
+====
+. Login to portal.exoscale.com
+. Create a new organization using the naming scheme `VSHN AppCat ${CLUSTER_ID}`, for example `VSHN AppCat ch-gva-2-0`.
+. Create an Exoscale support ticket to link the organization to the root organization.
+. Once they're linked, in the new organization, create a restricted IAM API key using a name like `appcat-objects-cloudscale-ch-gva-2-0`.
+  The key should have following service permissions: `SOS - unrestricted, all buckets`, `IAM - unrestricted`.
+. Store token in Vault
++
+[source,bash]
+----
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/objectstorage/provider-exoscale"
+vault kv put "${parent}" access-key=<the-exoscale-access-key> secret-key=<the-exoscale-secret-key>
+----
+====
+
+. Configure cluster catalog
++
+[source,yaml]
+----
+classes:
+  - global.apps.appcat.objectstorage
+----
++
+This will deploy Crossplane and the Crossplane provider specific for the cloud provider.
+It also deploys the Crossplane XRDs and compositions along with RBAC.
++
+[TIP]
+====
+If there's a need to deploy Crossplane providers for other cloud providers, include extra classes.
+For example, for cloudscale add
+[source,yaml]
+----
+classes:
+  - appcat.composition.objectstorage.exoscale
+  - appcat.provider.exoscale
+----
+====
+
+. Compile and push cluster catalog.
