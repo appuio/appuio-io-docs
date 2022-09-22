@@ -79,4 +79,8 @@ Organization:: Kubernetes namespaced resource.
 |xref:references/architecture/control-api-zone.adoc[Zone]
 |Global
 |CRD
+
+|xref:references/architecture/control-api-billing-account.adoc[Billing Account]
+|Global
+|CRD (requires an aggregated API to limmit listing)
 |===

@@ -1,0 +1,18 @@
+= {controlapi}: Billing Account
+
+TIP: This resource implements the xref:references/functional-requirements/portal.adoc#_feature_billing_account["Billing Acctoun Management"] features.
+
+== Object
+
+.CRD based
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: BillingAccount
+metadata:
+  name: acme-corp
+data:
+  displayName: ACME Corporation
+status:
+  external_id: 123456
+----

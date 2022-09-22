@@ -7,6 +7,11 @@ A unit that groups together Users, Teams and Namespaces.
 It's the entity that owns the associated resources and the business connection.
 Billing is done on this level.
 
+=== Billing Account
+The Billing Account links Organizations to billing credentials.
+Such credentials could be a postal or electronic address for sending invoices or credit card information.
+The Billing Account is also the link to external systems used to manage contracts, invoicing, accounting etc.
+
 === Team
 A group of users.
 Always belongs to exactly one organization.
