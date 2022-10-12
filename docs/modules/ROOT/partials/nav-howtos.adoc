@@ -6,8 +6,6 @@
 
 * Day 2 operations
 ** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to {idp}]
-** xref:appuio-cloud:ROOT:how-to/day2ops/grant-access.adoc[Grant access to {product}]
-** xref:appuio-cloud:ROOT:how-to/day2ops/disable-access.adoc[Disable access to {product}]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/override-default-quota.adoc[Update resource limits]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/override-namespace-quota.adoc[Override Namespace Quota]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/connect-control-api.adoc[Connect to Control API]
