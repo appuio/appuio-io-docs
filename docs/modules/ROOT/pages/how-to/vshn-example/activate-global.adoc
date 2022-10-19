@@ -70,3 +70,50 @@ vault login -method=oidc
 parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/cloudscale-metrics-collector"
 vault kv put "${parent}" token=<the-cloudscale-token>
 ----
+
+== Configure Exoscale Metrics Collector
+
+The buckets are fetched from exoscale S3 storage and matched with the buckets from the cluster they were created.
+
+. Login to exoscale.com.
+
+. Create a new IAM key within the `VSHN AppCat objects-ch-gva-2-0` project, give it a memorable name like `exoscale-metrics-collector` and read-only access. The credentials will be saved later in Vault.
+
+. Login to the end cluster from where the exoscale buckets will be fetched, example APPUiO Cloud `exoscale-ch-gva-2-0`.
+
+. Create a ServiceAccount, ClusterRole and ClusterRoleBinding
++
+[source,bash]
+----
+oc -n <a-namespace> create serviceaccount exoscale-metrics-collector --as cluster-admin
+oc create clusterrole exoscale-metrics-collector --verb=get,list,watch --resource=namespaces,buckets.exoscale.crossplane.io --as cluster-admin
+oc create clusterrolebinding exoscale-metrics-collector --clusterrole=exoscale-metrics-collector --serviceaccount=<a-namespace>:exoscale-metrics-collector
+----
+
+. Get the ServiceAccount token
++
+[source,bash]
+----
+tokenname=$(oc -n <a-namespace> get serviceaccount exoscale-metrics-collector -o jsonpath='{.secrets[0].name}' --as cluster-admin)
+oc -n <a-namespace> get secret ${tokenname} -o jsonpath='{.data.token}' --as cluster-admin | base64 --decode
+----
+
+. Login to Vault.
++
+[source,bash]
+----
+export VAULT_ADDR=https://vault-prod.syn.vshn.net
+vault login -method=oidc
+----
+
+. Save the exoscale access-key, secret-key, cluster-server and cluster-token from previous steps in Vault.
++
+[source,bash]
+----
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/exoscale-metrics-collector/${instance-alias}" <1>
+vault kv put "${parent}" exoscale-key=<exoscale-access-key>
+vault kv put "${parent}" exoscale-secret=<exoscale-secret-key>
+vault kv put "${parent}" cluster-server=<cluster-server>
+vault kv put "${parent}" cluster-token=<cluster-server>
+----
+<1> ${instance-alias} is the component's alias in case of multiple instances of `exoscale-metrics-collector` are used in a cluster catalog. It defaults to `exoscale-metrics-collector` in case of single instance.
