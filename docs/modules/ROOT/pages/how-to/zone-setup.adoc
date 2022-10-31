@@ -192,6 +192,10 @@ pass:[<!-- vale Openly.GenderBias = YES -->]
 . Compile and push the cluster catalog
 . Wait for ArgoCD to sync the changes
 
+== Configure Appcat ObjectStorage provider
+
+Please refer to https://kb.vshn.ch/appuio-cloud/how-to/vshn-example/activate-appcat.html[the dedicated page] to setup AppCat ObjectStorage
+
 == Add Cluster to Status Page
 
 . Login to Statuspal
