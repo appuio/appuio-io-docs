@@ -1,6 +1,6 @@
-= Activate AppCat On {zone}
+= Activate AppCat Object Storage On {zone}
 
-This page describes how certain AppCat services can be enabled on a {zone}.
+This page describes how AppCat Object Storage service can be enabled on a {zone}.
 
 . Check that the there is support for the used cloud provider.
   See https://github.com/vshn/component-appcat/tree/master/packages.
@@ -46,11 +46,14 @@ vault kv put "${parent}" token=<the-cloudscale-token>
 . Create an Exoscale support ticket to link the organization to the root organization.
 . Once they're linked, in the new organization, create a restricted IAM API key using a name like `appcat-objects-cloudscale-ch-gva-2-0`.
   The key should have following service permissions: `SOS - unrestricted, all buckets`, `IAM - unrestricted`.
++
+WARNING: In case other AppCat services are already enabled on the {zone} such as ObjectStorage then the IAM Key should be recreated with appropriate permissions in the existing Exoscale organization.
++
 . Store token in Vault
 +
 [source,bash]
 ----
-parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/objectstorage/provider-exoscale"
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/provider-exoscale"
 vault kv put "${parent}" access-key=<the-exoscale-access-key> secret-key=<the-exoscale-secret-key>
 ----
 ====
