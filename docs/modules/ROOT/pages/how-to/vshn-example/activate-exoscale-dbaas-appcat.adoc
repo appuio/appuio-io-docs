@@ -1,0 +1,50 @@
+= Activate AppCat Exoscale DBaaS On {zone}
+
+This page describes how AppCat Database as a Service on Exoscale can be enabled on a {zone}.
+
+. Set variables.
++
+[source,bash]
+----
+export CLUSTER_ID = <cluster>
+export TENANT_ID = <tenant>
+----
+
+. Login to Vault.
++
+[source,bash]
+----
+export VAULT_ADDR=https://vault-prod.syn.vshn.net
+vault login -method=oidc
+----
+
+. Setup API keys for exoscale cloud provider in case no other AppCat services are running in {zone}.
++
+.. Login to portal.exoscale.com
+.. Create a new organization using the naming scheme `VSHN AppCat ${CLUSTER_ID}`, for example `VSHN AppCat ch-gva-2-0`.
+.. Create an Exoscale support ticket to link the organization to the root organization.
+.. Once they're linked, in the new organization, create a restricted IAM API key using a name like `appcat-dbaas-cloudscale-ch-gva-2-0`.
+  The key should have following service permissions: `DBaaS - unrestricted`, `IAM - unrestricted`.
++
+WARNING: In case other AppCat services are already enabled on the {zone} such as ObjectStorage then the IAM Key should be recreated with appropriate permissions in the existing Exoscale organization.
++
+.. Store token in Vault
++
+[source,bash]
+----
+parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/exoscale/provider-exoscale"
+vault kv put "${parent}" access-key=<the-exoscale-access-key> secret-key=<the-exoscale-secret-key>
+----
+. Configure cluster catalog
++
+[source,yaml]
+----
+classes:
+  - global.apps.appcat.dbaas.exoscale.postgres
+----
++
+This will deploy Crossplane and the Crossplane Exoscale provider.
+It also deploys the Crossplane XRDs and compositions along with RBAC.
++
+
+. Compile and push cluster catalog.
