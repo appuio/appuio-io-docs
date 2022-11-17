@@ -42,6 +42,7 @@ vault kv put "${parent}" access-key=<the-exoscale-access-key> secret-key=<the-ex
 classes:
   - global.apps.appcat.dbaas.exoscale.postgres
   - global.apps.appcat.dbaas.exoscale.mysql
+  - global.apps.appcat.dbaas.exoscale.redis
 ----
 +
 This will deploy Crossplane and the Crossplane Exoscale provider.
