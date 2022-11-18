@@ -35,12 +35,13 @@ WARNING: In case other AppCat services are already enabled on the {zone} such as
 parent="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/appcat/exoscale/provider-exoscale"
 vault kv put "${parent}" access-key=<the-exoscale-access-key> secret-key=<the-exoscale-secret-key>
 ----
-. Configure cluster catalog
+. Configure cluster catalog and choose at least one of the following exoscale DBaaS:
 +
 [source,yaml]
 ----
 classes:
   - global.apps.appcat.dbaas.exoscale.postgres
+  - global.apps.appcat.dbaas.exoscale.mysql
 ----
 +
 This will deploy Crossplane and the Crossplane Exoscale provider.
