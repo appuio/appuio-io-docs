@@ -1,0 +1,77 @@
+= {controlapi}: BillingEntity
+
+TIP: This resource implements the xref:references/functional-requirements/portal.adoc#_feature_manage_billing_information["Manage Billing Information"] features.
+
+It is required that billing data can be modified by the billing entity owner in the portal and by our accounting team in the ERP.
+
+A naive implementation with a controller that synchronizes the `BillingEntity` resource with the ERP would be problematic.
+There might be two states updated independently that can collide or override each other.
+
+To circumvent the complexities of a shared source of truth the `BillingEntity` is a virtual resource that is stored in the ERP and fetched by an aggregated API server.
+
+The clusters etcd, a ConfigMap, or CRD might be used as a cache.
+
+Having a virtual resource also helps with filtering of list operations on Kubernetes resources.
+
+List operations on Kubernetes resources can not be filtered by RBAC, it's a binary operation:
+Resources can either be listed or not, there is no way to give access only to a sub-set.
+
+== Object
+
+.Virtual resource
+[source,yaml]
+----
+apiVersion: billing.appuio.io/v1
+kind: BillingEntity
+metadata:
+  name: be-234234 <1>
+spec:
+  displayName: Acme Corp. <2>
+----
+<1> The name of the `BillingEntity` is the billing accounts partner ID in the ERP.
+It is prefixed with `be-` to keep the name RFC 1035 compliant.
+This works with the assumption that the ERP provides a otherwise compliant name.
+It might be to VSHN (Odoo) specific.
+<2> The display name of the `BillingEntity` is the billing accounts name in the ERP.
+
+.Organization resource
+[source,yaml]
+----
+apiVersion: organization.appuio.io/v1 <1>
+kind: Organization
+spec:
+  billingEntityRef: be-234234 <2>
+status:
+  billingEntity:
+    displayName: Acme Corp. <3>
+----
+<1> Only relevant fields are shown for brevity.
+<2> The `billingEntityRef` is the reference to the `BillingEntity` resource.
+<3> The `displayName` is the cached display name of the `BillingEntity` resource.
+
+== Access Control
+
+[TIP]
+We use the same access control mechanism for `BillingEntity` as for xref:references/architecture/control-api-org.adoc#_access_control[`Organization` resources].
+
+We use standard Kubernetes role-based access control for `BillingEntity` with two distinct differences.
+
+. Access needs to be granted for `billingentities` resources in API group `rbac.appuio.io` and not for resources in API group `billing.appuio.io`.
+Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`.
+. For `list` and `watch` verbs the API server will only return resources that the user also has permission to `get`
+
+[NOTE]
+====
+The `rbac.appuio.io` API group allows us to delegate access control to the aggregate API server.
+With the new API group we can still use the powerful RBAC engine of Kubernetes, while bypassing the Kubernetes API server's access control.
+As a consequence, by introducing this logical RBAC group, no custom code needs to be written in order to implement the access control required for multi-tenancy.
+The Kubernetes API server will still perform classical access control for `billingentities.billing.appuio.io` resources.
+In practice any user is allowed to perform any action on `billingentities.billing.appuio.io` and access control is handled by the aggregate API server.
+====
+
+[IMPORTANT]
+Users with the `view` role on a `BillingEntity` can reference it in `Organization` resources.
+
+== Data Flow
+
+image::billing-data-flow.svg[Billing Data Flow,600]

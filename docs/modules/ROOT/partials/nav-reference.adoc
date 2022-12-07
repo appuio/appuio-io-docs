@@ -17,8 +17,10 @@
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-user.adoc[User]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-team.adoc[Team]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-zone.adoc[Zone]
+*** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity.adoc[BillingEntity]
 *** Adapters
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-org-adapter.adoc[Organization Adapter]
+*** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter.adoc[BillingEntity Adapter]
 
 * Functional Requirements
 
@@ -50,6 +52,7 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-serviceaccount.adoc[Creating namespaces with ServiceAccount tokens]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-oc-new-project.adoc[Creating OpenShift projects]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-organization-rbac.adoc[Namespaces are owned by organizations]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/org-billing-entity-human-readable-name.adoc[Organizations show a human-readable Billing Entity reference]
 
 ** Security
 *** xref:appuio-cloud:ROOT:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]

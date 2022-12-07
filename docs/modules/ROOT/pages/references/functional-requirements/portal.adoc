@@ -96,3 +96,16 @@ A lot of sanity checks are needed:
 * Create resources
 * Update resources
 * Delete resources
+
+== Feature: Manage Billing Information
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] +
+> I want to choose how my resources are billed +
+> So that I can have I can simplify the setup for me and my users.
+
+*Scenarios*
+
+* List my billing information
+* Show current billing contact information
+* Change billing contact information
+* Set billing contact to my organizations

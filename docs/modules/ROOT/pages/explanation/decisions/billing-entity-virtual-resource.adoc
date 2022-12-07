@@ -1,0 +1,96 @@
+= {controlapi} Billing Entity as Virtual Resource
+
+== Problem
+
+We want to allow users self-service to create and manage their own billing entities using the {controlapi}.
+We use an ERP for all of our billing and accounting needs, which is not Kubernetes aware.
+Some customers might have other products than {product} and our accounting team needs to edit billing entities in the ERP.
+
+Since billing entities will be edited through both the {portal} and the ERP, we need to make sure that the billing entities are always in sync.
+
+== Relevant requirements
+
+* Self-Service
+
+== Proposals
+
+=== Virtual Resource Stored in ERP
+
+The billing entity is not stored in the {controlapi} but fetched on demand from the ERP.
+This is implemented as a aggregate API server which translates the {controlapi} API to the ERP API.
+The adapter respects the RBAC rules of the {controlapi} and only allows users to access their own billing entities.
+
+This solves any synchronization issues as the billing entity is always up-to-date.
+
+The {controlapi} might become partly unresponsive if the ERP is down or slow.
+
+[quote,Kubernetes SIG Kubebuilder,apiserver-builder-alpha Readme,href=https://github.com/kubernetes-sigs/apiserver-builder-alpha]
+____
+Aggregated apiserver empowers you to customize your apiserver to do following things cannot achieved by CR[D]:
+
+* Makes your apiserver adopt different storage APIs rather than ETCDv3
+* Extends long-running subresources/endpoints like websocket for your own resources
+* Integrates your apiserver with whatever other external systems
+____
+
+.Editing Entity example
+[example]
+====
+. The API transparently loads the billing entity from the ERP.
+. A user edits the billing entity in the {portal}.
+. The changes are saved in the ERP through the API.
+====
+
+=== Custom Resource Stored in Control API
+
+The billing entity is stored in the {controlapi} as a custom resource.
+The billing entity is synchronized with the ERP periodically and on demand.
+
+The controller synchronizing the billing entity with the ERP is implemented as a Kubernetes controller.
+It must have a way to track changes from both the ERP and the {controlapi}.
+Otherwise one might overwrite changes made in the other system.
+
+The sync state tracking might be inspired by Kubernetes three-way merge patching and resource versioning.
+
+It could be possible to use Webhooks in the ERP to notify the {controlapi} about changes.
+There still needs to be backup mechanism if changes made in the ERP happen during downtime of the {controlapi} or vice-versa.
+
+Since the custom resources are stored locally performance is not affected by the ERP.
+
+We still need to implement an aggregate API server since list operations are not supported through Kubernetes RBAC.
+
+.Editing Entity example
+[example]
+====
+. The controller loads the billing entity from the ERP and stores it in the {controlapi}.
+. A user edits the billing entity in the {portal}.
+. The changes are saved in the control API.
+. The controller compares versions and synchronizes the changes with the ERP.
+====
+
+.VSHN Specific
+****
+There are plugins that implement webhooks in the ERP. https://apps.odoo.com/apps/modules/browse?search=Odoo%20Webhook[Odoo Webhook marketplace search].
+
+Since we have an ancient ERP version the plugins might not work.
+****
+
+== Decision
+
+Virtual Resource Stored in ERP
+
+== Rationale
+
+The virtual resource stored in the ERP approach has been chosen because it does not have any synchronization issues.
+Debugging synchronization issues can be tricky and we still need most of the parts of the locally stored CRD approach.
+
+The following reasons favor the virtual resource stored in the ERP over the CRD approach:
+
+Debuggability::
+  The virtual resource stored in the ERP approach is easier to debug.
+  The CRD approach requires a lot of synchronization logic and debugging might be tricky.
+  The virtual resource stored in the ERP approach is easier to understand and debug.
+
+Implementation effort::
+  The syncing approach has more open variables and might change substantially if switching to a different ERP.
+  We need to implement an aggregate API server for list operations anyway.
