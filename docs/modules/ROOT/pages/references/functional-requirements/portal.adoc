@@ -29,10 +29,38 @@ This page discusses functional requirements targeting the Control API and the {p
 
 [NOTE]
 ====
-The "Delete Organization" isn't listed by intention as deleting an organization is a delicious task.
-A lot of sanity checks are needed:
+The "Delete Organization" isn't listed by intention:
+Some sanity checks are needed:
 
 * No depending resources running / available anymore
+* And more
+====
+
+== Feature: Manage Billing Account
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to provide the {product} service provider my billing credentials +
+> So that they know how to bill me and I can use their service
+
+The Billing Account is what ties the world of APPUiO Cloud into the coorporate IT world of the {product} service provider.
+It is the interface for users to provide the data that then is reflected within any ERP or otherwise billing related systems.
+
+*Scenarios*
+
+* Create Billing Account
+* List Billing Accounts
+* Edit Billing Accounts
+* Give other users access to the Billing Account
+
+[NOTE]
+====
+The "Delete Billing Account" isn't listed by intention:
+The following are just a few of the needed sanity checks:
+
+The "Delete Billing Account" isn't listed by intention as deleting an Billing Account is a delicious task.
+A lot of sanity checks are needed:
+
+* No Organizations liked with Billing Account
 * No unpaid invoices
 * And more
 ====
