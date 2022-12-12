@@ -2,7 +2,7 @@
 
 == Prerequisites
 
-* All namespaces belonging to that organisation, on every APPUiO Cloud zone, are removed.
+* All namespaces belonging to that organization, on every APPUiO Cloud zone, are removed.
 * https://kb.vshn.ch/appuio-cloud/how-to/day2ops/connect-control-api.html[Connect to control api]
 
 
