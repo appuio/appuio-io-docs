@@ -1,0 +1,30 @@
+= Remove an organization
+
+== Prerequisites
+
+* All namespaces on every APPUiO Cloud zone, belonging to that organisation, is removed.
+* https://kb.vshn.ch/appuio-cloud/how-to/day2ops/connect-control-api.html[Connect to control api]
+
+
+== Check for organization namespaces
+
+On every APPUiO Cloud zone:
+
+[source,bash]
+----
+org=<NAME_OF_THE_ORG>
+
+kubectl get ns -ocustom-columns="NAME:.metadata.name,ORG:.metadata.labels.appuio\.io\/organization" | grep $org
+----
+
+
+== Remove organization
+
+On the control api cluster:
+
+[source,bash]
+----
+org=<NAME_OF_THE_ORG>
+
+kubectl delete organization $org
+----
