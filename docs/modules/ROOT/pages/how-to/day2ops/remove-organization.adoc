@@ -15,6 +15,10 @@ On every APPUiO Cloud zone:
 kubectl get ns -o name -l appuio.io/organization=<ORG_NAME>
 ----
 
+If any namespace is still present, contact the customer and make them delete it.
+Alternatively, we can delete them but we need the agreement by the customer that it is OK.
+Make them understand, that this will permanently delete all persistent volumes without a means to recover them.
+
 
 == Remove organization
 
