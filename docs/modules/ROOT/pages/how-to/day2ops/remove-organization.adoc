@@ -12,7 +12,7 @@ On every APPUiO Cloud zone:
 
 [source,bash]
 ----
-kubectl get ns -ocustom-columns="NAME:.metadata.name,ORG:.metadata.labels.appuio\.io\/organization" | grep <ORG_NAME>
+kubectl get ns -o name -l appuio.io/organization=<ORG_NAME>
 ----
 
 
