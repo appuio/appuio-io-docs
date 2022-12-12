@@ -12,9 +12,7 @@ On every APPUiO Cloud zone:
 
 [source,bash]
 ----
-org=<NAME_OF_THE_ORG>
-
-kubectl get ns -ocustom-columns="NAME:.metadata.name,ORG:.metadata.labels.appuio\.io\/organization" | grep $org
+kubectl get ns -ocustom-columns="NAME:.metadata.name,ORG:.metadata.labels.appuio\.io\/organization" | grep <ORG_NAME>
 ----
 
 
@@ -24,7 +22,5 @@ On the control api cluster:
 
 [source,bash]
 ----
-org=<NAME_OF_THE_ORG>
-
-kubectl delete organization $org
+kubectl delete organization <ORG_NAME>
 ----
