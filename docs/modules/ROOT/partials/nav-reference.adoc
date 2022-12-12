@@ -20,7 +20,8 @@
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity.adoc[BillingEntity]
 *** Adapters
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-org-adapter.adoc[Organization Adapter]
-*** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter.adoc[BillingEntity Adapter]
+**** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter.adoc[BillingEntity Adapter]
+**** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter-vshn.adoc[BillingEntity Adapter at VSHN]
 
 * Functional Requirements
 
