@@ -187,7 +187,7 @@ Odoo allows to add custom fields to partner records which can be used to mark re
 
 . Create Company Partner Record
 .. Tag as coming from the `BillingEntity` resource
-.. Tag as in creation process (category or custom field e.g. `x_transaction_id`)
+.. Tag as in creation process (category or custom field for example `x_transaction_id`)
 . Remember the ID of the company partner record
 . Create Roleaccount Partner Record
 .. Link to the company partner record
