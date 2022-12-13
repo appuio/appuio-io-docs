@@ -36,7 +36,7 @@ spec:
     emails: <6>
     - ursula.gurnmeister@cyberai.example.com
     - contact@cyberai.example.com
-  languagePreference: en <7>
+  languagePreference: de <7>
 ----
 <1> The name of the `BillingEntity` is the **billing accounts** partner ID in the ERP.
 It is prefixed with `be-` to keep the name RFC 1035 compliant.
