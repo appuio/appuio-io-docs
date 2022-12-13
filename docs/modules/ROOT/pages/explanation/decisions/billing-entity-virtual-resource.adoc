@@ -82,7 +82,9 @@ Virtual Resource Stored in ERP
 == Rationale
 
 The virtual resource stored in the ERP approach has been chosen because it does not have any synchronization issues.
-Debugging synchronization issues can be tricky and we still need most of the parts of the locally stored CRD approach.
+Debugging synchronization issues can be tricky.
+
+If we go for the locally stored CRD approach we still need to implement an aggregate API server for list operations.
 
 The following reasons favor the virtual resource stored in the ERP over the CRD approach:
 
