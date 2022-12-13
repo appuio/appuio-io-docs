@@ -24,7 +24,7 @@ metadata:
 spec:
   name: Cyber AI <2>
   emails: <3>
-  - contact@cyberai.com
+  - contact@cyberai.example.com
   phone: "+41313131313"
   address:
     line1: "Zisternenstrasse 3f"
@@ -34,8 +34,8 @@ spec:
   accountingContact: <4>
     name: "Ursula Gurnmeister" <5>
     emails: <6>
-    - ursula.gurnmeister@cyberai.com
-    - contact@cyberai.com
+    - ursula.gurnmeister@cyberai.example.com
+    - contact@cyberai.example.com
   languagePreference: en <7>
 ----
 <1> The name of the `BillingEntity` is the **billing accounts** partner ID in the ERP.
@@ -82,7 +82,7 @@ image::odoo-vshn/customer-accounting-contact.png[ERP Accounting Contact,600]
   "zip": "3600",
   "country_id": [256, "Schweiz"],
 
-  "email": "ursula.gurnmeister@cyberai.com, contact@cyberai.com", <11>
+  "email": "ursula.gurnmeister@cyberai.example.com, contact@cyberai.example.com", <11>
 }
 ----
 <1> The ID of the partner record.
@@ -133,7 +133,7 @@ image::odoo-vshn/customer.png[ERP Company Contact,600]
   "city": "Thun", <10>
   "zip": "3600", <11>
   "country_id": [256, "Schweiz"], <12>
-  "email": "contact@cyberai.com", <13>
+  "email": "contact@cyberai.example.com", <13>
   "phone": false, <14>
 }
 ----

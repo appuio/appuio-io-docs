@@ -30,7 +30,7 @@ spec:
   name: Cyber AI <2>
   phone: "+41313131313"
   emails: <3>
-  - contact@cyberai.com
+  - contact@cyberai.example.com
   address:
     line1: "Zisternenstrasse 3f"
     line2: ""
@@ -39,8 +39,8 @@ spec:
   accountingContact: <4>
     name: "Ursula Gurnmeister" <5>
     emails: <6>
-    - ursula.gurnmeister@cyberai.com
-    - contact@cyberai.com
+    - ursula.gurnmeister@cyberai.example.com
+    - contact@cyberai.example.com
 ----
 <1> The name of the `BillingEntity` is the partner ID in the ERP.
 It is prefixed with `be-` to keep the name RFC 1035 compliant.
