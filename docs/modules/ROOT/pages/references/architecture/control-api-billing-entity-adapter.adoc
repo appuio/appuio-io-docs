@@ -32,7 +32,7 @@ The ERP provides the billing information and partner contacts used for creating 
 The {controlapi} is not authoritative for billing information but gets its billing information from the ERP.
 
 * The ERP **must** hold the a user's billing information.
-* The ERP **may** have a notion of customers structure and hierarchy.
+* The ERP **may** have a notion of customer structure and hierarchy.
 
 .ERP at VSHN
 ****

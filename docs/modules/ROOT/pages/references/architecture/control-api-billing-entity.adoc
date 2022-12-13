@@ -5,15 +5,16 @@ TIP: This resource implements the xref:references/functional-requirements/portal
 It is required that billing data can be modified by the billing entity owner in the portal and by our accounting team in the ERP.
 
 A naive implementation with a controller that synchronizes the `BillingEntity` resource with the ERP would be problematic.
-There might be two states updated independently that can collide or override each other.
+An implementation based on a controller would create a system with multiple sources of truth.
+In the general case, there's no right order for independent updates in such a system.
 
-To circumvent the complexities of a shared source of truth the `BillingEntity` is a virtual resource that is stored in the ERP and fetched by an aggregated API server.
+To ensure we have a single source of truth the `BillingEntity` is a virtual resource that is stored in the ERP and fetched by an aggregated API server.
 
-The clusters etcd, a ConfigMap, or CRD might be used as a cache.
+The cluster's etcd, a ConfigMap, or a CRD may be used as a cache for information fetched from the ERP.
 
 Having a virtual resource also helps with filtering of list operations on Kubernetes resources.
 
-List operations on Kubernetes resources can not be filtered by RBAC, it's a binary operation:
+List operations on Kubernetes resources can't be filtered by RBAC, it's a binary operation:
 Resources can either be listed or not, there is no way to give access only to a sub-set.
 
 == Object

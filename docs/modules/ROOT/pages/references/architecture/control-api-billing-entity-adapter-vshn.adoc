@@ -9,7 +9,7 @@ VSHN uses https://www.odoo.com/[Odoo] in version 8.0.
 
 == Field Mapping
 
-At VSHN every customer has an Odoo partner record of type `Customer` and a partner record of type `Roleaccount` for storing billing email addresses and the billing contact shown in the _c/o_ line of the invoice.
+At VSHN, every customer has an Odoo partner record of type `Customer` and a partner record of type `Roleaccount` for storing billing email addresses and the billing contact shown in the _c/o_ line of the invoice.
 The two partner records are linked via the `parent_id` field of the `Roleaccount` partner record.
 
 The `BillingEntity` resource is mapped to the `Roleaccount` (billing contact) partner record.
