@@ -17,7 +17,7 @@ Since billing entities will be edited through both the {portal} and the ERP, we 
 === Virtual Resource Stored in ERP
 
 The billing entity is not stored in the {controlapi} but fetched on demand from the ERP.
-This is implemented as a aggregate API server which translates the {controlapi} API to the ERP API.
+This is implemented as an aggregated API server which translates the {controlapi} API to the ERP API.
 The adapter respects the RBAC rules of the {controlapi} and only allows users to access their own billing entities.
 
 This solves any synchronization issues as the billing entity is always up-to-date.
@@ -57,7 +57,7 @@ There still needs to be backup mechanism if changes made in the ERP happen durin
 
 Since the custom resources are stored locally performance is not affected by the ERP.
 
-We still need to implement an aggregate API server since list operations are not supported through Kubernetes RBAC.
+We still need to implement an aggregated API server since list operations are not supported through Kubernetes RBAC.
 
 .Editing Entity example
 [example]

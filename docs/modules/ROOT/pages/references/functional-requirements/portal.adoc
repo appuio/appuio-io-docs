@@ -99,9 +99,9 @@ A lot of sanity checks are needed:
 
 == Feature: Manage Billing Information
 
-> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] +
-> I want to choose how my resources are billed +
-> So that I can have I can simplify the setup for me and my users.
+> As a service provider +
+> I want users to link their Organizations to BillingEntities +
+> So that I know where the invoice can be sent to.
 
 *Scenarios*
 

@@ -18,7 +18,7 @@ Organizations with human-readable Billing Entity reference are shown.
 Rationale::
 To enable a user-friendly experience.
 Organization Viewers should be able to see to whom the organization resources are billed.
-ERP IDs are not not meant to be human-readable.
+ERP IDs are not meant to be human-readable.
 
 [NOTE]
 If the ERP is slow or unavailable, the organization list should still be shown.
