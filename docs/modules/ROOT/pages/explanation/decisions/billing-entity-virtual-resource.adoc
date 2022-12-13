@@ -46,10 +46,12 @@ ____
 The billing entity is stored in the {controlapi} as a custom resource.
 The billing entity is synchronized with the ERP periodically and on demand.
 
-The controller synchronizing the billing entity with the ERP is implemented as a Kubernetes controller.
-It must have a way to track changes from both the ERP and the {controlapi}.
-Otherwise one might overwrite changes made in the other system.
 
+The controller synchronizing the billing entity with the ERP is implemented as a Kubernetes controller.
+An implementation based on a controller would create a system with multiple sources of truth.
+In the general case, there's no right order for independent updates in such a system.
+
+The controller must have a way to track changes from both the ERP and the {controlapi}.
 The sync state tracking might be inspired by Kubernetes three-way merge patching and resource versioning.
 
 It could be possible to use Webhooks in the ERP to notify the {controlapi} about changes.

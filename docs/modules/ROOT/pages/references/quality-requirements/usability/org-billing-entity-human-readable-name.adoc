@@ -22,3 +22,4 @@ ERP IDs are not meant to be human-readable.
 
 [NOTE]
 If the ERP is slow or unavailable, the organization list should still be shown.
+See xref:references/quality-requirements/reliability/organization-list-resilience.adoc[Organization list resilience] requirement.
