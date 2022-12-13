@@ -14,44 +14,7 @@ The two partner records are linked via the `parent_id` field of the `Roleaccount
 
 The `BillingEntity` resource is mapped to the `Roleaccount` (billing contact) partner record.
 
-.Virtual resource
-[source,yaml]
-----
-apiVersion: billing.appuio.io/v1
-kind: BillingEntity
-metadata:
-  name: be-2494 <1>
-spec:
-  name: Cyber AI <2>
-  emails: <3>
-  - contact@cyberai.example.com
-  phone: "+41313131313"
-  address:
-    line1: "Zisternenstrasse 3f"
-    line2: ""
-    postalCode: "3600"
-    city: "Thun"
-  accountingContact: <4>
-    name: "Ursula Gurnmeister" <5>
-    emails: <6>
-    - ursula.gurnmeister@cyberai.example.com
-    - contact@cyberai.example.com
-  languagePreference: de <7>
-----
-<1> The name of the `BillingEntity` is the **billing accounts** partner ID in the ERP.
-It is prefixed with `be-` to keep the name RFC 1035 compliant.
-This works with the assumption that the ERP provides a otherwise compliant name.
-<2> The name of the company.
-Also used as the display name.
-<3> The general contact email address of the company.
-<4> The accounting contact information.
-Used when generating invoices.
-<5> The name of the accounting contact person.
-Used in the "c/o" line of the invoice.
-<6> The email addresses of the accounting contact person.
-Invoices are sent to these addresses.
-<7> The language preference of the company.
-Future use.
+include::partial$references/billing-entity/virtual-resource.adoc[]
 
 [NOTE]
 Odoo has the terrible habit of returning `false` instead of `null` for unset fields.
