@@ -2,7 +2,7 @@
 
 == Problem
 
-We want to allow users to create and manage their own billing entities using the {controlapi} as self-service.
+We want to allow users to create and manage billing relevant data (billing entity) on their own using the {controlapi} (self-service).
 We use an ERP which is not Kubernetes aware for all of our billing and accounting needs.
 Some customers might have other products than {product} and our accounting team needs to edit billing entities in the ERP.
 
