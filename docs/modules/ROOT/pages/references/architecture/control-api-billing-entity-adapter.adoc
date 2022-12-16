@@ -1,0 +1,79 @@
+= {controlapi}: Billing Entity Adapter
+
+[IMPORTANT]
+====
+This document is kept as generic as possible but it might contain references to VSHN-specific implementations.
+
+VSHN uses https://www.odoo.com/[Odoo].
+====
+
+{product} relies on an external ERP system to manage billing entities.
+
+The billing entity owner can edit the billing information in the {controlapi} to provide self-service capabilities.
+The VSHN accounting team might also edit customer billing information, especially if a customer also uses other VSHN services.
+
+This document should give a high level specification of what an APPUiO ERP and its adapter needs to be able to do.
+The implementation details and which part of these requirements are fulfilled by which system might vary.
+
+pass:[<!-- vale Microsoft.Quotes = NO -->]
+
+[NOTE]
+====
+The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119].
+
+In this document, such keywords are highlighted using **bold** font.
+====
+
+pass:[<!-- vale Microsoft.Quotes = YES -->]
+
+== Enterprise Resource Planning (ERP)
+
+The ERP provides the billing information and partner contacts used for creating invoices.
+The {controlapi} is not authoritative for billing information but gets its billing information from the ERP.
+
+* The ERP **must** hold the a user's billing information.
+* The ERP **may** have a notion of customer structure and hierarchy.
+
+.ERP at VSHN
+****
+Odoo stores the billing information in `partner` records.
+
+The `partner` records are organized in a hierarchy with a `parent_id` field.
+We use this to have separate company and billing contacts.
+****
+
+== BillingEntity Adapter
+
+The BillingEntity Adapter is a component that interfaces with the ERP and the {controlapi}.
+It is responsible to translate the billing information from the ERP to the {controlapi} and vice versa.
+
+This adapter **should** be implemented as an https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
+The source of truth for billing information **must** be the ERP.
+The adapter **may** cache the billing information in the {controlapi}.
+
+[NOTE]
+Some of the following requirements **may** be implemented by or through the ERP itself or by a third system.
+
+=== BillingEntity
+
+* Each partner record in the ERP **must** be represented as a `BillingEntity` in the {controlapi}.
+* The list of partner records **may** be filtered to contain only relevant records.
+* The adapter **must** be able to list all partner records the user has access to.
+* The adapter **must** expose all relevant billing information as `BillingEntity.spec` fields.
+* The adapter **must** be able to create and update partner record through billing entity resources.
+* The adapter **may** be able to delete partner records.
+
+The access permissions for the `BillingEntity` are stored in the {controlapi} and must be respected by the adapter.
+
+* The adapter **must not** allow viewing or updating `BillingEntity` resources for which the user does not have access.
+
+Organization viewers should see a human readable name for billing entities even if they can't access the billing entity resource or the ERP is not available.
+
+* The adapter **should** save a human readable name for billing entities in the Organization status.
+
+.BillingEntity Adapter at VSHN
+****
+The BillingEntity Adapter is a work in progress.
+
+Relevant information and repositories should be linked here once they are available.
+****

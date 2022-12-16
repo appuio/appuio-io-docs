@@ -1,0 +1,20 @@
+= Organization list resilience
+
+Source::
+Organization Viewer
+
+Stimulus::
+Checks organizations he is part of
+
+Environment::
+Portal
+
+Artifact::
+Browser
+
+Response::
+Organizations list is shown even if external ERP or IDP is unavailable.
+
+Rationale::
+To enable a user-friendly experience.
+Systems that are not strictly necessary for the user to perform his task should not block the user from performing his task.

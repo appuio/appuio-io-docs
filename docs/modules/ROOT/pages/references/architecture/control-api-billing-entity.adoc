@@ -1,0 +1,63 @@
+= {controlapi}: BillingEntity
+
+TIP: This resource implements the xref:references/functional-requirements/portal.adoc#_feature_manage_billing_information["Manage Billing Information"] features.
+
+The `BillingEntity` allows a user to manage billing information in a self-service manner.
+It allows users to choose where to bill their used resources through a link to the `Organization` resource.
+The `BillingEntity` maps records and fields needed to create invoices from an external ERP to the API.
+All information required for an invoice can be accessed through the {portal} and the {controlapi}.
+
+It is required that billing data can be modified by the billing entity owner in the {portal} and by our accounting team in the ERP.
+
+A naive implementation with a controller that synchronizes the `BillingEntity` resource with the ERP would be problematic.
+An implementation based on a controller would create a system with multiple sources of truth.
+
+To ensure we have a single source of truth the `BillingEntity` is a virtual resource that is stored in the ERP and fetched by an aggregated API server.
+See xref:explanation/decisions/billing-entity-virtual-resource.adoc[Billing Entity as Virtual Resource].
+
+== Object
+
+include::partial$references/billing-entity/virtual-resource.adoc[]
+
+.Organization resource
+[source,yaml]
+----
+apiVersion: organization.appuio.io/v1 <1>
+kind: Organization
+spec:
+  billingEntityRef: be-234234 <2>
+status:
+  billingEntity:
+    display: Acme Corp. <3>
+----
+<1> Only relevant fields are shown for brevity.
+<2> The `billingEntityRef` is the reference to the `BillingEntity` resource.
+Every `Organization` resource must have a reference to a `BillingEntity` resource.
+<3> The `display` is the cached display name of the `BillingEntity` resource.
+
+== Access Control
+
+[TIP]
+We use the same access control mechanism for `BillingEntity` as for xref:references/architecture/control-api-org.adoc#_access_control[`Organization` resources].
+
+We use standard Kubernetes role-based access control for `BillingEntity` with two distinct differences.
+
+. Access needs to be granted for `billingentities` resources in API group `rbac.appuio.io` and not for resources in API group `billing.appuio.io`.
+Permissions can be configured through both `Roles` and `RoleBindings`, as well as `ClusterRoles` and `ClusterRoleBindings`.
+. For `list` and `watch` verbs the API server will only return resources that the user also has permission to `get`
+
+[NOTE]
+====
+The `rbac.appuio.io` API group allows us to delegate access control to the aggregate API server.
+With the new API group we can still use the powerful RBAC engine of Kubernetes, while bypassing the Kubernetes API server's access control.
+As a consequence, by introducing this logical RBAC group, no custom code needs to be written in order to implement the access control required for multi-tenancy.
+The Kubernetes API server will still perform classical access control for `billingentities.billing.appuio.io` resources.
+In practice any user is allowed to perform any action on `billingentities.billing.appuio.io` and access control is handled by the aggregate API server.
+====
+
+[IMPORTANT]
+Users with the `view` role on a `BillingEntity` can reference it in `Organization` resources.
+
+== Data Flow
+
+image::billing-data-flow.svg[Billing Data Flow,600]

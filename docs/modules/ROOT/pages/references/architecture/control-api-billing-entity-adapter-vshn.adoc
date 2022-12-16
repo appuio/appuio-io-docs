@@ -1,0 +1,164 @@
+= {controlapi}: Billing Entity Adapter at VSHN
+
+[IMPORTANT]
+====
+This document is VSHN specific and is not part of the {controlapi} specification.
+
+VSHN uses https://www.odoo.com/[Odoo] in version 8.0.
+====
+
+== Field Mapping
+
+At VSHN, every customer has an Odoo partner record of type `Customer` and a partner record of type `Roleaccount` for storing billing email addresses and the billing contact shown in the _c/o_ line of the invoice.
+The two partner records are linked via the `parent_id` field of the `Roleaccount` partner record.
+
+The `BillingEntity` resource is mapped to the `Roleaccount` (billing contact) partner record.
+
+include::partial$references/billing-entity/virtual-resource.adoc[]
+
+[NOTE]
+Odoo has the terrible habit of returning `false` instead of `null` for unset fields.
+We already implemented a workaround for this in https://github.com/vshn/appuio-odoo-adapter/blob/master/odoo/model/odoo_composite_id.go[appuio-odoo-adapter] which needs to get a generic version for string fields.
+
+=== Accounting Contact
+
+image::odoo-vshn/customer-accounting-contact.png[ERP Accounting Contact,600]
+
+[source,json]
+----
+{
+  "id": 2495, <1>
+  "name": "Accounting", <2>
+
+  "category_id": [7], <3>
+  "lang": "de_DE", <4>
+  "notify_email": "always", <5>
+  "parent_id": [2494, "Cyber AI"], <6>
+  "property_payment_term": [2, "10 Days"], <7>
+
+  "x_invoice_contact": "Ursula Gurnmeister", <8>
+  "use_parent_address": true, <9>
+
+  "street": "Zisternenstrasse 3f", <10>
+  "street2": false,
+  "city": "Thun",
+  "zip": "3600",
+  "country_id": [256, "Schweiz"],
+
+  "email": "ursula.gurnmeister@cyberai.example.com, contact@cyberai.example.com", <11>
+}
+----
+<1> The ID of the partner record.
+Read-only.
+Exported as `.metadata.name` with the `be-` prefix.
+<2> Static value.
+<3> Tag such as `Roleaccount`.
+Statically set.
+<4> The language preference of the company.
+Not relevant yet.
+Exposed as `.spec.languagePreference`.
+<5> The notification preference of the contact person.
+Statically set to `always`.
+Invoice won't be sent if this is not set to `always`.
+<6> The ID of the company partner record.
+Read-only.
+<7> The payment term of the company.
+Statically set.
+<8> The name of the accounting contact person.
+Used in the "c/o" line of the invoice.
+Exported as `.spec.accountingContact.name`.
+<9> Use the address of the company partner record.
+Statically set to `true`.
+<10> The address of the company partner record.
+Read-only and set from the company partner record.
+<11> The email addresses of the accounting contact person.
+Invoices are sent to these addresses.
+Exposed as `.spec.accountingContact.emails`.
+
+=== Company Contact
+
+image::odoo-vshn/customer.png[ERP Company Contact,600]
+
+[source,json]
+----
+{
+  "id": 2494, <1>
+  "name": "Cyber AI", <2>
+
+  "category_id": [1], <3>
+  "lang": "de_DE", <4>
+  "notify_email": "none", <5>
+  "parent_id": false, <6>
+  "property_payment_term": [2, "10 Days"], <7>
+
+  "street": "Zisternenstrasse 3f", <8>
+  "street2": false, <9>
+  "city": "Thun", <10>
+  "zip": "3600", <11>
+  "country_id": [256, "Schweiz"], <12>
+  "email": "contact@cyberai.example.com", <13>
+  "phone": false, <14>
+}
+----
+<1> The ID of the partner record.
+Read-only.
+Found by the `parent_id` of the `Roleaccount` partner record.
+<2> The name of the company.
+Exported as `.spec.name`.
+<3> Tag such as `Customer`.
+Statically set.
+<4> The language preference of the company.
+Not relevant yet.
+Exposed as `.spec.languagePreference`.
+<5> The notification preference of the contact person.
+Statically set to `none`.
+<6> The ID of the parent partner record.
+Read-only.
+Unset for the company partner record.
+<7> The payment term of the company.
+Statically set.
+<8> The address line 1 of the company.
+Exposed as `.spec.address.line1`.
+<9> The address line 2 of the company.
+Exposed as `.spec.address.line2`.
+<10> The city of the company.
+Exposed as `.spec.address.city`.
+<11> The postal code of the company.
+Exposed as `.spec.address.postalCode`.
+<12> The country of the company.
+Most likely statically set to Switzerland.
+<13> The general contact address of the company.
+Exported as `.spec.emails`.
+<14> The phone number of the company.
+Exported as `.spec.phone`.
+
+== Record Handling
+
+There are two records in the ERP that are relevant for the `BillingEntity` resource.
+They can't be updated in the same request, so the adapter has to handle the update process in two steps.
+
+Creation should be able to handle a failure in the second step without polluting the ERP with orphaned records.
+
+Odoo allows to add custom fields to partner records which can be used to mark records as created by the adapter or might allow to store a transaction ID/ resourceVersion from K8s.
+
+=== Get Billing Entity
+
+. Load the `Roleaccount` partner record by the name of the `BillingEntity` resource
+. Load the `Customer` partner record by the `parent_id` of the `Roleaccount` partner record
+
+=== Create Billing Entity
+
+. Create Company Partner Record
+.. Tag as coming from the `BillingEntity` resource
+.. Tag as in creation process (category or custom field for example `x_transaction_id`)
+. Remember the ID of the company partner record
+. Create Roleaccount Partner Record
+.. Link to the company partner record
+.. Tag as coming from the `BillingEntity` resource
+.. Remove the in creation process tag from the company partner record
+. Return the `BillingEntity` resource with the ID of the Roleaccount partner record
+
+=== Update Billing Entity
+
+. Update the Roleaccount Partner Record
+. Update the Company Partner Record

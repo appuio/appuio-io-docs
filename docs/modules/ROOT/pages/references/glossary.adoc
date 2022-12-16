@@ -7,6 +7,10 @@ A unit that groups together Users, Teams and Namespaces.
 It's the entity that owns the associated resources and the business connection.
 Billing is done on this level.
 
+=== Billing Entity
+A entity defining the billing relationship between {product} and a customer.
+Can belong to zero to multiple organizations.
+
 === Team
 A group of users.
 Always belongs to exactly one organization.
@@ -62,6 +66,9 @@ A user which interacts with {product} (the Kubernetes API) in a specified namesp
 
 === Organization Owner
 A user which interacts with {product} (the Kubernetes API).
+
+=== Billing Entity Owner
+A user allow to edit billing information like payment methods or billing address.
 
 === Instance Owner
 Owner of the particular {product} instance.

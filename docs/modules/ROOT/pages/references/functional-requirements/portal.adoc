@@ -96,3 +96,16 @@ A lot of sanity checks are needed:
 * Create resources
 * Update resources
 * Delete resources
+
+== Feature: Manage Billing Information
+
+> As a service provider +
+> I want users to link their Organizations to BillingEntities +
+> So that I know where the invoice can be sent to.
+
+*Scenarios*
+
+* List my billing information
+* Show current billing contact information
+* Change billing contact information
+* Set billing contact to my organizations
