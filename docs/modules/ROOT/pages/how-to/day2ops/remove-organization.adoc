@@ -1,0 +1,30 @@
+= Remove an organization
+
+== Prerequisites
+
+* All namespaces belonging to that organization, on every APPUiO Cloud zone, are removed.
+* https://kb.vshn.ch/appuio-cloud/how-to/day2ops/connect-control-api.html[Connect to control api]
+
+
+== Check for organization namespaces
+
+On every APPUiO Cloud zone:
+
+[source,bash]
+----
+kubectl get ns -o name -l appuio.io/organization=<ORG_NAME>
+----
+
+If any namespace is still present, contact the customer and make them delete it.
+Alternatively, we can delete them but we need the agreement by the customer that it is OK.
+Make them understand, that this will permanently delete all persistent volumes without a means to recover them.
+
+
+== Remove organization
+
+On the control api cluster:
+
+[source,bash]
+----
+kubectl delete organization <ORG_NAME>
+----
