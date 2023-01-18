@@ -1,0 +1,21 @@
+= Invitations
+
+Owners of {product} Organizations or Billing Entities need the ability to invite users to their organization or billing entity.
+
+They can do so by creating an invitation object in the {controlapi} or be using the {portal}.
+
+Since new users do not have a user name yet, the invitation object is not linked to a user object.
+The first user claiming the invitation will be linked to the invitation object.
+To make an invitation discoverable, the invitation contains an email address to notify the user about the invitation.
+
+The authentication and sign up is handled by the IDP where users can create a new account using social login or email.
+
+[NOTE]
+====
+In order to allow users to sign up, the IDP needs to be configured to allow sign up.
+See IDP requirements xref:references/architecture/control-api-org-adapter.adoc#idp-provide-onboard[The IdP should provide means to on-board new users to APPUiO Cloud].
+====
+
+image::user-invitation-flow.svg[Invitation Flow,600]
+
+See xref:references/architecture/control-api-invitation.adoc[] for the {controlapi} specification.

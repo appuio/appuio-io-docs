@@ -33,7 +33,7 @@ It is helpful if the IdP has some notion of groups and sub-groups which can be c
 * The IdP **must** provide OIDC tokens authenticating {product} users to {zone}s.
 * The IdP **must** provide OIDC tokens authenticating {product} users to the {controlapi}.
 * The IdP **should** have a notion of groups and sub-groups containing users which can be added as claims in the OIDC token.
-* The IdP **should** provide means to on-board new users to {product}.
+* [[idp-provide-onboard]]The IdP **should** provide means to on-board new users to {product}.
 
 .Identity Provider at VSHN
 ****
