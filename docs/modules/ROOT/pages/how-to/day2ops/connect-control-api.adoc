@@ -1,32 +1,8 @@
 = Connect to APPUiO Control API
 
-== Prerequisites
 
-* https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl]
-* https://github.com/int128/kubelogin#setup[kubectl oidc-login plugin]
+Visit the kubeconfig view at the APPUiO Cloud Portal and follow the instruction there.
+You will find iat at:
 
-
-== Connect
-
-. Download the kubeconfig from the APPUiO Cloud Portal
-+
 * https://portal.appuio.cloud/kubeconfig[Production]
 * https://cloud-portal-integration.apps.cloudscale-lpg-2.appuio.cloud/kubeconfig[Integration]
-
-. Point your environment to that kubeconfig
-+
-[source, bash]
-----
-export KUBECONFGI=/path/to/my/kubeconfig
-----
-
-. Interact with the cluster
-+
-Interacting with the API will trigger a login.
-A browser window should open, where you can log in with your VSHN account.
-For instance, you can list zones but any API interaction will work.
-+
-[source,bash]
-----
-kubectl get zones
-----
