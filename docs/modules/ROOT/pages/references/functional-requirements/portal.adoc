@@ -109,3 +109,23 @@ A lot of sanity checks are needed:
 * Show current billing contact information
 * Change billing contact information
 * Set billing contact to my organizations
+
+== Feature: Send Invitations
+
+> As an xref:references/glossary.adoc#_organization-owner[Organization Owner] or xref:references/glossary.adoc#_billing-entity-owner[Billing Entity Owner] +
+> I want to invite xref:references/glossary.adoc#_user[Users] to my organizations, teams, or billing entities +
+> So they can join and use the {product} ecosystem.
+
+*Scenarios*
+* Invite User to Organization, Team, or Billing Entity
+* Invite non existing User to Organization, Team, or Billing Entity
+* List Invitations
+
+== Feature: Accept Invitations
+
+> As a xref:references/glossary.adoc#_user[User] +
+> I want to accept invitations to organizations, teams, or billing entities +
+> So that I can join and use the {product} ecosystem.
+
+*Scenarios*
+* Receive and accept invitation to Organization, Team, or Billing Entity
