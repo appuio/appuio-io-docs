@@ -20,4 +20,5 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/billing-etl.adoc[No off-the-shelf ETL processor for metering and billing]
 ** xref:appuio-cloud:ROOT:explanation/decisions/billing-entity-virtual-resource.adoc[Billing Entity as Virtual Resource]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-adapter.adoc[Keycloak Organization Adapter]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-identity-brokering.adoc[Keycloak Usernames for Brokered Identities]
 * xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[Kyverno policies used by {product}]

@@ -1,0 +1,29 @@
+= Keycloak Usernames for Brokered Identities
+
+== Problem
+
+In xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster] we defined that the Username attribute in Keycloak is used as an immutable identifier for users. When signing up through a brokered identity provider, Keycloak has a default mapping for the Username attribute. This mapping is not consistent across providers as they don't provide the same information about their users (Claims in the context of OIDC). For GitHub, the username is used, but for Google and Microsoft it is the email. As email addresses are prone to change, they are not the best choice for immutable usernames.
+
+Further, users must have a human-readable username because it is widely used for user-facing actions across the APPUiO ecosystem (e.g. RBAC based on username).
+
+== Proposals
+
+[qanda]
+Use default mapping::
+Keycloak is configured to use the default username mapping it provides for an identity provider.
+
+Create custom mappers::
+Keycloak is configured to use a custom mapping for every identity provider. This custom mapping ensures that a username is not set to the email of a user.
+
+Allow users to choose their username::
+The authentication flow for the initial sign up with an identity broker is configured so that users have to choose their username.
+
+== Decision
+
+Use custom mappers that prefill the username with something human-readable, but still allow the user to change it during the initial authentication flow.
+
+== Rationale
+
+This provides a good balance between a seemless sign-up experience and freedom of choice.
+
+Users are forced to choose a different username if it is already taken in Keycloak and therefore a way to choose another name must exist.
