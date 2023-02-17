@@ -436,6 +436,9 @@ All the other dimensions are empty.
 
 | target
 | null
+
+| during
+| [-Infinity,Infinity)
 |===
 
 .Dimension Category
@@ -588,6 +591,9 @@ All the other dimensions are empty.
 
 | target
 | *22457*
+
+| during
+| [-Infinity,Infinity)
 |===
 
 .Dimension Category
