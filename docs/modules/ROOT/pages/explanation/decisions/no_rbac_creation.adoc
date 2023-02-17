@@ -1,0 +1,26 @@
+= Omit creation of default RBAC rules on select organization namespaces
+
+== Problem
+
+The "Managed by VSHN" appcat services provision the instances in a separate namespace that has the same organization label as the namespace where the claim originates from. By default, this will give the organization users full access to those managed namespaces and would allow the users to manipulate the managed appcat services in an undesired way.
+To avoid that, the default RBACs should not be created for those namespaces.
+
+== Proposals
+
+. Create a new label `appuio.io/access-level` where you can define the access level for the namespace, for example::
+
+** `appuio.io/access-level: read-write` -- read-write access for the organization -- equivalent when ommiting the label.
+** `appuio.io/access-level: read-only` -- read-only access for the organization
+** `appuio.io/access-level: none` -- no access for the organization
+
+. Create a new label `appuio.io/no-rbac-creation` where you can define if the default RBACs should be created (read-write access) or not (no access at all)::
+
+
+== Decision
+
+Create a new label `appuio.io/no-rbac-creation`
+
+== Rationale
+
+Multiple access levels introduce more complexity, furthermore it is desired to manage the RBAC direclty with AppCat in the compositions.
+A simple flag to not add any RBAC is thefore sufficient for this usecase. As we currently don't have any usecase for multiple access levels, this idea was dropped.
