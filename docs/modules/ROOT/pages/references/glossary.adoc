@@ -92,3 +92,9 @@ A project manager. If used in a local binding, an admin has rights to view any r
 === Viewer
 [quote, OpenShift default role]
 > A user who cannot make any modifications, but can see most objects in a project. They cannot view or modify roles or bindings.
+
+== Billing
+
+=== Tenant
+A billable entity.
+This is a more generic term mapping to <<_organization>>, Customer, Partner and other similar terms.
