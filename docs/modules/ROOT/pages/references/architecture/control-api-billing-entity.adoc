@@ -27,13 +27,12 @@ kind: Organization
 spec:
   billingEntityRef: be-234234 <2>
 status:
-  billingEntity:
-    display: Acme Corp. <3>
+  billingEntityName: Acme Corp. <3>
 ----
 <1> Only relevant fields are shown for brevity.
 <2> The `billingEntityRef` is the reference to the `BillingEntity` resource.
 Every `Organization` resource must have a reference to a `BillingEntity` resource.
-<3> The `display` is the cached display name of the `BillingEntity` resource.
+<3> The cached display name of the `BillingEntity` resource.
 
 == Access Control
 
