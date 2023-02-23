@@ -9,7 +9,7 @@ To avoid that, the default RBACs should not be created for those namespaces.
 
 . Create a new label `appuio.io/access-level` where you can define the access level for the namespace, for example::
 
-** `appuio.io/access-level: read-write` -- read-write access for the organization -- equivalent when ommiting the label.
+** `appuio.io/access-level: read-write` -- read-write access for the organization -- equivalent to omitting the label.
 ** `appuio.io/access-level: read-only` -- read-only access for the organization
 ** `appuio.io/access-level: none` -- no access for the organization
 
