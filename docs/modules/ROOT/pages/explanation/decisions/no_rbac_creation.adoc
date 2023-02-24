@@ -2,8 +2,8 @@
 
 == Problem
 
-The "Managed by VSHN" appcat services provision the instances in a separate namespace that has the same organization label as the namespace where the claim originates from. By default, this will give the organization users full access to those managed namespaces and would allow the users to manipulate the managed appcat services in an undesired way.
-To avoid that, the default RBACs should not be created for those namespaces.
+We use services (eg "VSHN Application Catalog") that will create namespaces (managed by the service) for the end users. Those managed namespaces will also have the corresponding orgainzation label set (mostly for billing purposes). By default, this will give the organization users full access to those managed namespaces and would allow the users to manipulate any services running in those managed namespaces in an undesired way.
+To avoid that, the default RBACs should not be created for such namespaces. 
 
 == Proposals
 
