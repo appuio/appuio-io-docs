@@ -7,7 +7,7 @@ The Keycloak Organization Adapter maps the in-cluster resources to Keycloak grou
 .Goals
 
 * Map `Organization` / `OrganizationMembers` resource to top level groups in Keycloak
-** Create group if `Organization exits
+** Create group if `Organization` exits
 ** Manage group members based on `OrganizationMembers`
 ** Import existing groups as `Organization`/`OrganizationMembers`
 * Map `Teams` to sub-groups in Keycloak
