@@ -6,46 +6,46 @@
 
 * Installation
 ** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
-** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup role-based access control for {product}]
-** xref:appuio-cloud:ROOT:how-to/zone-cluster-install.adoc[Install a cluster for {product}]
-** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[Add a cluster to {product}]
+** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
+** xref:appuio-cloud:ROOT:how-to/zone-cluster-install.adoc[]
+** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[]
 
 * Day 2 operations
-** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[Administrator access to {idp}]
+** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[]
 ** xref:appuio-cloud:ROOT:how-to/day2ops/override-default-quota.adoc[Update resource limits]
-** xref:appuio-cloud:ROOT:how-to/day2ops/override-namespace-quota.adoc[Override Namespace Quota]
-** xref:appuio-cloud:ROOT:how-to/day2ops/connect-control-api.adoc[Connect to Control API]
-** xref:appuio-cloud:ROOT:how-to/day2ops/remove-organization.adoc[Remove an organization]
+** xref:appuio-cloud:ROOT:how-to/day2ops/override-namespace-quota.adoc[]
+** xref:appuio-cloud:ROOT:how-to/day2ops/connect-control-api.adoc[]
+** xref:appuio-cloud:ROOT:how-to/day2ops/remove-organization.adoc[]
 
 * Examples for VSHN
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[Configure role mappings for Keycloak Brokering]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[Configure role-based access control for brokered users]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[Activate Zone]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-global.adoc[Activate Global Environment]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-storage-appcat.adoc[Activate AppCat Object Storage on Zone]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-exoscale-dbaas-appcat.adoc[Activate AppCat Exoscale DBaaS on Zone]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-storage-appcat.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-exoscale-dbaas-appcat.adoc[]
 
 * Operations
-** xref:appuio-cloud:ROOT:how-to/measure-log-ingestion-by-organization.adoc[Measure Log Ingestion by Organization]
+** xref:appuio-cloud:ROOT:how-to/measure-log-ingestion-by-organization.adoc[]
 
 .Technical reference
 
-* xref:appuio-cloud:ROOT:references/glossary.adoc[Glossary]
-* xref:appuio-cloud:ROOT:references/document-requirements.adoc[How to read and document requirements]
-* xref:appuio-cloud:ROOT:references/document-decisions.adoc[How to read and document decisions]
-* xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[DNS Naming Scheme]
+* xref:appuio-cloud:ROOT:references/glossary.adoc[]
+* xref:appuio-cloud:ROOT:references/document-requirements.adoc[Document requirements]
+* xref:appuio-cloud:ROOT:references/document-decisions.adoc[Document decisions]
+* xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[]
 
 
 * Architecture
 
-** xref:appuio-cloud:ROOT:references/architecture/identity-data-model.adoc[Identity data model]
-** xref:appuio-cloud:ROOT:references/architecture/openshift-authentication.adoc[Authentication on OpenShift clusters]
-** xref:appuio-cloud:ROOT:references/architecture/namespace-ownership.adoc[Namespace ownership]
-** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage]
-** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[Metrics of interest]
-** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[Data model and flow for Billing]
-** xref:appuio-cloud:ROOT:references/architecture/invitations.adoc[Invitations]
+** xref:appuio-cloud:ROOT:references/architecture/identity-data-model.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/openshift-authentication.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/namespace-ownership.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/invitations.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/control-api.adoc[Control API]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-org.adoc[Organization]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-user.adoc[User]
@@ -66,60 +66,60 @@
 * Quality Requirements
 
 ** Functional
-*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[Retention time of metrics used for invoicing]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-collecting.adoc[Sampling interval for collecting metering data]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-reporting.adoc[Sampling interval in the intermediate metering storage]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/namespace-organization.adoc[User namespaces belong to an organization]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-collecting.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-reporting.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/functional/namespace-organization.adoc[]
 
 ** Performance
-*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-create-time.adoc[Time to create Namespace]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-quota.adoc[Namespace quota per Zone]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/resource-quota.adoc[Resource limit per Namespace]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-create-time.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-quota.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/performance/resource-quota.adoc[]
 
 ** Reliability
-*** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/ns-validation-resilience.adoc[Namespace validation resilience]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/organization-list-resilience.adoc[Organization list resilience]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/ns-validation-resilience.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/reliability/organization-list-resilience.adoc[]
 
 ** Usability
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/dns-naming-scheme.adoc[DNS Naming scheme]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-arbitrary-name.adoc[Arbitrary Namespace name]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/user-arbitrary-name.adoc[Arbitrary user name]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/organization-arbitrary-name.adoc[Arbitrary organization name]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[Metrics scope for invoicing]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-serviceaccount.adoc[Creating namespaces with ServiceAccount tokens]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-oc-new-project.adoc[Creating OpenShift projects]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-organization-rbac.adoc[Namespaces are owned by organizations]
-*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/org-billing-entity-human-readable-name.adoc[Organizations show a human-readable Billing Entity reference]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/dns-naming-scheme.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-arbitrary-name.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/user-arbitrary-name.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/organization-arbitrary-name.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/metrics-scope-invoicing.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-serviceaccount.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/create-ns-with-oc-new-project.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/ns-organization-rbac.adoc[]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/usability/org-billing-entity-human-readable-name.adoc[]
 
 ** Security
 *** xref:appuio-cloud:ROOT:references/quality-requirements/security/impersonating-cluster-admin.adoc[Impersonating cluster-admin]
 
 ** Portability
-*** xref:appuio-cloud:ROOT:references/quality-requirements/portability/adapters.adoc[Foreign components as Adapters]
+*** xref:appuio-cloud:ROOT:references/quality-requirements/portability/adapters.adoc[]
 
 .Explanation
 
 * System
-** xref:appuio-cloud:ROOT:explanation/system/context.adoc[System context]
-** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[System idea]
-** xref:appuio-cloud:ROOT:explanation/system/details-ui.adoc[System idea: Graphical user interface]
+** xref:appuio-cloud:ROOT:explanation/system/context.adoc[]
+** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[]
+** xref:appuio-cloud:ROOT:explanation/system/details-ui.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/system/details-adapters.adoc[System idea: Adapters]
-** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[Data model]
+** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[]
 
 * Decisions
-** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[Keycloak as IdP]
-** xref:appuio-cloud:ROOT:explanation/decisions/idp-group-mapping.adoc[IdP group membership mapping]
-** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Kyverno and custom validating admission webhooks as policy engine]
-** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-generator.adoc[Kyverno as resource generator]
-** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[User object names in the OpenShift cluster]
-** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[User name choice on sign-up]
-** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[User name stability]
-** xref:appuio-cloud:ROOT:explanation/decisions/control-api.adoc[{controlapi}]
-** xref:appuio-cloud:ROOT:explanation/decisions/unit-prefixes.adoc[Unit prefixes]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/idp-group-mapping.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Policy Engine]
+** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-generator.adoc[Resource Generator]
+** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/control-api.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/unit-prefixes.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/access-metering-data.adoc[Access metering data]
-** xref:appuio-cloud:ROOT:explanation/decisions/efk-openshift-logging.adoc[RHOL EFK logging stack]
-** xref:appuio-cloud:ROOT:explanation/decisions/billing-etl.adoc[No off-the-shelf ETL processor for metering and billing]
-** xref:appuio-cloud:ROOT:explanation/decisions/billing-entity-virtual-resource.adoc[Billing Entity as Virtual Resource]
+** xref:appuio-cloud:ROOT:explanation/decisions/efk-openshift-logging.adoc[RHOL EFK Logging Stack]
+** xref:appuio-cloud:ROOT:explanation/decisions/billing-etl.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/billing-entity-virtual-resource.adoc[BillingEntity as Virtual Resource]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-adapter.adoc[Keycloak Organization Adapter]
-** xref:appuio-cloud:ROOT:explanation/decisions/no_rbac_creation.adoc[Omit creation of default RBAC rules on select organization namespaces]
-* xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[Kyverno policies used by {product}]
+** xref:appuio-cloud:ROOT:explanation/decisions/no_rbac_creation.adoc[]
+* xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[]
