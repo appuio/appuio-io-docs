@@ -48,14 +48,20 @@
 
 * Security and compliance
 ** xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[]
+** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
 
 * Authentication and authorization
 ** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[]
 ** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[]
+** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
 
-//Networking
+* Networking
+** xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[]
+
 //Storage
 //Registry
 //Operators
