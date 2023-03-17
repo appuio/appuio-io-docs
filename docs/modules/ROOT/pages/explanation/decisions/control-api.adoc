@@ -10,7 +10,7 @@ The {controlapi} is the construct for both.
 Certain features are to be provided by foreign software components, which are called xref:explanation/system/details-adapters.adoc[Adapters] in this context.
 
 For both {controlapi} (and consequently Adapter API) an architecture pattern is needed to define the playground for both the orchestration but also the adapters.
-This pattern must follow the https://handbook.vshn.ch/hb/beliefs.html#_beliefs[VSHN Company Beliefs] (mainly the part "For that we use"), which states that the chosen proposal should run with or on Kubernetes.
+This pattern must follow the https://handbook.vshn.ch/hb/beliefs.html#_beliefs[VSHN Company Beliefs^] (mainly the part "For that we use"), which states that the chosen proposal should run with or on Kubernetes.
 
 This decision is specifically addressing the following concrete issues:
 
@@ -65,12 +65,12 @@ The Kubernetes API server provides a standardized API pattern that comes with au
 By design, Kubernetes is a API framework that works with reconciling a desired state.
 Business logic or orchestration is asynchronous by nature and this leads to an eventual-consistent behavior of the platform.
 
-Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features] of the Kubernetes API server are leveraged.
-This could mean that the {controlapi} specification is written as CRDs and the back-end functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller] or a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
-Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime] could be used to write the back-end functionality, which is an SDK designed to especially work with foreign third-party APIs.
+Implementation-wise the core https://kubernetes.io/docs/concepts/extend-kubernetes/[extensibility features^] of the Kubernetes API server are leveraged.
+This could mean that the {controlapi} specification is written as CRDs and the back-end functionality implemented as a https://kubernetes.io/docs/concepts/architecture/controller/[Kubernetes controller^] or a custom https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server^].
+Even the https://github.com/crossplane/crossplane-runtime[crossplane-runtime^] could be used to write the back-end functionality, which is an SDK designed to especially work with foreign third-party APIs.
 
 A dedicated Kubernetes API server will be used for that to not interfere with other workload running on this instance.
-This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster]) or a full-blown Kubernetes cluster.
+This could be a virtualized API server (for example https://github.com/loft-sh/vcluster[vcluster^]) or a full-blown Kubernetes cluster.
 The controllers acting on the CRDs can run directly in this API server or outside in another Kubernetes cluster.
 All operations are handled through the Kubernetes API server, CRDs and controllers.
 
@@ -113,7 +113,7 @@ Asynchronous::
 It allows to build upon an asynchronous and eventual-consistent architecture which VSHN has a lot of experience with due to VSHNs day-to-day business with Kubernetes.
 
 API Extensibility and versioning::
-By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning] Kubernetes brings already proven strategies dealing with extending APIs.
+By leveraging the built-in https://kubernetes.io/docs/concepts/overview/kubernetes-api/#api-groups-and-versioning[API versioning^] Kubernetes brings already proven strategies dealing with extending APIs.
 
 Framework ecosystem::
 For both proposals there are popular OpenSource ecosystems with various framework support.

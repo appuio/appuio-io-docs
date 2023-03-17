@@ -74,7 +74,7 @@ parameters:
 ----
 
 . Compile and push the cluster catalog
-. Wait for Keycloak to start up and visit https://id.appuio.cloud.
+. Wait for Keycloak to start up and visit https://id.appuio.cloud[^].
 
 == Configure Keycloak
 
@@ -93,7 +93,7 @@ oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o 
 
 . Create a realm role called `appuio-zone-access`
 
-. Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak]
+. Create a sync user as described in https://hub.syn.tools/group-sync-operator/how-tos/configure-keycloak-sync.html[Configure Group Sync with Keycloak^]
 +
 [NOTE]
 ====

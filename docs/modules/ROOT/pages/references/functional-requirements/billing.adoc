@@ -1,6 +1,6 @@
 = Billing and Reporting
 
-NOTE: This page is currently very VSHN specific and targets the https://products.docs.vshn.ch/products/appuio/cloud/pricing.html[APPUiO Cloud price model].
+NOTE: This page is currently very VSHN specific and targets the https://products.docs.vshn.ch/products/appuio/cloud/pricing.html[APPUiO Cloud price model^].
 
 Each organization gets an invoice, containing all items of the organization in a summarized format.
 Detailed information can be looked up in the {portal}.

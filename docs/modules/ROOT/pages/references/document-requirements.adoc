@@ -32,7 +32,7 @@ Response measure::
 How is the response measured?
 It should be a number, but a clear `yes` or `no` is also acceptable.
 
-Quality requirements are categorized into eight different characteristics as standardized in https://iso25000.com/index.php/en/iso-25000-standards/iso-25010[ISO 25010].
+Quality requirements are categorized into eight different characteristics as standardized in https://iso25000.com/index.php/en/iso-25000-standards/iso-25010[ISO 25010^].
 
 [TIP]
 ====

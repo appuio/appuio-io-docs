@@ -8,4 +8,4 @@ Use the search field at the top of this page, navigate through topics with the t
 
 If you need more help please xref:kb:ROOT:contact.adoc[get in touch with us].
 
-TIP: Contributions to the documentation are welcome. Just click on btn:[Edit this Page] top-right or head over to https://github.com/appuio/appuio-io-docs[GitHub] where the content source is stored.
+TIP: Contributions to the documentation are welcome. Just click on btn:[Edit this Page] top-right or head over to https://github.com/appuio/appuio-io-docs[GitHub^] where the content source is stored.

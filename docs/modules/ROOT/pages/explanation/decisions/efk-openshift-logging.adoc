@@ -7,7 +7,7 @@ We need to store user logs and allow users a way to visualize them.
 == Proposals
 
 [qanda]
-Built-in https://docs.openshift.com/container-platform/4.9/logging/cluster-logging.html[RedHat OpenShift Logging]::
+Built-in https://docs.openshift.com/container-platform/latest/logging/cluster-logging.html[RedHat OpenShift Logging^]::
 +
 Works out-of-the-box with multitenancy.
 Performant and has good visualization (Kibana).
@@ -18,7 +18,7 @@ It is not possible to implement retention policies by storage size but only by t
 Resource hungry and thus expensive to run.
 
 Custom Solution using Loki::
-There were some prototypes using https://grafana.com/oss/loki[Loki] for cluster logging https://git.vshn.net/syn/commodore-components/synsights-logging[synsights-logging (internal)]
+There were some prototypes using https://grafana.com/oss/loki[Loki^] for cluster logging https://git.vshn.net/syn/commodore-components/synsights-logging[synsights-logging (internal)^]
 Loki allows us querying storage used by tenant.
 This way we can implement retention policies by storage size and not only by time.
 Cheaper to run than ES.
@@ -26,7 +26,7 @@ Performant and has good visualization (Grafana).
 +
 Integration of Loki into the ElasticSearch console and into concepts like OpenShift Projects would require quite a bit of engineering.
 +
-There is a https://github.com/openshift/enhancements/blob/master/enhancements/cluster-logging/loki-storage.md[proposal] with OpenShift to use Loki as the log store.
+There is a https://github.com/openshift/enhancements/blob/master/enhancements/cluster-logging/loki-storage.md[proposal^] with OpenShift to use Loki as the log store.
 
 == Decision
 
@@ -37,4 +37,4 @@ Built-in RedHat OpenShift Logging with short log retention.
 RedHat OpenShift Logging is easy to install and supports multitenancy by default.
 We have experience with it on OpenShift clusters.
 
-A short retention period is chosen to ensure good performance and ease of operation and maintenance. If more retention is needed log forwarding to a custom system https://access.redhat.com/documentation/en-us/openshift_container_platform/4.9/html/logging/cluster-logging-external[can be configured].
+A short retention period is chosen to ensure good performance and ease of operation and maintenance. If more retention is needed log forwarding to a custom system https://access.redhat.com/documentation/en-us/openshift_container_platform/latest/html/logging/cluster-logging-external[can be configured^].

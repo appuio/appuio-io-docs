@@ -1,7 +1,7 @@
 = {controlapi}: Organization Adapter and Identity Provider
 
 At the core of {product} user management is an OIDC enabled **Identity Provider (IdP)** that stores the identity of every {product} user and provides OIDC tokens to authenticate users to {zone}s and the {controlapi}.
-For the VSHN-managed {product} instance and throughout parts of this documentations this IdP is https://www.keycloak.org/[Keycloak], but in general this could be any IdP with OIDC integration.
+For the VSHN-managed {product} instance and throughout parts of this documentations this IdP is https://www.keycloak.org/[Keycloak^], but in general this could be any IdP with OIDC integration.
 
 Regardless of what IdP is being used the {controlapi} needs to be able to manage organizations, teams, as well as user preferences.
 The interaction between the state in the {controlapi}, represented by `User`, `Team`, and `Organization` resources, is managed by the **Organization Adapter**.
@@ -14,7 +14,7 @@ pass:[<!-- vale Microsoft.Quotes = NO -->]
 
 [NOTE]
 ====
-The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119].
+The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119^].
 
 In this document, such keywords are highlighted using **bold** font.
 ====
@@ -37,7 +37,7 @@ It is helpful if the IdP has some notion of groups and sub-groups which can be c
 
 .Identity Provider at VSHN
 ****
-The VSHN-managed {product} instance uses https://www.keycloak.org/[Keycloak] as the identity provider.
+The VSHN-managed {product} instance uses https://www.keycloak.org/[Keycloak^] as the identity provider.
 
 User are brokered in through the existing LDAP userbase and assigned to Keycloak groups representing organizations and sub-groups of these groups represent teams.
 The group membership information is then present as a claim in the OIDC token provided to {zone}s and the {controlapi}.
@@ -48,7 +48,7 @@ The group membership information is then present as a claim in the OIDC token pr
 As long as the Identity Provider is not custom built, it is very unlikely to be able to interface with the {controlapi}.
 Providing this interface is the job of the Organization Adapter.
 
-This adapter **should** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`.
+This adapter **should** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator^] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`.
 
 
 [NOTE]
@@ -132,14 +132,14 @@ If this feature is provided
 
 .Organization Adapter at VSHN
 ****
-The VSHN-managed {product} instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter].
+The VSHN-managed {product} instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter^].
 
 The adapter is a Kubernetes Operator that creates and manages Keycloak groups and sub-groups that correlate to `Organization` and `Team` resources.
-A per {zone} deployed https://github.com/redhat-cop/group-sync-operator[Group Sync Operator] then synchronizes group memberships from the Keycloak groups to OpenShift.
+A per {zone} deployed https://github.com/redhat-cop/group-sync-operator[Group Sync Operator^] then synchronizes group memberships from the Keycloak groups to OpenShift.
 
 The adapter also imports Keycloak users as `User` resources.
 Changes to the `User` resource's `spec` is added to the Keycloak user's attributes.
-These attributes are then synced to the {zone}s by the https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller].
+These attributes are then synced to the {zone}s by the https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller^].
 
 The Keycloak adapter also supports periodic imports of new Keycloak groups as `Organizations`.
 ****

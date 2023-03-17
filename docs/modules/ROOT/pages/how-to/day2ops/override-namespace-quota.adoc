@@ -10,7 +10,7 @@ This guide describes how a cluster admin can override the namespace/project quot
 
 === Method 1: Configure in cluster catalog
 
-This method uses the https://hub.syn.tools/appuio-cloud/references/parameters.html#_namespacequotaoverrides[component parameters] to generate and maintain the `ConfigMaps` for the overrides.
+This method uses the https://hub.syn.tools/appuio-cloud/references/parameters.html#_namespacequotaoverrides[component parameters^] to generate and maintain the `ConfigMaps` for the overrides.
 
 . Configure component per {zone}:
 +

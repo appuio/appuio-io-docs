@@ -4,7 +4,7 @@
 ====
 This document is kept as generic as possible but it might contain references to VSHN-specific implementations.
 
-VSHN uses https://www.odoo.com/[Odoo].
+VSHN uses https://www.odoo.com/[Odoo^].
 ====
 
 {product} relies on an external ERP system to manage billing entities.
@@ -19,7 +19,7 @@ pass:[<!-- vale Microsoft.Quotes = NO -->]
 
 [NOTE]
 ====
-The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119].
+The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document are to be interpreted as described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119^].
 
 In this document, such keywords are highlighted using **bold** font.
 ====
@@ -47,7 +47,7 @@ We use this to have separate company and billing contacts.
 The BillingEntity Adapter is a component that interfaces with the ERP and the {controlapi}.
 It is responsible to translate the billing information from the ERP to the {controlapi} and vice versa.
 
-This adapter **should** be implemented as an https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server].
+This adapter **should** be implemented as an https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server^].
 The source of truth for billing information **must** be the ERP.
 The adapter **may** cache the billing information in the {controlapi}.
 

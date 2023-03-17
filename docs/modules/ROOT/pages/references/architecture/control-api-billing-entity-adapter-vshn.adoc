@@ -4,7 +4,7 @@
 ====
 This document is VSHN specific and is not part of the {controlapi} specification.
 
-VSHN uses https://www.odoo.com/[Odoo] in version 8.0.
+VSHN uses https://www.odoo.com/[Odoo^] in version 8.0.
 ====
 
 == Field Mapping
@@ -18,7 +18,7 @@ include::partial$references/billing-entity/virtual-resource.adoc[]
 
 [NOTE]
 Odoo has the terrible habit of returning `false` instead of `null` for unset fields.
-We already implemented a workaround for this in https://github.com/vshn/appuio-odoo-adapter/blob/master/odoo/model/odoo_composite_id.go[appuio-odoo-adapter] which needs to get a generic version for string fields.
+We already implemented a workaround for this in https://github.com/vshn/appuio-odoo-adapter/blob/master/odoo/model/odoo_composite_id.go[appuio-odoo-adapter^] which needs to get a generic version for string fields.
 
 === Accounting Contact
 

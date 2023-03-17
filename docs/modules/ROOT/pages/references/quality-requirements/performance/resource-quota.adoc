@@ -48,9 +48,9 @@ As listed, pods are separated into `NotTerminating` and `Terminating`.
 A `Terminating` pod is a pod which has `.spec.activeDeadlineSeconds >= 0`.
 A `NotTerminating` pod is a pod which has `.spec.activeDeadlineSecons = nil`.
 
-See the Kubernetes docs on https://kubernetes.io/docs/concepts/policy/resource-quotas/#quota-scopes[Quota Scopes] for the official documentation about `NotTerminating` and `Terminating` pods.
+See the Kubernetes docs on https://kubernetes.io/docs/concepts/policy/resource-quotas/#quota-scopes[Quota Scopes^] for the official documentation about `NotTerminating` and `Terminating` pods.
 
-See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component] for the exact default quota values.
+See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component^] for the exact default quota values.
 
 Rationale::
 * The {zone} shall be protected from abusive resource usage.

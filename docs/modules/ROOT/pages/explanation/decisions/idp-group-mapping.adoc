@@ -36,7 +36,7 @@ In this proposal, if the brokered IdP is also Keycloak, the group memberships ca
 The {idp} is then able to read and create or join the given groups on-the-fly.
 +
 Unfortunately there is no built-in mechanism in Keycloak that allows to dynamically manage group memberships coming from brokered claims.
-There is a https://github.com/amomra/oidc-group-mapper[GitHub project] that implements this approach as a Keycloak extension written in Java, but it seems to be unmaintained.
+There is a https://github.com/amomra/oidc-group-mapper[GitHub project^] that implements this approach as a Keycloak extension written in Java, but it seems to be unmaintained.
 
 == Decision
 

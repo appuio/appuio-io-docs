@@ -2,7 +2,7 @@
 
 NOTE: This guide is targeted at VSHN employees.
 
-. Add the cluster as a new client to {idp} https://id.vshn.net/auth/admin/master/console[id.vshn.net].
+. Add the cluster as a new client to {idp} https://id.vshn.net/auth/admin/master/console[id.vshn.net^].
 +
 [source]
 ----

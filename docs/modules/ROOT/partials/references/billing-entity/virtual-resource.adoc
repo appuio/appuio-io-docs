@@ -23,7 +23,7 @@ spec:
   languagePreference: de <7>
 ----
 <1> The name of the `BillingEntity` is the **billing accounts** partner ID in the ERP.
-It is prefixed with `be-` to keep the name https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names[RFC 1035] compliant.
+It is prefixed with `be-` to keep the name https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names[RFC 1035^] compliant.
 +
 [NOTE]
 Keeping the name RFC 1035 compliant is not strictly necessary, but it makes it easier to use the name in other contexts.
