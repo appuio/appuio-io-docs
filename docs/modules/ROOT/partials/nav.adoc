@@ -1,41 +1,10 @@
-* xref:index.adoc[Home]
+* xref:index.adoc[About]
+** xref:appuio-cloud:ROOT:references/glossary.adoc[]
+** xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[]
 
-.Tutorials
-
-.How-to guides
-
-* Installation
-** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
-** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
-** xref:appuio-cloud:ROOT:how-to/zone-cluster-install.adoc[]
-** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[]
-
-* Day 2 operations
-** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[]
-** xref:appuio-cloud:ROOT:how-to/day2ops/override-default-quota.adoc[Update resource limits]
-** xref:appuio-cloud:ROOT:how-to/day2ops/override-namespace-quota.adoc[]
+//Release notes
+* Getting started
 ** xref:appuio-cloud:ROOT:how-to/day2ops/connect-control-api.adoc[]
-** xref:appuio-cloud:ROOT:how-to/day2ops/remove-organization.adoc[]
-
-* Examples for VSHN
-** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-global.adoc[Activate Global Environment]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-storage-appcat.adoc[]
-** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-exoscale-dbaas-appcat.adoc[]
-
-* Operations
-** xref:appuio-cloud:ROOT:how-to/measure-log-ingestion-by-organization.adoc[]
-
-.Technical reference
-
-* xref:appuio-cloud:ROOT:references/glossary.adoc[]
-* xref:appuio-cloud:ROOT:references/document-requirements.adoc[Document requirements]
-* xref:appuio-cloud:ROOT:references/document-decisions.adoc[Document decisions]
-* xref:appuio-cloud:ROOT:references/dns-naming-scheme.adoc[]
-
 
 * Architecture
 
@@ -46,6 +15,14 @@
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/invitations.adoc[]
+
+** System
+*** xref:appuio-cloud:ROOT:explanation/system/context.adoc[]
+*** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[]
+*** xref:appuio-cloud:ROOT:explanation/system/details-ui.adoc[]
+*** xref:appuio-cloud:ROOT:explanation/system/details-adapters.adoc[System idea: Adapters]
+*** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[]
+
 ** xref:appuio-cloud:ROOT:references/architecture/control-api.adoc[Control API]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-org.adoc[Organization]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-user.adoc[User]
@@ -58,14 +35,62 @@
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter.adoc[BillingEntity Adapter]
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter-vshn.adoc[BillingEntity Adapter at VSHN]
 
-* Functional Requirements
+* Installation
+** xref:appuio-cloud:ROOT:how-to/keycloak-setup.adoc[Install Keycloak]
+** xref:appuio-cloud:ROOT:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
+** xref:appuio-cloud:ROOT:how-to/zone-cluster-install.adoc[]
+** xref:appuio-cloud:ROOT:how-to/zone-setup.adoc[]
+** Examples for VSHN
+*** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-zone.adoc[]
+*** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-global.adoc[Activate Global Environment]
+*** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-storage-appcat.adoc[]
+*** xref:appuio-cloud:ROOT:how-to/vshn-example/activate-exoscale-dbaas-appcat.adoc[]
 
-** xref:appuio-cloud:ROOT:references/functional-requirements/portal.adoc[Portal]
-** xref:appuio-cloud:ROOT:references/functional-requirements/billing.adoc[Billing and Reporting]
+* Security and compliance
+** xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[]
 
-* Quality Requirements
+* Authentication and authorization
+** xref:appuio-cloud:ROOT:how-to/day2ops/keycloak-admin.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering.adoc[Add Keycloak Brokering]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rolemapping.adoc[]
+** xref:appuio-cloud:ROOT:how-to/vshn-example/keycloak-brokering-rbac.adoc[]
+
+//Networking
+//Storage
+//Registry
+//Operators
+//CI/CD
+//Images
+//Building applications
+//Machine management
+//Nodes
+* Organizations and Namespaces
+** xref:appuio-cloud:ROOT:how-to/day2ops/override-default-quota.adoc[Update resource limits]
+** xref:appuio-cloud:ROOT:how-to/day2ops/override-namespace-quota.adoc[]
+** xref:appuio-cloud:ROOT:how-to/day2ops/remove-organization.adoc[]
+
+//Windows Container Support for OpenShift
+//Sandboxed Containers Support for OpenShift
+
+* Logging
+** xref:appuio-cloud:ROOT:how-to/measure-log-ingestion-by-organization.adoc[]
+
+//Monitoring
+//Scalability and performance
+//Specialized hardware and driver enablement
+//Backup and restore
+//API reference
+//Service Mesh
+//Distributed tracing
+//Virtualization
+//Serverless
+
+* Requirements
+** xref:appuio-cloud:ROOT:references/document-requirements.adoc[Document requirements]
 
 ** Functional
+*** xref:appuio-cloud:ROOT:references/functional-requirements/portal.adoc[Portal]
+*** xref:appuio-cloud:ROOT:references/functional-requirements/billing.adoc[Billing and Reporting]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/invoicing-retention.adoc[]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-collecting.adoc[]
 *** xref:appuio-cloud:ROOT:references/quality-requirements/functional/samplinginterval-for-reporting.adoc[]
@@ -97,16 +122,8 @@
 ** Portability
 *** xref:appuio-cloud:ROOT:references/quality-requirements/portability/adapters.adoc[]
 
-.Explanation
-
-* System
-** xref:appuio-cloud:ROOT:explanation/system/context.adoc[]
-** xref:appuio-cloud:ROOT:explanation/system/idea.adoc[]
-** xref:appuio-cloud:ROOT:explanation/system/details-ui.adoc[]
-** xref:appuio-cloud:ROOT:explanation/system/details-adapters.adoc[System idea: Adapters]
-** xref:appuio-cloud:ROOT:explanation/system/data-model.adoc[]
-
 * Decisions
+** xref:appuio-cloud:ROOT:references/document-decisions.adoc[Document decisions]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/idp-group-mapping.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Policy Engine]
@@ -122,4 +139,3 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/billing-entity-virtual-resource.adoc[BillingEntity as Virtual Resource]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-adapter.adoc[Keycloak Organization Adapter]
 ** xref:appuio-cloud:ROOT:explanation/decisions/no_rbac_creation.adoc[]
-* xref:appuio-cloud:ROOT:explanation/kyverno-policies.adoc[]
