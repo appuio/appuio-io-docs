@@ -30,7 +30,7 @@ The user's Keycloak property `Username` is used to name the `User` object in eac
 {product} organizations and their teams are represented as `Group` objects in each OpenShift cluster.
 The `Groups` are synchronized from Keycloak to all OpenShift clusters in regular intervals.
 The organization _CyberIgnite_ with team _NobleGoldfish_ has two `Groups`: `CyberIgnite` and `CyberIgnite+NobleGoldfish`.
-The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[group-sync-operator].
+The group synchronization is implemented with the RedHat Communities of Practice https://github.com/redhat-cop/group-sync-operator[group-sync-operator^].
 
 To ensure `Groups` and their `Users` can't be overridden by external actors the separator between organisation and team `+` is forbidden in group names.
 

@@ -19,11 +19,11 @@ All generated resources are generally the same, but the solution must be able to
 APPUiO Operator::
 A custom controller or operator that watches Namespaces resources and generates resources from a template.
 
-https://github.com/vshn/espejo[Espejo]::
+https://github.com/vshn/espejo[Espejo^]::
 An operator designed to generate resources in every selected Namespace.
 The feature for deviating from defaults resp. the cleanup after changing the default must yet be implemented.
 
-https://kyverno.io/[Kyverno]::
+https://kyverno.io/[Kyverno^]::
 Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
 It also supports "generating" policies, for example depending on configurable conditions, arbitrary resources can be created.
 

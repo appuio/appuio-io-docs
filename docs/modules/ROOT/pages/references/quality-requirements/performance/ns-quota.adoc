@@ -19,7 +19,7 @@ Response::
 
 Response measure::
 The workload is denied if they exceed the configured quota.
-See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component] for the exact default quota values.
+See the https://github.com/appuio/component-appuio-cloud/blob/master/class/defaults.yml[{product} Commodore component^] for the exact default quota values.
 
 Rationale::
 * The {zone} shall be protected from abusive resource usage.

@@ -12,7 +12,7 @@ Please adjust the settings for your own case where necessary.
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
 
-NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
+NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions^] is installed.
 
 image:how-to/keycloak-brokering.drawio.svg[]
 

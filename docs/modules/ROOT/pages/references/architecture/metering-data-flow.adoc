@@ -28,7 +28,7 @@ Key features of this component are:
 
 == System idea
 
-This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process].
+This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process^].
 The extract and load part are well isolated and only have a dependency to their source/target system.
 In contrast, the transform part needs to bring information from both the source and the target together.
 Instead of having one single ETL process, a multistage model with an intermediate persistence will be used.
@@ -45,7 +45,7 @@ For example, the price for a given product and any discounts are valid only for 
 The system deals with them by assigning time ranges to those data records.
 The time range `during` denotes the earliest point and the latest point in time that records becomes valid.
 
-To define records which are valid from the beginning up until a certain time, and records which are valid until further notice, https://www.postgresql.org/docs/13/datatype-datetime.html#DATATYPE-DATETIME-SPECIAL-TABLE[`(-)infinity`] can be used.
+To define records which are valid from the beginning up until a certain time, and records which are valid until further notice, https://www.postgresql.org/docs/13/datatype-datetime.html#DATATYPE-DATETIME-SPECIAL-TABLE[`(-)infinity`^] can be used.
 The database holds whether the lower and upper bounds are inclusive or exclusive.
 By default the lower range is inclusive, the upper is exclusive `[lower,upper)`.
 To avoid ambiguous data points, the system must implement constraints and validations to ensure that no overlapping time ranges can be defined.
@@ -154,7 +154,7 @@ image::system/data-model-billing.drawio.svg[]
 
 [NOTE]
 ====
-Using a https://en.wikipedia.org/wiki/Star_schema[star schema] seems to be the most logical choice.
+Using a https://en.wikipedia.org/wiki/Star_schema[star schema^] seems to be the most logical choice.
 However, it's not the only choice.
 It can and has to be adapted according the storage technology chosen for implementation.
 

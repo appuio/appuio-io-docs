@@ -72,7 +72,7 @@ We still need to implement an aggregated API server since list operations are no
 
 .VSHN Specific
 ****
-There are plugins that implement webhooks in the ERP. https://apps.odoo.com/apps/modules/browse?search=Odoo%20Webhook[Odoo Webhook marketplace search].
+There are plugins that implement webhooks in the ERP. https://apps.odoo.com/apps/modules/browse?search=Odoo%20Webhook[Odoo Webhook marketplace search^].
 
 Since we have an ancient ERP version the plugins might not work.
 ****

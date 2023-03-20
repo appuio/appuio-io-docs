@@ -21,7 +21,7 @@ Browser Flow = APPUiO Browser RBAC <2>
 <1> For each enabled {zone} there shall be its own client using the cluster ID and the prefix `appuio_` as name.
 <2> See xref:how-to/keycloak-rbac-login-flow.adoc[Setup RBAC]
 
-NOTE: VSHN uses https://id.vshn.net/auth/admin/master/console[id.vshn.net] as the IDP.
+NOTE: VSHN uses https://id.vshn.net/auth/admin/master/console[id.vshn.net^] as the IDP.
 
 == Configure openshift4-authentication
 
@@ -61,7 +61,7 @@ parameters:
 
 == Configure group-sync-operator
 
-The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator] is required to sync Keycloak groups to each {zone}.
+The https://github.com/appuio/keycloak-attribute-sync-controller[group-sync-operator^] is required to sync Keycloak groups to each {zone}.
 
 . Add component configuration
 +
@@ -90,7 +90,7 @@ parameters:
 
 == Configure keycloak-attribute-sync-controller
 
-The https://github.com/redhat-cop/group-sync-operator[keycloak-attribute-sync-controller] is required to sync Keycloak user attributes to each {zone}.
+The https://github.com/redhat-cop/group-sync-operator[keycloak-attribute-sync-controller^] is required to sync Keycloak user attributes to each {zone}.
 
 . Add component configuration
 +
@@ -123,7 +123,7 @@ parameters:
 == Configure metering metrics collection
 
 We collect a small set of metrics from each {zone} for xref:references/architecture/metering.adoc[metering].
-This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos Receiver] on each zone and configuring the zone's cluster monitoring to send selected metrics to the Thanos Receiver via Prometheus's remote write feature.
+This is done by deploying a https://thanos.io/tip/components/receive.md/[Thanos Receiver^] on each zone and configuring the zone's cluster monitoring to send selected metrics to the Thanos Receiver via Prometheus's remote write feature.
 
 . Create an S3 bucket which can be accessed using the same credentials as the cluster's registry bucket.
 Use name `${CLUSTER_ID}-appuio-metering` for the bucket.
@@ -194,7 +194,7 @@ pass:[<!-- vale Openly.GenderBias = YES -->]
 
 == Configure Appcat ObjectStorage provider
 
-Please refer to https://kb.vshn.ch/appuio-cloud/how-to/vshn-example/activate-appcat.html[the dedicated page] to setup AppCat ObjectStorage
+Please refer to https://kb.vshn.ch/appuio-cloud/how-to/vshn-example/activate-appcat.html[the dedicated page^] to setup AppCat ObjectStorage
 
 == Add Cluster to Status Page
 

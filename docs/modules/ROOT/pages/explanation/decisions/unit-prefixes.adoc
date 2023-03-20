@@ -10,8 +10,8 @@ It also helps in various different aspects like product description, marketing, 
 
 There are two well-known unit prefixes we could use:
 
-. https://en.wikipedia.org/wiki/Binary_prefix[binary prefixes]
-. https://en.wikipedia.org/wiki/Metric_prefix#List_of_SI_prefixes[SI prefixes]
+. https://en.wikipedia.org/wiki/Binary_prefix[binary prefixes^]
+. https://en.wikipedia.org/wiki/Metric_prefix#List_of_SI_prefixes[SI prefixes^]
 
 == Decision
 

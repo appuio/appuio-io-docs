@@ -16,7 +16,7 @@ Response::
 New third-party component works transparently with {controlapi}.
 
 Response measure::
-Third-party system behaves according to the API specification (see https://en.wikipedia.org/wiki/Design_by_contract[Design by contract principle] applied to components)
+Third-party system behaves according to the API specification (see https://en.wikipedia.org/wiki/Design_by_contract[Design by contract principle^] applied to components)
 
 Rationale::
 The {controlapi} should ensure replaceability for parts of functionalities so that the foreign component can be integrated.

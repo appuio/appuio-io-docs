@@ -3,7 +3,7 @@
 
 [abstract]
 --
-The https://products.docs.vshn.ch/products/appuio/cloud/price_model.html[VSHN products documentation] explains the price model for a business oriented audience.
+The https://products.docs.vshn.ch/products/appuio/cloud/price_model.html[VSHN products documentation^] explains the price model for a business oriented audience.
 The following breaks this down to a more technical level.
 --
 
@@ -22,7 +22,7 @@ For intervals where more than one sample is available, those samples will be agg
 In Prometheus lingo the `<aggregation>_over_time()` functions will be used applied to a time window of 1 minute.
 
 Reported unit::
-In the Prometheus ecosystem, it is common to measure memory in https://prometheus.io/docs/practices/naming/#base-units[base units (for example bytes)].
+In the Prometheus ecosystem, it is common to measure memory in https://prometheus.io/docs/practices/naming/#base-units[base units (for example bytes)^].
 This would result in utterly long numbers.
 During the invoice generation, those units will be converted to a more suitable one.
 

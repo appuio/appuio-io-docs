@@ -10,7 +10,7 @@ This guide assumes that you've already configured the xref:how-to/vshn-example/k
 
 NOTE: This page is meant to be growing and doesn't contain the final configuration at this time.
 
-NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions] is installed.
+NOTE: Some steps require that https://github.com/appuio/appuio-keycloak-extensions[APPUiO Keycloak extensions^] is installed.
 
 For the purpose of this guide, we'll use the following names, adjust as needed:
 

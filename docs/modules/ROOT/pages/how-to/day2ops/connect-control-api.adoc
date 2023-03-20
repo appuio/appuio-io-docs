@@ -4,5 +4,5 @@
 Visit the kubeconfig view in the APPUiO Cloud Portal and follow the instruction there.
 You will find the view at:
 
-* https://portal.appuio.cloud/kubeconfig[Production]
-* https://cloud-portal-integration.apps.cloudscale-lpg-2.appuio.cloud/kubeconfig[Integration]
+* https://portal.appuio.cloud/kubeconfig[Production^]
+* https://cloud-portal-integration.apps.cloudscale-lpg-2.appuio.cloud/kubeconfig[Integration^]

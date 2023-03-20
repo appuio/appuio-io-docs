@@ -2,7 +2,7 @@
 
 == Problem
 
-As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://thanos.io[Thanos] instance.
+As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://thanos.io[Thanos^] instance.
 Thanos provides a query API which is guaranteed to be compatible with the Prometheus 2.x API.
 The collected data is intended to be used to generate invoices.
 In addition, the data may also be used to show cost reports on the {portal}.

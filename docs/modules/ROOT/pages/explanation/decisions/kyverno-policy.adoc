@@ -18,22 +18,22 @@ On {product} however, we require fine-grained control of certain properties, suc
 == Proposals
 
 [qanda]
-https://www.openpolicyagent.org/[OPA]::
+https://www.openpolicyagent.org/[OPA^]::
 Open Policy Agent is a policy engine written for cloud native environments.
 Policies are written in Rego, which is declarative query language suited for writing policies.
 
-https://kyverno.io/[Kyverno]::
+https://kyverno.io/[Kyverno^]::
 Kyverno is a Kubernetes native policy engine that uses Kyverno-specific CRDs to configure policies.
 
-https://www.kubewarden.io[kubewarden]::
+https://www.kubewarden.io[kubewarden^]::
 Kubewarden is a Kubernetes native policy engine which allows users to write policies in general purpose languages.
 Policies are compiled to WebAssembly and loaded into the policy engine as container images.
 
-https://www.jspolicy.com[jsPolicy]::
+https://www.jspolicy.com[jsPolicy^]::
 Kubewarden is a Kubernetes native policy engine which allows users to write policies in JavaScript/TypeScript.
 Interaction with the Kubernetes API is done through the Kubernetes controller-runtime Go library.
 
-https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[Custom validating admission webhook]::
+https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[Custom validating admission webhook^]::
 It's possible to write custom validating admission webhooks in Go (or other general purpose languages).
 
 == Decision
@@ -73,4 +73,4 @@ NOTE: Choosing Kyverno as policy engine and resource generator reduces complexit
 
 == References
 
-* https://github.com/glrf/appuio-jspolicy-demo/blob/master/EVALUATION.md[Detailed evaluation of jsPolicy as a replacement for Kyverno]
+* https://github.com/glrf/appuio-jspolicy-demo/blob/master/EVALUATION.md[Detailed evaluation of jsPolicy as a replacement for Kyverno^]

@@ -79,7 +79,7 @@ On a {zone} it's the cluster admin, on the global level it's the admin.
 
 == Roles
 
-OpenShift default roles are documented in the https://docs.openshift.com/container-platform/4.9/authentication/using-rbac.html#default-roles_using-rbac[upstream documentation].
+OpenShift default roles are documented in the https://docs.openshift.com/container-platform/latest/authentication/using-rbac.html#default-roles_using-rbac[upstream documentation^].
 
 === Admin
 [quote, OpenShift default role]

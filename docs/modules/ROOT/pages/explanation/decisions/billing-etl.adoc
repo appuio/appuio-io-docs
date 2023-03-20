@@ -21,11 +21,11 @@ There's two approaches we could take to implement the billing process:
 [qanda]
 
 Off-the-shelf ETL processor::
-We setup an off-the-shelf ETL processor (for example https://www.singer.io[Singer], https://airbyte.io[Airbyte] or https://nifi.apache.org/[Apache NiFi]) to implement our billing process.
+We setup an off-the-shelf ETL processor (for example https://www.singer.io[Singer^], https://airbyte.io[Airbyte^] or https://nifi.apache.org/[Apache NiFi^]) to implement our billing process.
 We implement the billing process in the framework provided by the ETL processor.
 
 Custom implementation of our ETL process::
-We implement the billing process as a collection of custom tools which operate on a shared relational database which acts as a https://en.wikipedia.org/wiki/Data_warehouse[data warehouse].
+We implement the billing process as a collection of custom tools which operate on a shared relational database which acts as a https://en.wikipedia.org/wiki/Data_warehouse[data warehouse^].
 
 
 == Decision

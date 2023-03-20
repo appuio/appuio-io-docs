@@ -6,10 +6,10 @@ It adheres to the decision taken in xref:explanation/decisions/control-api.adoc[
 == General Principles
 
 Kubernetes API::
-The Control API is built upon the Kubernetes API and adheres to it's https://kubernetes.io/docs/reference/kubernetes-api/[design principles].
+The Control API is built upon the Kubernetes API and adheres to it's https://kubernetes.io/docs/reference/kubernetes-api/[design principles^].
 
 API object field: `.status`::
-The `status` field (also called https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#status-subresource["Status subresource"]) represents the current observed state and external information.
+The `status` field (also called https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#status-subresource[Status subresource^]) represents the current observed state and external information.
 It is read-only to the end-user.
 
 API object field: `.spec`::
@@ -19,18 +19,18 @@ The `spec` field contains the desired state for reconciliation.
 
 Some resources are not persisted to etcd and are only available _virtually_, others are persisted to etcd and are defined and represented via `CustomResourceDefinition` (CRDs).
 
-Virtual resources are accessible via an https://kubernetes.io/docs/tasks/extend-kubernetes/setup-extension-api-server/[API Server Extension].
+Virtual resources are accessible via an https://kubernetes.io/docs/tasks/extend-kubernetes/setup-extension-api-server/[API Server Extension^].
 These resources are similar to views in a relational database.
 The benefit of providing these resources instead of only using CRDs is that we can calculate access permissions dynamically for every request.
-The same concept is also used by OpenShift with its `Project` resource which represents RBAC filtered `Namespaces` (see https://github.com/openshift/kube-projects[kube-projects]).
-And we can also find it in https://github.com/loft-sh/kiosk[Kiosk] for example.
+The same concept is also used by OpenShift with its `Project` resource which represents RBAC filtered `Namespaces` (see https://github.com/openshift/kube-projects[kube-projects^]).
+And we can also find it in https://github.com/loft-sh/kiosk[Kiosk^] for example.
 
 == Authentication and Authorization
 
 Authentication against the API server is done by the {idp}.
 It's always the same subject (user) which is being used throughout the whole {product} ecosystem.
 
-For authorization, standard https://kubernetes.io/docs/reference/access-authn-authz/rbac/[Kubernetes RBAC] is being used.
+For authorization, standard https://kubernetes.io/docs/reference/access-authn-authz/rbac/[Kubernetes RBAC^] is being used.
 Kyverno policies can be used to implement enhanced policies, for example the number of resources of a specified kind a user is allowed to create.
 
 There are several layers of authorization:
@@ -41,7 +41,7 @@ There are several layers of authorization:
 
 == Resource Scopes
 
-Resources on the Kubernetes API server can either be https://kubernetes.io/docs/reference/using-api/api-concepts/#standard-api-terminology[cluster scoped or namespace scoped].
+Resources on the Kubernetes API server can either be https://kubernetes.io/docs/reference/using-api/api-concepts/#standard-api-terminology[cluster scoped or namespace scoped^].
 
 Each {controlapi} instance is represented by one Kubernetes API server instance.
 This allows us to leverage the scoping concept of the Kubernetes API server to reflect the scopes in the {product} domain.

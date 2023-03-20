@@ -11,7 +11,7 @@ The identifier should have the following properties:
 
 In the implementation, this identifier is selected by providing an appropriate attribute name for the OpenID claim `preferred_username` in the OpenShift OpenID Connect identity provider configuration.
 Please note that regardless of the choice of identifier for `preferred_username`, the user's identity in the OpenShift cluster is always tied to their Keycloak user's `ID` property.
-This is because Openshift's OpenID Connect identity provider uses the OpenID claim `sub` to establish the user's identity, see the https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-oidc-identity-provider.html[OpenShift documentation].
+This is because Openshift's OpenID Connect identity provider uses the OpenID claim `sub` to establish the user's identity, see the https://docs.openshift.com/container-platform/latest/authentication/identity_providers/configuring-oidc-identity-provider.html[OpenShift documentation^].
 The OpenID claim `sub` is mapped to the Keycloak user's `ID` by default.
 
 == Proposals
