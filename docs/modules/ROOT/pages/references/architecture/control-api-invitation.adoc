@@ -77,16 +77,19 @@ This is enforced by the API server and mitigates privilege escalation risks.
 
 Invitations can be accepted by any user in possession of the invitation token.
 
-Invitations are accepted by sending a `REDEEM` request to the `Invitation` resource.
+A virtual, create-only `InvitationRedeemRequest` resource exists to accept an invitation.
 
-[source,bash]
+[source,yaml]
 ----
-INVITATION=E303B166-5D66-4151-8F5F-B84BA84A7559 <1>
-TOKEN=BL30rELat6Faee5OgfmmZGhnECnp5H8GCbw7PcgRlTTXW0OAJMYl5anzuIdO
-
-curl -XREDEEM "$API/apis/user.appuio.io/v1/invitations/$INVITATION?token=$TOKEN"
+apiVersion: user.appuio.io/v1
+kind: InvitationRedeemRequest
+metadata:
+  name: E303B166-5D66-4151-8F5F-B84BA84A7559 <1>
+token: BL30rELat6Faee5OgfmmZGhnECnp5H8GCbw7PcgRlTTXW0OAJMYl5anzuIdO
 ----
 <1> Referencing the invitation resource above.
+
+The redeem request is successful if the server returns no error.
 
 == Invitation Messages
 
