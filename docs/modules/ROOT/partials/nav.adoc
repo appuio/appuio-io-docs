@@ -145,3 +145,4 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/billing-entity-virtual-resource.adoc[BillingEntity as Virtual Resource]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-adapter.adoc[Keycloak Organization Adapter]
 ** xref:appuio-cloud:ROOT:explanation/decisions/no_rbac_creation.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/control-api-interaction-with-zones.adoc[]

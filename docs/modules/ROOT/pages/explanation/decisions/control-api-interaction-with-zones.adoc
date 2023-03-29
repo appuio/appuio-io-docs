@@ -1,0 +1,37 @@
+= Control API interaction with Zones
+
+== Problem
+
+For some use-cases in the xref:references/architecture/control-api.adoc[Control API] there has to be an interaction with xref:references/glossary.adoc#_zone[zones].
+The Control API might need information from zones for read-only purposes, but it could also interact with zones and cause configuration changes on them.
+
+We need to specify how this interaction is conducted, as there are different ways how to do that.
+It also takes the xref:references/functional-requirements/portal.adoc[Portal] into consideration, as it plays an important role when interacting with the Control API and its features.
+
+== Proposals
+
+Proposal 1: The Control API connects to zones (Virtual)::
+The Control API provides resources from zones via an aggregated API server.
+It directly connects to all the associated zones API servers and exposes it to the Control API as virtual resources.
+
+Proposal 2: The Control API connects to zones (CRDs)::
+A controller connects to the associated zones' API servers and reads or writes remote resources as needed.
+The needed resources are represented as custom resources in the Control API.
+
+Proposal 3: Zones connect to the Control API::
+One or many agents on the zones connect to the Control API and write and read custom resources.
+These are regular Kubernetes controllers, connecting to a remote Kubernetes API server - with all the possibilities like watching resources.
+The needed resources are represented as custom resources in the Control API.
+
+== Decision
+
+*Zones connect to the Control API*
+
+== Rationale
+
+Connecting from zones to the Control API has several advantages over the other proposals:
+
+* Only outgoing connections from zones needed, which is usually easier when firewalls are involved
+* Permission model (RBAC) is easier to model in the Control API
+* We have some experience doing it with Project Syn Steward
+* It's more resilient to zones being inaccessible - data is still available in the Control API
