@@ -137,6 +137,7 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/usernames.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/arbitrary-usernames.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/stable-usernames.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-usernames.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/control-api.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/unit-prefixes.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/access-metering-data.adoc[Access metering data]

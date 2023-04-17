@@ -24,6 +24,6 @@ Use custom mappers that prefill the username with something human-readable, but 
 
 == Rationale
 
-This provides a good balance between a seemless sign-up experience and freedom of choice.
+This provides a good balance between a seamless sign-up experience and freedom of choice.
 
 Users are forced to choose a different username if it is already taken in Keycloak and therefore a way to choose another name must exist.
