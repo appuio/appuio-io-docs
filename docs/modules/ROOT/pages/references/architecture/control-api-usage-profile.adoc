@@ -95,17 +95,36 @@ Setting `metadata.name` in a value has no effect.
 <5> Additional metadata, such as labels or annotations, can be defined in the values.
 <6> There's no restriction on the kinds of manifests that can be defined as part of a `UsageProfile`.
 
+.BillingEntity resource
+[source,yaml]
+----
+apiVersion: billing.appuio.io/v1 <1>
+kind: BillingEntity
+spec:
+  usageProfileRef: restricted <2>
+----
+<1> Only relevant fields are shown for brevity
+<2> A `BillingEntity` references a `UsageProfile`.
+This `UsageProfile` is the default usage profile for all organizations associated with the billing entity.
+
 .Organization resource
 [source,yaml]
 ----
 apiVersion: organization.appuio.io/v1 <1>
 kind: Organization
 spec:
-  usageProfileRef: restricted <2>
+  billingEntityRef: be-1234 <2>
+  usageProfileRef: default <3>
+status:
+  usageProfileRef: default <4>
 ----
 <1> Only relevant fields are shown for brevity
-<2> Each `Organization` references a `UsageProfile`.
-This reference defines the base set of quotas and policies which are applied to all namespaces belonging to this organization.
+<2> An `Organization` always references a billing entity.
+<3> An `Organization` can optionally explicitly reference a `UsageProfile`.
+<4> The {controlapi} updates `status.usageProfileRef` with the usage profile that should be applied.
+When field `spec.usageProfileRef` of the `Organization` is set, the value of that field is propagated to field `status.usageProfileRef`.
+Otherwise, the referenced billing entity's field `spec.usageProfileRef` is propagated to field `status.usageProfileRef`.
+This field defines the base set of quotas and policies which are applied to all namespaces belonging to this organization.
 
 == Access control
 

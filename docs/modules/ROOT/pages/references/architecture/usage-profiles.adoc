@@ -15,16 +15,30 @@ We're implementing usage policies in the {controlapi}, so that non-technical use
 Usage profiles are defined as a new custom resource in the {controlapi}.
 See the xref:appuio-cloud:ROOT:references/architecture/control-api-usage-profile.adoc[`UsageProfile` reference documentation] for details on the structure of the custom resource.
 
-The organization virtual resource has a new field `spec.usageProfileRef` which contains the name (`metadata.name`) of a `UsageProfile` resource.
-The value of this field is validated by the {controlapi}.
+=== Default usage profile for a billing entity
+
+We want to allow operators of {product} to set a default usage profile for a whole billing entity.
+To enable this, we introduce a new field `spec.usageProfileRef` on the billing entity which indicates the default usage profile for organizations associated with this billing entity.
+The {controlapi} sets field `status.usageProfileRef` of all organizations to field `spec.usageProfileRef` of the billing entity referenced in `spec.billingEntityRef`.
+
+=== Customize usage profile for an organization
+
+The organization virtual resource has a new optional field `spec.usageProfileRef` which contains the name (`metadata.name`) of a `UsageProfile` resource.
+If this field is present, it overrides the default usage profile that would be assigned to the organization based on its billing entity.
+
+If present, the value of this field is validated by the {controlapi}.
 The {controlapi} rejects updates of an organization virtual resource, if the `spec.usageProfileRef` field is modified and the principal doesn't have access to the usage profile referenced in the updated organization resource.
+
+The {controlapi} ensures that `status.usageProfileRef` is updated to the new billing entity's default usage profile when an organization's `spec.billingEntityRef` is updated, if the organization doesn't have `spec.usageProfileRef` set.
 
 == Applying usage profiles on zones
 
 To apply usage profiles to organization namespaces on each zone, we extend the {product} agent.
-We reimplement the existing Kyverno policies which manages the resource quotas in organization namespaces and restrict the number of namespaces per zone in the agent.
+The agent identifies the organization's usage profile by looking at field `status.usageProfileRef` in the {controlapi} `Organization` object for the organization.
 
+We reimplement the existing Kyverno policies which manages the resource quotas in organization namespaces and restrict the number of namespaces per zone in the agent.
 The resource quota policy is changed to apply the quotas and policies defined in the `UsageProfile` referenced by the `Organization` by default, instead of the default quotas stored on the zone.
+Per-namespace quota overrides are still possible through namespace annotations.
 Additionally, the agent reject new namespaces if the namespace's organization has reached its namespace count limit on the zone.
 The agent reads the organization's namespace count limit from the organization's usage profile.
 
