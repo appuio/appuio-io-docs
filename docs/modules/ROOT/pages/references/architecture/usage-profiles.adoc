@@ -1,0 +1,35 @@
+= Usage profiles
+
+Originally, the xref:appuio-cloud:ROOT:references/quality-requirements/performance/resource-quota.adoc[] and xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-quota.adoc[] requirements have been implemented as Kyverno policies on each zone.
+With this approach, overriding the default resource quotas must be done on individual namespaces (or on zones for the namespace count quota).
+This approach doesn't scale, and doesn't easily allow configuring different default quotas for different organizations or billing entities.
+
+As {product} has grown, and we now allow users to sign up autonomously (self signup), we want to configure lower default quotas and additional policies (for example network policies) for organizations of billing entities which haven't been validated yet.
+
+== Usage profiles
+
+We've decided to call a set of quotas and policies a _usage profile_.
+
+We're implementing usage policies in the {controlapi}, so that non-technical users who have administrative privileges can easily update the usage profile for a billing entity or an organization in the {portal}.
+
+Usage profiles are defined as a new custom resource in the {controlapi}.
+See the xref:appuio-cloud:ROOT:references/architecture/control-api-usage-profile.adoc[`UsageProfile` reference documentation] for details on the structure of the custom resource.
+
+The organization virtual resource has a new field `spec.usageProfileRef` which contains the name (`metadata.name`) of a `UsageProfile` resource.
+The value of this field is validated by the {controlapi}.
+The {controlapi} rejects updates of an organization virtual resource, if the `spec.usageProfileRef` field is modified and the principal doesn't have access to the usage profile referenced in the updated organization resource.
+
+== Applying usage profiles on zones
+
+To apply usage profiles to organization namespaces on each zone, we extend the {product} agent.
+We reimplement the existing Kyverno policies which manages the resource quotas in organization namespaces and restrict the number of namespaces per zone in the agent.
+
+The resource quota policy is changed to apply the quotas and policies defined in the `UsageProfile` referenced by the `Organization` by default, instead of the default quotas stored on the zone.
+Additionally, the agent reject new namespaces if the namespace's organization has reached its namespace count limit on the zone.
+The agent reads the organization's namespace count limit from the organization's usage profile.
+
+To determine the usage profile for each organization, the agent connects to the {controlapi} to read `UsageProfile` and `Organization` resources.
+The agent watches these resource for changes to ensure changes are reflected on the zones.
+
+Additionally, the agent reconciles all Kubernetes resources which are created to apply a usage profile.
+This ensures that users can't modify the quotas and policies defined through the usage profile.

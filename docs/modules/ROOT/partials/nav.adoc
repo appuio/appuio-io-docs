@@ -15,6 +15,8 @@
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/invitations.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/usage-profiles.adoc[]
+
 
 ** System
 *** xref:appuio-cloud:ROOT:explanation/system/context.adoc[]
@@ -30,6 +32,7 @@
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-zone.adoc[Zone]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity.adoc[BillingEntity]
 *** xref:appuio-cloud:ROOT:references/architecture/control-api-invitation.adoc[Invitation]
+*** xref:appuio-cloud:ROOT:references/architecture/control-api-usage-profile.adoc[UsageProfile]
 *** Adapters
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-org-adapter.adoc[Organization Adapter]
 **** xref:appuio-cloud:ROOT:references/architecture/control-api-billing-entity-adapter.adoc[BillingEntity Adapter]

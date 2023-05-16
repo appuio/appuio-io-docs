@@ -1,0 +1,114 @@
+= APPUiO Control API: UsageProfile
+
+TIP: This resource implements the xref:appuio-cloud:ROOT:references/quality-requirements/performance/resource-quota.adoc[] and xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-quota.adoc[] requirements.
+
+The `UsageProfile` encapsulates a set of quotas and policies which are applied to a namespace.
+Every organization has a `UsageProfile` assigned.
+When a new organization is created, a default `UsageProfile` is assigned.
+Depending on whether the new organization's `BillingEntity` has been validated, a different default `UsageProfile` is assigned.
+
+
+== Object
+
+.CRD based
+[source,yaml]
+----
+apiVersion: appuio.io/v1
+kind: UsageProfile
+metadata:
+  name: restricted <1>
+spec:
+  namespaceCount: 50 <2>
+  resources: <3>
+    organization-compute: <4>
+      apiVersion: v1
+      kind: ResourceQuota
+      spec:
+        hard:
+          limits.cpu: "8"
+          limits.memory: 20Gi
+          pods: "45"
+          requests.cpu: "4"
+          requests.memory: 4Gi
+        scopes:
+          - NotTerminating
+    organization-compute-terminating:
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata: <5>
+        labels:
+          foo: bar
+      spec:
+        hard:
+          limits.cpu: "4"
+          limits.memory: 4Gi
+          pods: "5"
+          requests.cpu: 500m
+          requests.memory: 2Gi
+        scopes:
+        - Terminating
+    organization-objects:
+      apiVersion: v1
+      kind: ResourceQuota
+      spec:
+        hard:
+          cephfs-fspool-cluster.storageclass.storage.k8s.io/requests.storage: 25Gi
+          count/configmaps: "150"
+          count/jobs.batch: "150"
+          count/replicationcontrollers: "100"
+          count/secrets: "150"
+          count/services: "20"
+          count/services.loadbalancers: "0"
+          count/services.nodeports: "0"
+          limits.ephemeral-storage: 500Mi
+          localblock-storage.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+          openshift.io/imagestreams: "20"
+          openshift.io/imagestreamtags: "50"
+          persistentvolumeclaims: "10"
+          rbd-storagepool-cluster.storageclass.storage.k8s.io/requests.storage: 25Gi
+          requests.ephemeral-storage: 250Mi
+          requests.storage: 1000Gi
+    deny-egress-tcp-25: <6>
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        annotations:
+          description: "Deny egress traffic to all hosts on ports 25"
+      spec:
+        podSelector: {}
+        egress:
+          - to:
+              - ipBlock:
+                  cidr: 0.0.0.0/0
+            ports:
+              - protocol: TCP
+                port: 25
+        policyTypes:
+          - Egress
+----
+<1> The name of the usage profile, used to reference it from other resources (for example `Organization`).
+<2> `spec.namespaceCount` defines how many namespaces an organization with this usage profile can create per zone.
+<3> `spec.resources` is a map whose values are expected to be Kubernetes manifests.
+This field defines the set of resources which are created in each namespace for which the usage profile is applied.
+<4> The keys are injected into the associated value as `metadata.name`.
+Setting `metadata.name` in a value has no effect.
+<5> Additional metadata, such as labels or annotations, can be defined in the values.
+<6> There's no restriction on the kinds of manifests that can be defined as part of a `UsageProfile`.
+
+.Organization resource
+[source,yaml]
+----
+apiVersion: organization.appuio.io/v1 <1>
+kind: Organization
+spec:
+  usageProfileRef: restricted <2>
+----
+<1> Only relevant fields are shown for brevity
+<2> Each `Organization` references a `UsageProfile`.
+This reference defines the base set of quotas and policies which are applied to all namespaces belonging to this organization.
+
+== Access control
+
+This resource is cluster-scoped.
+No RBAC rules are generated automatically.
+A cluster admin must allow users to view or edit `UsageProfile` resources.
