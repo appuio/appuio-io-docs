@@ -2,7 +2,7 @@
 
 TIP: This resource implements the xref:appuio-cloud:ROOT:references/quality-requirements/performance/resource-quota.adoc[] and xref:appuio-cloud:ROOT:references/quality-requirements/performance/ns-quota.adoc[] requirements.
 
-The `UsageProfile` encapsulates a set of quotas and policies which are applied to a namespace.
+The `UsageProfile` encapsulates a set of quotas and policies which are applied to a namespace or a set of namespaces.
 Every organization has a `UsageProfile` assigned.
 When a new organization is created, a default `UsageProfile` is assigned.
 Depending on whether the new organization's `BillingEntity` has been validated, a different default `UsageProfile` is assigned.
