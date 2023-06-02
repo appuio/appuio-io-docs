@@ -185,7 +185,7 @@ The query holds the PromQL query string used to generate facts.
 It also holds metadata associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
 The description is a rendered string from a template.
 
-The product holds the amount to be charged per unit.
+The product holds the amount to be charged per unit and the type assigned to it.
 Its source identifier is a segmented match as explained in <<System idea>>.
 This is effectively the price table.
 
@@ -288,6 +288,9 @@ For example, the ingestion job may need to sum all records belonging to a single
 | target
 | 18367
 
+| type
+| appcat
+
 | amount
 | 0.0002248931
 
@@ -312,8 +315,8 @@ For example, the ingestion job may need to sum all records belonging to a single
 |===
 
 In the target system, a record exists for a tenant with the id `22457`.
-That record has a field that contains the source reference with the value `acme-corp`
-Also a product record exists with the id `18367`
+That record has a field that contains the source reference with the value `acme-corp`.
+Also a product record exists with the id `18367` which is of type `appcat`.
 
 All the other dimensions are empty.
 
@@ -466,6 +469,9 @@ All the other dimensions are empty.
 
 | target
 | 18367
+
+| type
+| appcat
 
 | amount
 | 0.0002248931
@@ -634,6 +640,9 @@ The target specific code has a way to parse the category source string and trans
 
 | target
 | 18367
+
+| type
+| appcat
 
 | amount
 | 0.0002248931
