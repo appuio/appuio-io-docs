@@ -95,7 +95,7 @@
 //Serverless
 
 * Requirements
-** xref:appuio-cloud:ROOT:references/document-requirements.adoc[Document requirements]
+** https://kb.vshn.ch/corp-tech/documents/document-requirements.html[Document requirements^]
 
 ** Functional
 *** xref:appuio-cloud:ROOT:references/functional-requirements/portal.adoc[Portal]
@@ -132,7 +132,7 @@
 *** xref:appuio-cloud:ROOT:references/quality-requirements/portability/adapters.adoc[]
 
 * Decisions
-** xref:appuio-cloud:ROOT:references/document-decisions.adoc[Document decisions]
+** https://kb.vshn.ch/corp-tech/documents/document-decisions.html[Document decisions^]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/idp-group-mapping.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/kyverno-policy.adoc[Policy Engine]
