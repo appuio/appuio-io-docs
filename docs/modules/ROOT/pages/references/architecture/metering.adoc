@@ -18,7 +18,7 @@ In addition, the storage engine of Prometheus is not meant to be use for long te
 Also the invoicing adapter should be able to invoice all the usage from all the {zone}s.
 All of this calls for another system that collects, aggregates and stores those metrics.
 
-Since the source of all the metrics is Prometheus, the most logical choice is to pair it with https://thanos.io/[Thanos^].
+Since the source of all the metrics is Prometheus, the most logical choice is to pair it with https://grafana.com/oss/mimir/[Mimir^].
 It provides a collection of tools to solve different use cases that Prometheus can not solve on its own.
 One of those cases is storing metrics on a different system for long term storage.
 
