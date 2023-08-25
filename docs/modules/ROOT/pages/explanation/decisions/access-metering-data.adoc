@@ -2,8 +2,8 @@
 
 == Problem
 
-As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://thanos.io[Thanos^] instance.
-Thanos provides a query API which is guaranteed to be compatible with the Prometheus 2.x API.
+As discussed in xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage], metering data is collected into a https://grafana.com/oss/mimir/[Mimir^] instance.
+Mimir provides a query API which is guaranteed to be compatible with the Prometheus 2.x API.
 The collected data is intended to be used to generate invoices.
 In addition, the data may also be used to show cost reports on the {portal}.
 
@@ -39,7 +39,6 @@ Prometheus queries are restricted in how many data points can be processed.
 The queries required for the billing model are quite complex.
 It's not possible to run them once for a whole billing interval (currently one month).
 Experiments have shown, that the query exceeds the maximum execution time.
-In addition, even with a fairly small data set, memory usage of the Thanos Querier went up as high as 20GiB.
 
 Even if the query was run for smaller time ranges, the execution time was in the order of several seconds.
 While this is not an issue for invoicing, it most certainly is for reports accessible to a user.
