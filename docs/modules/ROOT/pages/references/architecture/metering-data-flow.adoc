@@ -1,730 +1,265 @@
-= Data model and data flow for Billing
+= Data model and data flow for Resource Usage Reporting
 
 [abstract]
 --
 xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works.
-This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
+This page explains how that data gets transformed and pushed into a billing/ERP system.
+APPUiO Billing uses Odoo 16 as its ERP system.
+Metered billing is enabled by a custom metered usage addon, which provides a REST endpoint (the https://docs.central.vshn.ch/metered-billing.html[Metered Billing API]) to which usage data can be reported.
 --
 
-The core of this part of the system has three responsibilities.
+The core of this part of the system has two responsibilities.
 First, it must fetch the required data from the input system.
-Second, that data must be enriched.
-That enrichment involves looking up prices and discounts from price tables.
 It also includes matching the identifiers from the source (Prometheus) with the identifiers from the target system.
-Third, it must ingest that data into the target system.
+Second, it must ingest that data into the target system (Odoo).
 
 Key features of this component are:
 
 * It uses the Prometheus Query API as its source.
-* It allows to integrate any billing/ERP system as its target.
-  In order to achieve this, it must be loosely coupled.
 * Execution is idempotent.
   If run twice for a given time frame with the same configuration, the result is the same.
   However, if run again with a different configuration, the results reflect the changes made.
   This ensures that errors in the past can easily be fixed.
-* Time-aware configuration.
-  Every configuration with the power to change the output is made time-aware.
-  This means that this config has time ranges attached denoting from when and until when that config is valid.
+// TODO: odoo rejects the second sample for the same time interval (apparently) - can we then correct errors? do we need to? --- odoo should not do that, it should discard the old value! talk to tobru
+// TODO: How does odoo handle e.g. price changes? Just curious.
+
+
 
 == System idea
 
 This is an https://en.wikipedia.org/wiki/Extract,_transform,_load[ETL process^].
-The extract and load part are well isolated and only have a dependency to their source/target system.
+The extract and load parts are well isolated and only have a dependency to their source/target system.
 In contrast, the transform part needs to bring information from both the source and the target together.
-Instead of having one single ETL process, a multistage model with an intermediate persistence will be used.
-The first stage fetches the data from the source into that intermediate storage.
-The second stage enriches that data by bringing in missing pieces from the target system.
-The third stage then ingests the data into the target system.
-
-This architecture is chosen to easily accommodate ingesting the data into different target systems.
-Additionally, the rather loose coupling simplifies writing and maintaining the code base.
-We take into account ease of replacing for code that talks to the target system to accommodate replacing the billing/ERP system and reselling of {product}.
 
 Many aspects of this system are expected to change over time.
-For example, the price for a given product and any discounts are valid only for a defined time window.
-The system deals with them by assigning time ranges to those data records.
-The time range `during` denotes the earliest point and the latest point in time that records becomes valid.
-
-To define records which are valid from the beginning up until a certain time, and records which are valid until further notice, https://www.postgresql.org/docs/13/datatype-datetime.html#DATATYPE-DATETIME-SPECIAL-TABLE[`(-)infinity`^] can be used.
-The database holds whether the lower and upper bounds are inclusive or exclusive.
-By default the lower range is inclusive, the upper is exclusive `[lower,upper)`.
-To avoid ambiguous data points, the system must implement constraints and validations to ensure that no overlapping time ranges can be defined.
 
 Identifiers on the source and the target system aren't necessarily the same.
-On the source, the billing entity might be identified by the string `acme-corp`.
-However, on the target, that same billing entity might be identified by the integer `42`.
-In order to bring those two worlds together, the intermediate storage contains lookup tables holding both the source and target identifiers.
+In order to bring those two worlds together, static configuration is provided to the system, which allows mapping between identifiers on both sides.
 
-It often happens that the same product gets sold at different prices and discounts can be granted in general or for a given time period.
-Also, the scope can vary.
-For example, it's possible that a billing entity gets a different price but only for a specific instance of a product.
-A discount might be granted to everybody for a given time period or only to a single billing entity.
-In order to support these—and even more constellations—the source and target matching gets used.
+=== Example configuration
 
-On the source, all relevant information is available as labels (dimensions) on a time series.
-The query extracting the data from the source concatenates those dimensions into a source identifier for a product or a discount.
-After that, finding a matching record in the intermediate storage is a multi step process:
-First, the full identifier is looked up in the intermediate storage.
-If no record is found for the full identifier, one segment gets dropped from the end.
-This lookup process is repeated until a record is found, or only one segment is left.
-If the last segment is reached without finding an existing record, a new record will be created.
-
-[NOTE]
-====
-It's expected that those new records won't be complete.
-Either the system will add missing information to those records in the enrichment phase, or manual intervention will be required to complete the records.
-====
-
-The lookup process–as described–builds a strict hierarchy.
-For some use cases, this hierarchy, where zones are less specific than tenants, matches product variants.
-For example, the described hierarchy easily allows specifying different prices per {zone}.
-However, for other use cases, the hierarchy requires the same product or discount to be defined multiple times.
-For example, this is the case if we want to grant a tenant a discount on all zones.
-With the strict hierarchy, we'd have to create a record of this discount for each zone.
-
-To eliminate the need for duplicate product or discount records, the lookup process also supports wild cards for segments.
-The enhanced lookup process will also search for records where any segments except the first and last one are replaced by a literal asterisk (in all combinations).
-Note that the lookup process doesn't support partial wild cards for individual segments.
-Either a segment holds the value generated by the query or a single asterisk.
-
-One iteration of the enhanced lookup process differs from the strictly hierarchical process described above as follows:
-If no record is found for the identifier, the identifier's intermediate segments are successively replaced by asterisks.
-First a single segment is replaced by an asterisk, then two, etc., until all intermediate segments have been replaced by asterisks.
-We always replace segments with asterisks from right to left.
-A lookup is made for each combination of asterisks.
-If no record is found for any combination of asterisks, a segment from the end of the identifier is dropped and the full iteration is repeated.
-
-_Discounts and products are timed objects._
-
-.Examples
-****
-The following assumes the source contains metrics about workload in a Kubernetes namespace named _curly-snow-5598_.
-The billing entity is denoted by a label named `tenant_id` with the value _acme-corp_.
-There is also a label `cluster_id` to denote the cluster where that workload runs which has the value _c-appuio-cloudscale-lpg-2_.
-The product that's billed is the used memory and is referred to as _appuio_cloud_memory_.
-
-The source identifier produced by the query (used for both the product and the discount) would then be:
-
-`appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
-
-Following the enhanced algorithm, we query product or discount records with the following source identifiers (listed in query order):
-
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp:curly-snow-5598`
-  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:*:curly-snow-5598`
-  Applies to namespace _curly-snow-5598_ owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
-* `appuio_cloud_memory:*:acme-corp:curly-snow-5598`
-  Applies to namespace _curly-snow-5598_ owned by tenant _acme-corp_ on any cluster.
-* `appuio_cloud_memory:*:*:curly-snow-5598`
-  Applies to namespace _curly-snow-5598_ owned by any tenant on any cluster.
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2:acme-corp`
-  Applies to all namespaces owned by tenant _acme-corp_ on cluster _c-appuio-cloudscale-lpg-2_.
-* `appuio_cloud_memory:*:acme-corp`
-  Applies to all namespaces owned by tenant _acme-corp_ on any cluster.
-* `appuio_cloud_memory:c-appuio-cloudscale-lpg-2`
-  Applies to all namespaces owned by any tenant on cluster _c-appuio-cloudscale-lpg-2_.
-* `appuio_cloud_memory`
-  Applies to all namespaces owned by any tenant on any cluster.
-****
-
-The system is supposed to handle different products.
-We assume that the data required to bill one product can be generated with a single PromQL query.
-
-_Queries are timed objects._
-
-Some items contain a name or description that's to be ingested into the target system.
-Some of those texts are supposed to be dynamic.
-To enable this, they're treated as templates and the dynamic parts get inserted wile creating the records on the target system.
-
-A fact can be built from many factors.
-As a result, it may be hard or impossible to understand how the final fact corresponds to its inputs.
-Being able to display some of those factors, in isolation, can be immensely helpful when trying to understand the final result.
-To allow displaying individual factors which contribute to a fact, the system knows the concept of sub queries.
-
-A query can have any number of sub queries.
-A sub query can only be part of a single main query.
-Only the main query is billable and sub queries just add context.
-Sub queries can't have other sub queries.
-All sub queries associated with a query are run at the same time as the main query.
-When creating invoices, sub query facts can be used to build up the description text of a line item.
-
-== Data model
-
-image::system/data-model-billing.drawio.svg[]
-
-[NOTE]
-====
-Using a https://en.wikipedia.org/wiki/Star_schema[star schema^] seems to be the most logical choice.
-However, it's not the only choice.
-It can and has to be adapted according the storage technology chosen for implementation.
-
-Fields that are marked in **bold** are part a single unique constraint group for that table.
-====
-
-At the center of the model is the fact.
-A fact represents a sampled amount of a billed item (such as memory usage for a single namespace).
-The sampling rate for facts is one hour.
-For ingestion into the target, facts belonging to the same billed item are aggregated to a single line item.
-The value (field `quantity`) of the fact is the observed quantity to be billed.
-
-Records in the "date time" table indicate date and time of facts.
-The field `timestamp` is a Unix timestamp, and the values of the other fields correspond to the value of `timestamp` in UTC.
-For example, `1640656800` translates to year 2021, month 12, day 28 and hour 3.
-
-[IMPORTANT]
-====
-The field `quantity` of records in the fact table corresponds to the aggregated usage over one hour.
-Fact records are linked to the "date time" record indicating the start of the hour-long period they cover.
-
-Notably, this differs from how the Prometheus query interface handles time ranges.
-Prometheus's aggregation functions only support aggregating data which is older than the query's timestamp.
-Therefore, we need to provide the timestamp for the end of the period that we want to query to Prometheus.
-====
-
-The query holds the PromQL query string used to generate facts.
-It also holds metadata associated with the fact, for example the unit and the description to be shown for the line item on the invoice.
-The description is a rendered string from a template.
-
-The product holds the amount to be charged per unit.
-Its source identifier is a segmented match as explained in <<System idea>>.
-This is effectively the price table.
-
-The discount holds a percentage to be discounted.
-Its source identifier is a segmented match as explained in <<System idea>>.
-
-The category allows grouping line items together.
-Taking the example of {product}, a category is a namespace on a specific cluster.
-All billed items of that namespace will be grouped together on the resulting invoice.
-
-== Data flow
-
-=== Query phase
-
-In the query phase, the Prometheus API is queried, and the results are written to the facts table.
-If records in the dimension tables are missing, they're created as needed.
-The created dimension records might be incomplete.
-They will get completed in the next phase.
-
-From an orchestration perspective, a master job is created in the desired interval.
-The master job looks at the query table and identifies the queries that apply to the time window at hand.
-For each identified query, a job performing that query is created.
-
-[IMPORTANT]
-====
-Query jobs are invoked with a timestamp that indicates the end of the time window that they need to query.
-This allows query jobs to invoke the Prometheus query API with the provided timestamp.
-
-However, to create the resulting entry in the fact table, query jobs need to compute the timestamp for the start of the query window.
-To perform this calculation, query jobs need to know (or be called with) the query window size.
-====
-
-Each query job fetches the data from Prometheus and writes its results into the facts table.
-If the facts table already contains results for the query job's query and timestamp, those records are updated or dropped and replaced with the new results.
-Table locking is required to prevent two query jobs running in parallel from creating the same dimension records.
-
-The execution interval for this phase is in the range of minutes, hours or possibly days.
-
-== Enrichment phase
-
-The query phase may have created dimension records that are incomplete.
-In the enrichment phase, one or several jobs communicate with the target system to create or fetch any missing information in dimension records.
-It's possible that this phase creates new records in the target system.
-For example, in order to get the target id of a category, this category may need to be created in the target system first.
-
-This phase doesn't necessarily need to be executed as frequently the <<_query_phase,query phase>>.
-However, the enrichment must be completed successfully at least once before the <<_ingestion_phase,ingestion phase>> can be run.
-
-== Ingestion phase
-
-In this phase, the actual invoices and line items are created in the target system.
-The ingestion is usually executed once after a billing period has concluded.
-For example, ingestion can be executed at the beginning of a month to generate the invoices for the previous month.
-Thanks to the enrichment phase, jobs in this phase only need to query the intermediate storage to retrieve all the data which is required to create invoices.
-
-Depending on the sample interval in the intermediate storage, the ingestion phase must aggregate records retrieved from the intermediate storage.
-For example, the ingestion job may need to sum all records belonging to a single billed item for the requested month.
-
-== Example
-
-=== Initial state
-
-.Dimension Query
-[cols="2,3,3"]
-|===
-| id
-| 1
-| 2
-
-| parent_id
-| NULL
-| 1
-
-| name
-| appuio_cloud_memory
-| appuio_cloud_memory_requested
-
-| description
-| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-
-| query
-| …
-| …
-
-| unit
-| MiB
-| MiB
-|===
-
-.Dimension Product
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory:c-appuio-cloudscale-lpg-1
-
-| target
-| 18367
-
-| amount
-| 0.0002248931
-
-| during
-| [-Infinity,Infinity)
-|===
-
-.Dimension Discount
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory
-
-| discount
-| 0
-
-| during
-| [-Infinity,Infinity)
-|===
-
-In the target system, a record exists for a tenant with the id `22457`.
-That record has a field that contains the source reference with the value `acme-corp`
-Also a product record exists with the id `18367`
-
-All the other dimensions are empty.
-
-=== Query phase
-
-[source, Prometheus query result]
+[code:yaml]
 ----
-{
-  query="appuio_cloud_memory",
-  tenant="acme-corp",
-  category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
-  product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
-} 1035892736 1639040942
-
-{
-  query="appuio_cloud_memory_requested",
-  tenant="acme-corp",
-  category="c-appuio-cloudscale-lpg-2:curly-snow-5598",
-  product="appuio_cloud_memory:acme-corp:c-appuio-cloudscale-lpg-2:curly-snow-5598",
-} 5378296 1639040942
+parameters:
+  appuio_cloud_reporting:
+    rules: <1>
+      first_rule:
+        products: <2>
+          - product_variant_id: 'odoo_product_variant_id_string'
+            params: <3>
+              sla: best-effort
+              zone: c-appuio-cloud-lpg2
+          - product_variant_id: 'odoo_product_variant_id_string'
+            params:
+              sla: guaranteed-availability
+              zone: c-appuio-cloud-lpg2
+        instance_id_pattern: '%(zone)s-%(namespace)s' <4>
+        instance_description_pattern: 'All Pods' <5>
+        item_group_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
+        unit_id: '300' <7>
+        query_pattern: '' <8>
 ----
 
-.Fact
-[cols="1,3,3"]
-|===
-| id
-| 1
-| 2
-
-| date_time_id
-| 1
-| 1
-
-| query_id
-| 1
-| 2
-
-| tenant_id
-| 1
-| 1
-
-| category_id
-| 1
-| 1
-
-| product_id
-| 1
-| 1
-
-| discount_id
-| 1
-| 1
-
-| quantity
-| 1035892736
-| 5378296
-|===
-
-.Dimension Date Time
-[cols="1,5"]
-|===
-| id
-| 1
-
-| timestamp
-| 1639040942
-
-| year
-| 2021
-
-| month
-| 12
-
-| day
-| 09
-
-| hour
-| 10
-
-| minute
-| 09
-|===
-
-.Dimension Query
-[cols="2,3,3"]
-|===
-| id
-| 1
-| 2
-
-| parent_id
-| NULL
-| 1
-
-| name
-| appuio_cloud_memory
-| appuio_cloud_memory_requested
-
-| description
-| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-
-| query
-| …
-| …
-
-| unit
-| MiB
-| MiB
-|===
-
-.Dimension Tenant
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| acme-corp
-
-| target
-| null
-
-| during
-| [-Infinity,Infinity)
-|===
-
-.Dimension Category
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| c-appuio-cloudscale-lpg-2:curly-snow-5598
-
-| target
-| null
-|===
-
-
-.Dimension Product
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory:c-appuio-cloudscale-lpg-2
-
-| target
-| 18367
-
-| amount
-| 0.0002248931
-
-| during
-| [-Infinity,Infinity)
-|===
-
-.Dimension Discount
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory
-
-| discount
-| 0
-
-| during
-| [-Infinity,Infinity)
-|===
-
-=== Enrichment phase
-.Fact
-[cols="1,3,3"]
-|===
-| id
-| 1
-| 2
-
-| date_time_id
-| 1
-| 1
-
-| query_id
-| 1
-| 2
-
-| tenant_id
-| 1
-| 1
-
-| category_id
-| 1
-| 1
-
-| product_id
-| 1
-| 1
-
-| discount_id
-| 1
-| 1
-
-| quantity
-| 1035892736
-| 5378296
-|===
-
-.Dimension Date Time
-[cols="1,5"]
-|===
-| id
-| 1
-
-| timestamp
-| 1639040942
-
-| year
-| 2021
-
-| month
-| 12
-
-| day
-| 09
-
-| hour
-| 10
-
-| minute
-| 09
-|===
-
-.Dimension Query
-[cols="2,3,3"]
-|===
-| id
-| 1
-| 2
-
-| parent_id
-| NULL
-| 1
-
-| name
-| appuio_cloud_memory
-| appuio_cloud_memory_requested
-
-| description
-| Compute (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-| Requested (min: {{ .min }}, avg: {{ .avg }}, max: {{ .max }})
-
-| query
-| …
-| …
-
-| unit
-| MiB
-| MiB
-|===
-
-.Dimension Tenant
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| acme-corp
-
-| target
-| *22457*
-
-| during
-| [-Infinity,Infinity)
-|===
-
-.Dimension Category
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| c-appuio-cloudscale-lpg-2:curly-snow-5598
-
-| target
-| *19588*
-|===
-
-To get the target category id, a category record was created in the target system.
-
-.Target Category
-[cols="1,5"]
-|===
-| ID
-| 19588
-
-| Description
-| Zone: cloudscale.ch - LPG 2, namespace: curly-snow-5598
-|===
-
-The target specific code has a way to parse the category source string and transform it to something that resembles the above example.
-
-.Dimension Product
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory:c-appuio-cloudscale-lpg-2
-
-| target
-| 18367
-
-| amount
-| 0.0002248931
-
-| during
-| [-Infinity,Infinity)
-|===
-
-.Dimension Discount
-[cols="1,5"]
-|===
-| id
-| 1
-
-| source
-| appuio_cloud_memory
-
-| discount
-| 0
-
-| during
-| [-Infinity,Infinity)
-|===
-
-=== Ingestion phase
-
-The intermediate tables are no longer touched, so they're left out for brevity.
-The tables below are an example based on Odoo.
-
-
-.Invoice
-[cols="1,5"]
-|===
-| ID
-| 10730 (auto incremented primary key)
-
-| Partner ID
-| 22457 (the target from dimension tenant)
-
-| Account ID
-| 49 (constant)
-
-| Invoice Date
-| 2022–01–01
-
-| Journal ID
-| 1 (constant)
-
-| Name
-| APPUiO Cloud December 2021 (specific to the job that created this invoice)
-
-| Payment Term
-| 3 (constant)
-
-| State
-| Draft (constant)
-
-| User ID
-| ???
-|===
-
-.Line Item
-[cols="1,5"]
-|===
-| Invoice ID
-| 10730
-
-| Account ID
-| 612 (constant)
-
-| Product ID
-| 18367
-
-| Tax ID
-| [(6, 0, [43])] (constant)
-
-| Category ID
-| 19588 (target from the dimension category)
-
-| quantity
-| 1035892736 (summed quantity from fact for the given time span)
-
-| Discount
-| 0 (discount from the dimension discount)
-
-| Description
-| "Compute (min: …, avg: …, max: …, requested: …)" (description from dimension query with some values, both fact aggregations and properties, interpolated)
-
-| Unit of measure
-| MiB (unit from dimension query)
-
-| Amount
-| 0.0002248931 (amount from dimension product)
-|===
+<1> The reporting tool is configured with a number of reporting rules.
+Each rule generally represents one Prometheus query template.
+<2> A rule can correspond to multiple products or product variants (for example if these products all use a very similar query).
+<3> Parameters can be defined for each product variant.
+These parameters are used to instantiate the `query_pattern` for each product variant.
+<4> The `instance_id_pattern` is used to generate the `instance_id` for a given record.
+All template variables must be present as labels in the query result.
+<5> The `instance_description_pattern` is used to generate the `instance_description` for a given record.
+All template variables must be present as labels in the query result.
+<6> The `item_group_pattern` is used to generate the `item_group` for a given record.
+All template variables must be present as labels in the query result.
+In general, item groups correspond to instance IDs.
+<7> Odoo ID of the unit in which resource usage is measured for this rule.
+<8> PromQL query pattern.
+The query results must produce all the labels used in name patterns, as well as the `sales_order_id` label.
+The query pattern can include pattern variables defined in product params (such as %(sla)s).
+
+=== Extract
+
+From the static configuration, a number of query jobs are generated for each query rule and each billing time interval (default 1h).
+
+For a given rule and time interval, a separate job is created for each listed product.
+The product params are substituted into the query pattern, resulting in an unique query for each product, which only returns results for that specific product.
+
+The query must be formulated in such a way that the resulting timeseries contains the `sales_order_id` label, which determines the particular sales order to which this usage record should be billed.
+
+Each query result represents an usage data record, to be transformed and loaded into the target system.
+
+=== Transform
+
+In the transformation phase, the usage records are enriched with metadata from the static configuration.
+In particular, each record is associated with:
+* a product variant ID (taken from the static configuration; the query was generated with a specific product's parameters, and that product's variant ID is to be used)
+* an instance ID (generated using the `instance_id_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
+* an instance description (generated using the `instance_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
+* an item group (generated using the `item_group_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
+* a unit ID (taken directly from the reporting rule configuration)
+* a time range
+
+In addition, the presence of the `sales_order_id` label must be verified.
+If this label is not present, an error must be reported, as this is indicative of a misconfiguration.
+
+=== Load
+
+Each transformed query result is sent to the https://docs.central.vshn.ch/metered-billing.html[Metered Billing API] for the given time interval.
+
+==== Example API Payload
+
+[code:json]
+----
+{
+    "product_id": "an_identifying_product_variant_string", <1>   
+    "instance_id": "external-identifier", <2>             
+    "instance_description": "Human readable description", <3>    
+    "item_group": "My Item Group", <4>                           
+    "sales_order_id": "SO0042", <5>                              
+    "unit_id": "422", <6>                                        
+    "consumed_units": 821.42, <7>                                
+    "timerange": "2023-08-16T13:00:00Z/2023-08-16T14:00:00Z" <8> 
+}
+----
+
+<1> Odoo ID of the Product Variant, found in the product definitions in the static config
+<2> Identifier of this particular instance of the product; generated from instance_id_pattern in static config
+<3> Description as shown on invoice; generated from instance description pattern
+<4> Used for grouping lines item on the final invoice; generated from `item_group_pattern`
+<5> Odoo ID of the Sales Order to which this usage gets billed; must be present as a label in the Prometheus query result
+<6> Odoo ID of the unit in which resource usage is counted; can be found in static configuration
+<7> Amount of resources consumed; calculated in query
+<8> Timeframe during which this amount of resources were consumed; part of job arguments
+
+==== A Note on Instance ID
+// TODO I'm realizing that the Instance Description does not contain the same thing as the Instance ID, generally speaking. I would thus love to rename it.
+// TODO right now several of these properties are printed on the invoice as-is. Rather than defining customer facing strings here, is there a better way to generate those in Odoo?
+In the context of the usage reporting system, "Instance" refers to an identifier denoting a specific instance of use of a product.
+It serves two purposes:
+* a) The instance allows to distinguish between different uses of the same product (for example, vCPUs in Namespace A vs. vCPUs in Namespace B)
+* b) If the product variant changes for a given product, (for example when a customer upgrades from `best_effort` to `guaranteed_availability`) the instance should remain the same, allowing the ERP system to associate the usage reports even thought the product variant ID changed.
+
+This means the instance identifier should be chosen such that it uniquely identifies a use of a product (meaning the same product could not meaningfully be purchased twice under the same instance), but does not contain a direct reference to the product variant (such that it remains constant if a product is upgraded).
+
+For APPUiO Managed clusters, the cluster name serves as Instance ID.
+
+For APPUiO Cloud usage metrics, the Instance ID is comprised of the APPUiO Cloud Zone and the cluster namespace.
+
+For AppCat services, the Instance ID is comprised of the cluster name OR APPUiO Cloud Zone, the namespace in which the instance is deployed, and a meaningful name of that particular AppCat service instance.
+If the AppCat service is provided externally (as opposed to being deployed into a customer namespace), its Instance ID is reduced to just a meaningful name of the instance.
+
+Instance Description should generally contain the same information as Instance ID, but in a human readable format.
+Unlike the Instance ID itself, the description may also contain additional context pertaining to the product that is being billed.
+If any information is present in both the Instance ID and the Item Group, it can be skipped in the description.
+
+==== A Note on Item Groups
+In the context of the usage reporting system, "Item Group" refers to an identifier which is used to visually group multiple line items on an invoice under a common heading.
+This helps our customers better understand their invoices.
+
+This means the item group should be chosen such that it does not contain a direct reference to a particular product.
+This allows different products to be grouped together.
+
+The Item Group is used as a heading in the invoice, and thus should be human-friendly.
+
+For APPUiO Managed clusters, the cluster name serves as the item group.
+
+For APPUiO Cloud usage metrics, the item group is comprised of the APPUiO Cloud Zone and the cluster namespace.
+
+For AppCat services, the item group is comprised of the cluster name OR APPUiO Cloud Zone as well as namespace in which the instance is deployed.
+If the AppCat service is provided externally (as opposed to being deployed into a customer namespace), its item group is simply set to "VSHN AppCat".
+
+
+==== Examples
+
+[code:json]
+----
+{
+    "product_id": "ID_of_cloudscale_besteffort_vCPU",
+    "instance_id": "c-my-awesome-cluster",
+    "instance_description": "All compute resources", <1>
+    "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster"
+}
+----
+<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the product
+
+[code:json]
+----
+{
+    "product_id": "ID_of_flex_vCPU",
+    "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app",
+    "instance_description": "All Pods", <1>
+    "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
+    ...
+}
+----
+<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the product
+
+[code:json]
+----
+{
+    "product_id": "ID_of_appcat_redis_besteffort",
+    "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app/session-storage",
+    "instance_description": "session-storage", <1>
+    "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app", <2>
+    ...
+}
+----
+<1> The item group does not contain the instance name, so we put it in the description
+<2> The instance name is not part of the group.
+This way, all redis instances are grouped with other resources in the same namespace.
+
+[code:json]
+----
+{
+    "product_id": "ID_of_appcat_redis_besteffort",
+    "instance_id": "c-my-awesome-cluster/my-awesome-app/session-storage",
+    "instance_description": "session-storage", <1>
+    "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster / Namespace: my-awesome-app", <2>
+    ...
+}
+----
+<1> The item group does not contain the instance name, so we put it in the description
+<2> The item group must distinguish between APPUiO Cloud and Managed, such that it gets correctly grouped with the other resources (in this case, managed cluster vCPU)
+
+[code:json]
+----
+{
+    "product_id": "ID_of_appcat_postgres_besteffort",
+    "instance_id": "external-db",
+    "instance_description": "external-db", <1>
+    "item_group": "VSHN AppCat", <2>
+    ...
+}
+----
+<1> The item group does not contain the instance name, so we put it in the description
+<2> This AppCat service does not belong to a specific namespace.
+We simply group all such services together under the "VSHN AppCat" header.
+
+
+== Managing Sales Orders
+
+The Sales Order ID is an important parameter to associate products with where they should get billed.
+Each usage data record must be associated with an Odoo Sales Order.
+This section describes how Sales Orders are managed, and how the Sales Order ID can be retrieved.
+
+The Sales Order ID must be present as a label on each Prometheus query result.
+To enable this, metrics containing the Sales Order ID need to be present in Mimir.
+
+=== APPUiO Cloud
+The APPUiO Cloud Control API ensures a Sales Order exists for every organization.
+A reference to each organization's Sales Order ID is stored in the Organization object, similar to how a reference to the corresponding Billing Entity is maintained.
+There is exactly one Sales Order per organization.
+However, as multiple organizations can belong to the same Billing Entity, it is thus possible for multiple Sales Orders to belong to the same Billing Entity as well.
+
+The APPUiO Cloud Control API exposes a Prometheus metric `appuio_control_organization_info` with one constant timeseries for each organization.
+This metric contains one label with the organization name, and one label with the corresponding Sales Order ID.
+This metric is shipped to Mimir and can be used in queries to associate usage data with the correct Sales Order ID.
+
+=== APPUiO Managed
+
+For APPUiO Managed clusters, the sales order for a given cluster is stored in a static cluster fact, and maintained manually.
+The cluster fact is shipped to Mimir via the `appuio_managed_info` metric, and can be used in queries to associate usage data with the correct Sales Order ID.
+
+=== AppCat services
+
+AppCat services can leverage the same metrics as APPUiO Managed and APPUiO Cloud to associate usage data with the correct Sales Order ID.
