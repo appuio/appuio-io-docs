@@ -44,7 +44,7 @@ parameters:
               class: plus
               zone: c-appuio-exoscale-ch-gva-2-0
         instance_id_pattern: '%(zone)s-%(namespace)s' <4>
-        instance_description_pattern: 'All Pods' <5>
+        item_description_pattern: 'All Pods' <5>
         item_group_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
         unit_id: '300' <7>
         query_pattern: '' <8>
@@ -57,7 +57,7 @@ Each rule generally represents one Prometheus query template.
 These parameters are used to instantiate the `query_pattern` for each product.
 <4> The `instance_id_pattern` is used to generate the `instance_id` for a given record.
 All template variables must be present as labels in the query result.
-<5> The `instance_description_pattern` is used to generate the `instance_description` for a given record.
+<5> The `item_description_pattern` is used to generate the `item_description` for a given record.
 All template variables must be present as labels in the query result.
 <6> The `item_group_pattern` is used to generate the `item_group` for a given record.
 All template variables must be present as labels in the query result.
@@ -71,8 +71,9 @@ The query pattern can include pattern variables defined in product params (such 
 
 For APPUiO Cloud, the *Instance ID* is comprised of the APPUiO Cloud Zone as well as the customer namespace.
 The *item group* contains the exact same information, since the instance identifier happens to also be a sensible grouping criterion.
-The *instance description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
+The *item description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
 Note that it's not necessary to say what the metric is; that information is already contained in the product name.
+Alternatively, this parameter could also be omitted.
 
 === Extract
 
@@ -92,7 +93,7 @@ This is taken from the static configuration.
 
 * The product or product variant ID is taken from the static configuration; the query was generated with a specific product's parameters, and that product's ID is to be used.
 * The instance ID is generated using the `instance_id_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
-* The instance description is generated using the `instance_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
+* The item description is generated using the `item_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
 * The item group is generated using the `item_group_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
 * The unit ID is taken directly from the reporting rule configuration.
 * The time range is taken from the job's arguments.
@@ -109,12 +110,14 @@ Each transformed query result is sent to the https://docs.central.vshn.ch/metere
 {
     "product_id": "ID_of_flex_vCPU",
     "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app",
-    "instance_description": "All Pods", <1>
+    "item_description": "All Pods", <1>
     "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
     ...
 }
 ----
-<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the metric's scope.
+<1> The `item_group` already contains all information necessary to identify which namespace this is about.
+So the description just provides some generic context.
+It could also be omitted in this case.
 
 == Managing Sales Orders
 

@@ -50,7 +50,7 @@ parameters:
               sla: guaranteed-availability
               cloud_provider: exoscale
         instance_id_pattern: '%(cluster)s'
-        instance_description_pattern: 'All Compute Resources'
+        item_description_pattern: 'All Compute Resources'
         item_group_pattern: 'APPUiO Managed OpenShift - Cluster: %(cluster)s'
         unit_id: '300'
         query_pattern: ''
@@ -60,8 +60,9 @@ parameters:
 
 For APPUiO Managed, the *Instance ID* is equal to the cluster name.
 The *item group* is also the cluster name, since it happens to also be a sensible grouping parameter.
-The *instance description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
+The *item description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
 Note that it's not necessary to say what the metric is; that information is already contained in the product name.
+Alternatively, this parameter could also be omitted.
 
 === ETL Process
 
@@ -76,12 +77,14 @@ This is an (excerpt of an) example payload that is sent to the Metered Billing A
 {
     "product_id": "ID_of_cloudscale_besteffort_vCPU",
     "instance_id": "c-my-awesome-cluster",
-    "instance_description": "All compute resources", <1>
+    "item_description": "All compute resources", <1>
     "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster",
     ...
 }
 ----
-<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the product
+<1> The `item_group` already contains all information necessary to identify which cluster this is about.
+So the description just provides some generic context.
+It could also be omitted in this case.
 
 == Managing Sales Orders
 
