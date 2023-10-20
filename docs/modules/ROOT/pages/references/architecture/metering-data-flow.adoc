@@ -1,29 +1,32 @@
 = Data model and data flow for Resource Usage Reporting
 
 [abstract]
---
+====
 xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works.
 This page explains how that data gets transformed and pushed into a billing/ERP system.
 APPUiO Billing uses Odoo 16 as its ERP system.
 Metered billing is enabled by a custom metered usage addon, which provides a REST endpoint (the https://docs.central.vshn.ch/metered-billing.html[Metered Billing API]) to which usage data can be reported.
---
+====
 
 The core of this part of the system has two responsibilities.
 First, it must fetch the required data from the input system.
 It also includes matching the identifiers from the source (Prometheus) with the identifiers from the target system.
 Second, it must ingest that data into the target system (Odoo).
 
-Key features of this component are:
-
-* It uses the Prometheus Query API as its source.
-* Execution is idempotent.
+A key feature of this component is idempotent execution.
   If run twice for a given time frame with the same configuration, the result is the same.
   However, if run again with a different configuration, the results reflect the changes made.
   This ensures that errors in the past can easily be fixed.
-// TODO: odoo rejects the second sample for the same time interval (apparently) - can we then correct errors? do we need to? --- odoo should not do that, it should discard the old value! talk to tobru
-// TODO: How does odoo handle e.g. price changes? Just curious.
 
+[NOTE]
+--
+Currently Odoo does not process any further records submitted for the same time interval.
+The API does accept them, but the processing will fail later on.
+Errors would therefore need to be mitigated by hand.
 
+It would be convenient if submitting a record for the second time would replace any preexisting records, at least if that record has not yet been invoiced.
+However, at the moment, the system does not support that behaviour.
+--
 
 == System idea
 
@@ -33,74 +36,44 @@ In contrast, the transform part needs to bring information from both the source 
 
 Many aspects of this system are expected to change over time.
 
+The ETL process is handled by a reporting tool.
+There may be multiple reporting tools for different products, which obtain their usage data from different sources.
+Regardless of the source, though, the transformed usage data is loaded into Odoo via the Metered Billing API.
+
 Identifiers on the source and the target system aren't necessarily the same.
-In order to bring those two worlds together, static configuration is provided to the system, which allows mapping between identifiers on both sides.
+In order to bring those two worlds together, static configuration is provided to the reporting tool, which allows mapping between identifiers on both sides.
 
-=== Example configuration
-
-[code:yaml]
-----
-parameters:
-  appuio_cloud_reporting:
-    rules: <1>
-      first_rule:
-        products: <2>
-          - product_variant_id: 'odoo_product_variant_id_string'
-            params: <3>
-              sla: best-effort
-              zone: c-appuio-cloud-lpg2
-          - product_variant_id: 'odoo_product_variant_id_string'
-            params:
-              sla: guaranteed-availability
-              zone: c-appuio-cloud-lpg2
-        instance_id_pattern: '%(zone)s-%(namespace)s' <4>
-        instance_description_pattern: 'All Pods' <5>
-        item_group_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
-        unit_id: '300' <7>
-        query_pattern: '' <8>
-----
-
-<1> The reporting tool is configured with a number of reporting rules.
-Each rule generally represents one Prometheus query template.
-<2> A rule can correspond to multiple products or product variants (for example if these products all use a very similar query).
-<3> Parameters can be defined for each product variant.
-These parameters are used to instantiate the `query_pattern` for each product variant.
-<4> The `instance_id_pattern` is used to generate the `instance_id` for a given record.
-All template variables must be present as labels in the query result.
-<5> The `instance_description_pattern` is used to generate the `instance_description` for a given record.
-All template variables must be present as labels in the query result.
-<6> The `item_group_pattern` is used to generate the `item_group` for a given record.
-All template variables must be present as labels in the query result.
-In general, item groups correspond to instance IDs.
-<7> Odoo ID of the unit in which resource usage is measured for this rule.
-<8> PromQL query pattern.
-The query results must produce all the labels used in name patterns, as well as the `sales_order_id` label.
-The query pattern can include pattern variables defined in product params (such as %(sla)s).
+For a given time interval, a reporting job is generated in which the reporting tool is executed to collect and store usage data for that time interval.
+If sensible, it is possible to generate multiple jobs per time interval that are each responsible for, say, a different query.
+If a job fails with a transient failure, it can be re-tried until it succeeds.
 
 === Extract
 
-From the static configuration, a number of query jobs are generated for each query rule and each billing time interval (default 1h).
-
-For a given rule and time interval, a separate job is created for each listed product.
-The product params are substituted into the query pattern, resulting in an unique query for each product, which only returns results for that specific product.
-
-The query must be formulated in such a way that the resulting timeseries contains the `sales_order_id` label, which determines the particular sales order to which this usage record should be billed.
-
-Each query result represents an usage data record, to be transformed and loaded into the target system.
+In the extract phase, the reporting tool collects usage data from one or multiple data sources. This produces a number of usage data records, to be transformed and loaded into the target system.
 
 === Transform
 
-In the transformation phase, the usage records are enriched with metadata from the static configuration.
-In particular, each record is associated with:
-* a product variant ID (taken from the static configuration; the query was generated with a specific product's parameters, and that product's variant ID is to be used)
-* an instance ID (generated using the `instance_id_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
-* an instance description (generated using the `instance_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
-* an item group (generated using the `item_group_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern)
-* a unit ID (taken directly from the reporting rule configuration)
-* a time range
+In the transformation phase, the usage data records are enriched with metadata from the static configuration.
+After the transformation, each usage record must contain all the metadata required by Odoo.
 
-In addition, the presence of the `sales_order_id` label must be verified.
-If this label is not present, an error must be reported, as this is indicative of a misconfiguration.
+In particular, each record needs to contain:
+
+* a product ID, representing the specific product or product variant for which this record is counting usage.
+  This is an ID from Odoo.
+* an instance ID, containing an identifier of this specific use of the product.
+  It is used to distinguish between different purchases of the same product.
+  It can be chosen arbitrarily, and should be a meaningful identifier for the customer.
+* an instance description, containing additional information about this instance.
+  It can be chosen arbitrarily, and should provide useful context to the customer.
+* an item group, containing a label by which line items will be grouped on the resulting invoice.
+  It can be chosen arbitrarily, and should provide an useful grouping that will help the customer understand the invoice.
+  It should be possible for different products to wind up in the same group if they are related, so the item group should not contain any product identifiers.
+* a unit ID representing the unit of measurement in this usage data record.
+  This is an ID from Odoo.
+* a time range representing the interval during which usage data was counted in this particular record.
+* a sales order ID representing the specific sales order to which this usage record should be billed.
+  This is an ID from Odoo.
+* The amount of units that were consumed.
 
 === Load
 
@@ -122,35 +95,32 @@ Each transformed query result is sent to the https://docs.central.vshn.ch/metere
 }
 ----
 
-<1> Odoo ID of the Product Variant, found in the product definitions in the static config
-<2> Identifier of this particular instance of the product; generated from instance_id_pattern in static config
-<3> Description as shown on invoice; generated from instance description pattern
-<4> Used for grouping lines item on the final invoice; generated from `item_group_pattern`
-<5> Odoo ID of the Sales Order to which this usage gets billed; must be present as a label in the Prometheus query result
-<6> Odoo ID of the unit in which resource usage is counted; can be found in static configuration
-<7> Amount of resources consumed; calculated in query
-<8> Timeframe during which this amount of resources were consumed; part of job arguments
+<1> Odoo ID of the Product or Product Variant
+<2> Identifier of this particular instance of the product
+<3> Description as shown on invoice
+<4> Used for grouping lines item on the final invoice
+<5> Odoo ID of the Sales Order to which this usage gets billed
+<6> Odoo ID of the unit in which resource usage is counted
+<7> Amount of resources consumed
+<8> Timeframe during which this amount of resources were consumed
 
 ==== A Note on Instance ID
-// TODO I'm realizing that the Instance Description does not contain the same thing as the Instance ID, generally speaking. I would thus love to rename it.
-// TODO right now several of these properties are printed on the invoice as-is. Rather than defining customer facing strings here, is there a better way to generate those in Odoo?
 In the context of the usage reporting system, "Instance" refers to an identifier denoting a specific instance of use of a product.
+
 It serves two purposes:
+
 * a) The instance allows to distinguish between different uses of the same product (for example, vCPUs in Namespace A vs. vCPUs in Namespace B)
 * b) If the product variant changes for a given product, (for example when a customer upgrades from `best_effort` to `guaranteed_availability`) the instance should remain the same, allowing the ERP system to associate the usage reports even thought the product variant ID changed.
 
 This means the instance identifier should be chosen such that it uniquely identifies a use of a product (meaning the same product could not meaningfully be purchased twice under the same instance), but does not contain a direct reference to the product variant (such that it remains constant if a product is upgraded).
 
-For APPUiO Managed clusters, the cluster name serves as Instance ID.
+Instance Description should generally contain information to convey the instance to the end user, _within the context of its grouping_.
+This means, generally the Instance Description contains a human friendly description of the properties of the Instance, but skipping any properties that are already present in the Item Group description.
 
-For APPUiO Cloud usage metrics, the Instance ID is comprised of the APPUiO Cloud Zone and the cluster namespace.
+Furthermore, unlike the Instance ID itself, the description may also contain additional context pertaining to the product that is being billed.
 
-For AppCat services, the Instance ID is comprised of the cluster name OR APPUiO Cloud Zone, the namespace in which the instance is deployed, and a meaningful name of that particular AppCat service instance.
-If the AppCat service is provided externally (as opposed to being deployed into a customer namespace), its Instance ID is reduced to just a meaningful name of the instance.
-
-Instance Description should generally contain the same information as Instance ID, but in a human readable format.
-Unlike the Instance ID itself, the description may also contain additional context pertaining to the product that is being billed.
-If any information is present in both the Instance ID and the Item Group, it can be skipped in the description.
+// TODO I just spent so many words explaining why the Instance Description is different from the Instance ID in terms of which properties it contains. I would thus love to rename it. I think "Item Description" would be a better fit; it does not imply a direct correspondence with what is in the Instance ID. Plus, the Item Group + Instance Description should complement each other, as they are two different places of providing information directly on the invoice. The Instance ID is unrelated to that.
+// In essence: The Instance Description and the Item Group together exist to convey information about the line item to the customer. The Instance ID is internal only, and is used to keep track of line item adoption and variant changes. It would make it easier to convey the meaning and purpose of each parameter if Instance Description was renamed to Item Description, thus grouping it together with the Item Group parameter and keeping it distinct from the Instance ID parameter.
 
 ==== A Note on Item Groups
 In the context of the usage reporting system, "Item Group" refers to an identifier which is used to visually group multiple line items on an invoice under a common heading.
@@ -161,14 +131,6 @@ This allows different products to be grouped together.
 
 The Item Group is used as a heading in the invoice, and thus should be human-friendly.
 
-For APPUiO Managed clusters, the cluster name serves as the item group.
-
-For APPUiO Cloud usage metrics, the item group is comprised of the APPUiO Cloud Zone and the cluster namespace.
-
-For AppCat services, the item group is comprised of the cluster name OR APPUiO Cloud Zone as well as namespace in which the instance is deployed.
-If the AppCat service is provided externally (as opposed to being deployed into a customer namespace), its item group is simply set to "VSHN AppCat".
-
-
 ==== Examples
 
 [code:json]
@@ -178,9 +140,9 @@ If the AppCat service is provided externally (as opposed to being deployed into 
     "instance_id": "c-my-awesome-cluster",
     "instance_description": "All compute resources", <1>
     "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster"
-}
+},
 ----
-<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the product
+<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the context in which usage was measured.
 
 [code:json]
 ----
@@ -192,7 +154,7 @@ If the AppCat service is provided externally (as opposed to being deployed into 
     ...
 }
 ----
-<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the product
+<1> Everything from the `instance_id` is redundant with `item_group`, so this gets reduced to a general description of the context in which usage was measured
 
 [code:json]
 ----
@@ -204,7 +166,7 @@ If the AppCat service is provided externally (as opposed to being deployed into 
     ...
 }
 ----
-<1> The item group does not contain the instance name, so we put it in the description
+<1> The item group does not contain the instance name, so we instead put it in the description.
 <2> The instance name is not part of the group.
 This way, all redis instances are grouped with other resources in the same namespace.
 
@@ -218,8 +180,8 @@ This way, all redis instances are grouped with other resources in the same names
     ...
 }
 ----
-<1> The item group does not contain the instance name, so we put it in the description
-<2> The item group must distinguish between APPUiO Cloud and Managed, such that it gets correctly grouped with the other resources (in this case, managed cluster vCPU)
+<1> The item group does not contain the instance name, so we put it in the description.
+<2> The item group must distinguish between APPUiO Cloud and Managed, such that it gets correctly grouped with the other resources (in this case, managed cluster vCPU).
 
 [code:json]
 ----
@@ -234,32 +196,3 @@ This way, all redis instances are grouped with other resources in the same names
 <1> The item group does not contain the instance name, so we put it in the description
 <2> This AppCat service does not belong to a specific namespace.
 We simply group all such services together under the "VSHN AppCat" header.
-
-
-== Managing Sales Orders
-
-The Sales Order ID is an important parameter to associate products with where they should get billed.
-Each usage data record must be associated with an Odoo Sales Order.
-This section describes how Sales Orders are managed, and how the Sales Order ID can be retrieved.
-
-The Sales Order ID must be present as a label on each Prometheus query result.
-To enable this, metrics containing the Sales Order ID need to be present in Mimir.
-
-=== APPUiO Cloud
-The APPUiO Cloud Control API ensures a Sales Order exists for every organization.
-A reference to each organization's Sales Order ID is stored in the Organization object, similar to how a reference to the corresponding Billing Entity is maintained.
-There is exactly one Sales Order per organization.
-However, as multiple organizations can belong to the same Billing Entity, it is thus possible for multiple Sales Orders to belong to the same Billing Entity as well.
-
-The APPUiO Cloud Control API exposes a Prometheus metric `appuio_control_organization_info` with one constant timeseries for each organization.
-This metric contains one label with the organization name, and one label with the corresponding Sales Order ID.
-This metric is shipped to Mimir and can be used in queries to associate usage data with the correct Sales Order ID.
-
-=== APPUiO Managed
-
-For APPUiO Managed clusters, the sales order for a given cluster is stored in a static cluster fact, and maintained manually.
-The cluster fact is shipped to Mimir via the `appuio_managed_info` metric, and can be used in queries to associate usage data with the correct Sales Order ID.
-
-=== AppCat services
-
-AppCat services can leverage the same metrics as APPUiO Managed and APPUiO Cloud to associate usage data with the correct Sales Order ID.
