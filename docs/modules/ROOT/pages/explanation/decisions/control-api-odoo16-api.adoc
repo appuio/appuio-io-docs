@@ -30,7 +30,7 @@ The data models haven't changed a lot between Odoo 8 and Odoo 16.
 There's minor differences in how the Customer to Billing contact relationship will be modelled.
 However, the authentication process is significantly different.
 
-There's 3rd party Go clients for the XML-RPC API for recent Odoo versions.
+There are multiple 3rd party Go clients for the XML-RPC API for recent Odoo versions.
 For example, https://github.com/skilld-labs/go-odoo[github.com/skilld-labs/go-odoo] supports the authentication protocol, provides a fairly nice API and has Go types for the base Odoo models out of the box.
 Additionally, the client library also exposes a low-level API which provides convenience wrappers for constructing XML-RPC calls.
 
