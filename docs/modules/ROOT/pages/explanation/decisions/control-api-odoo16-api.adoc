@@ -1,0 +1,53 @@
+= Control API interface to Odoo 16
+
+== Problem
+
+The APPUiO Cloud xref:references/architecture/control-api.adoc[Control API] currently interacts with Odoo 8 through the Odoo 8 JSON-RPC API.
+However, VSHN is migrating to Odoo 16, and we need to update the Control API to interact with Odoo 16.
+
+=== Goal
+
+* Define how the Control API will interact with Odoo 16
+
+=== Non-Goals
+
+* Define how metered billing data will be sent to Odoo 16
+footnote:[Metered billing data will be sent to Odoo 16 through a custom REST API implemented with the `muk_rest` plugin, see also the https://docs.central.vshn.ch/rest-api.html[Odoo 16 REST API documentation^].]
+
+== Proposals
+
+=== Define REST endpoints for the operations done by the Control API
+
+We use the https://apps.odoo.com/apps/modules/16.0/muk_rest/[`muk_rest`] addon in Odoo 16 to provide a REST API for specific functionality.
+We could refactor the Control API to use the REST API `/api/v2/search_read` endpoint to manage partner records.
+However, this may require a non-trivial amount of work to reimplement the Control API Odoo integration since we'd have to write a client for the REST API from scratch.
+
+=== Use the XML-RPC Odoo API for the Control API
+
+We currently use the JSON-RPC Odoo API to interact with Odoo 8 in the Control API.
+
+The data models haven't changed a lot between Odoo 8 and Odoo 16.
+There's minor differences in how the Customer to Billing contact relationship will be modelled.
+However, the authentication process is significantly different.
+
+There are multiple 3rd party Go clients for the XML-RPC API for recent Odoo versions.
+For example, https://github.com/skilld-labs/go-odoo[github.com/skilld-labs/go-odoo] supports the authentication protocol, provides a fairly nice API and has Go types for the base Odoo models out of the box.
+Additionally, the client library also exposes a low-level API which provides convenience wrappers for constructing XML-RPC calls.
+
+=== Refactor the existing JSON-RPC client of the Control API to be compatible with Odoo 16
+
+We could refactor our current custom Odoo 8 JSON-RPC client to support the Odoo 16 authentication protocol.
+It's unclear how much effort this would be, since the official Odoo API documentation only mentions the XML-RPC endpoints, and doesn't have any information about the JSON-RPC endpoints.
+The JSON-RPC endpoints still exist, since the web interface still uses JSON-RPC, but it's likely we'd have to reverse-engineer the authentication endpoint of the JSON-RPC API.
+
+== Decision
+
+Use the XML-RPC Odoo API with a 3rd party client for the Control API.
+
+== Rationale
+
+There's no real benefit in implementing REST API endponints for functionality which is already accessible through the XML-RPC API.
+In contrast, by sticking to the base XML-RPC API, we don't bind the Control API Odoo 16 integration to a paid 3rd party Odoo plugin.
+
+Additionally, the changes to the Control API Odoo integration will be fairly small, since the data model of the XML-RPC API hasn't changed a lot.
+While we could implement the new authentication protocol in the existing client, it's probably easier to build a new backend for the `odoostorage` component based on an existing 3rd party library for the Odoo XML-RPC API.
