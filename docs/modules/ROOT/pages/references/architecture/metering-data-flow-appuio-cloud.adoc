@@ -45,7 +45,7 @@ parameters:
               zone: c-appuio-exoscale-ch-gva-2-0
         instance_id_pattern: '%(zone)s-%(namespace)s' <4>
         item_description_pattern: 'All Pods' <5>
-        item_group_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
+        item_group_description_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
         unit_id: '300' <7>
         query_pattern: '' <8>
 ----
@@ -59,9 +59,8 @@ These parameters are used to instantiate the `query_pattern` for each product.
 All template variables must be present as labels in the query result.
 <5> The `item_description_pattern` is used to generate the `item_description` for a given record.
 All template variables must be present as labels in the query result.
-<6> The `item_group_pattern` is used to generate the `item_group` for a given record.
+<6> The `item_group_description_pattern` is used to generate the `item_group_description` for a given record.
 All template variables must be present as labels in the query result.
-In general, item groups correspond to instance IDs.
 <7> Odoo ID of the unit in which resource usage is measured for this rule.
 <8> PromQL query pattern.
 The query results must produce all the labels used in name patterns, as well as the `sales_order_id` label.
@@ -70,7 +69,7 @@ The query pattern can include pattern variables defined in product params (such 
 === Billing API Parameters
 
 For APPUiO Cloud, the *Instance ID* is comprised of the APPUiO Cloud Zone as well as the customer namespace.
-The *item group* contains the exact same information, since the instance identifier happens to also be a sensible grouping criterion.
+The *item group description* contains the exact same information, since the instance identifier happens to also be a sensible grouping criterion.
 The *item description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
 Note that it's not necessary to say what the metric is; that information is already contained in the product name.
 Alternatively, this parameter could also be omitted.
@@ -94,7 +93,7 @@ This is taken from the static configuration.
 * The product or product variant ID is taken from the static configuration; the query was generated with a specific product's parameters, and that product's ID is to be used.
 * The instance ID is generated using the `instance_id_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
 * The item description is generated using the `item_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
-* The item group is generated using the `item_group_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
+* The item group is generated using the `item_group_description_pattern` from the reporting rule; the query result should contain all the labels necessary to expand that pattern.
 * The unit ID is taken directly from the reporting rule configuration.
 * The time range is taken from the job's arguments.
 * The sales order ID must be present in the query result's labels; if it is not present, an error must be reported.
@@ -111,11 +110,11 @@ Each transformed query result is sent to the https://docs.central.vshn.ch/metere
     "product_id": "ID_of_flex_vCPU",
     "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app",
     "item_description": "All Pods", <1>
-    "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
+    "item_group_description": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
     ...
 }
 ----
-<1> The `item_group` already contains all information necessary to identify which namespace this is about.
+<1> The `item_group_description` already contains all information necessary to identify which namespace this is about.
 So the description just provides some generic context.
 It could also be omitted in this case.
 

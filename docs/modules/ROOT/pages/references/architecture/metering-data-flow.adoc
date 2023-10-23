@@ -67,9 +67,9 @@ In particular, each record needs to contain:
 * Optionally, an item description, containing additional information about this particular line item.
   It can be chosen arbitrarily, and should provide useful context to the customer.
   See below for more information on the nature of this parameter.
-* an item group, containing a label by which line items will be grouped on the resulting invoice.
+* an item group description, containing a label by which line items will be grouped on the resulting invoice.
   It can be chosen arbitrarily, and should provide an useful grouping that will help the customer understand the invoice.
-  It should be possible for different products to wind up in the same group if they are related, so the item group should not contain any references to a specific product or variant.
+  It should be possible for different products to wind up in the same group if they are related, so the item group description should not contain any references to a specific product or variant.
   See below for more information on the nature of this parameter.
 * a unit ID representing the unit of measurement in this usage data record.
   This is an ID from Odoo.
@@ -90,7 +90,7 @@ Each transformed query result is sent to the https://docs.central.vshn.ch/metere
     "product_id": "an_identifying_product_variant_string", <1>   
     "instance_id": "external-identifier", <2>             
     "item_description": "Optional human readable description", <3>
-    "item_group": "My Item Group", <4>                           
+    "item_group_description": "My Item Group Description", <4>                           
     "sales_order_id": "SO0042", <5>                              
     "unit_id": "422", <6>                                        
     "consumed_units": 821.42, <7>                                
@@ -118,24 +118,24 @@ It serves two purposes:
 This means the instance identifier should be chosen such that it uniquely identifies a use of a product (meaning the same product could not meaningfully be purchased twice under the same instance), but does not contain a direct reference to the product variant (such that it remains constant if a product is upgraded).
 
 ==== A Note on Item Groups and Descriptions
-The Item Group and Item Description are human-friendly strings that help explain a line item to the customer.
+The Item Group Description and Item Description are human-friendly strings that help explain a line item to the customer.
 
-"Item Group" is an identifier which is used to visually group multiple line items on an invoice under a common heading.
+"Item Group Description" is an identifier which is used to visually group multiple line items on an invoice under a common heading.
 This helps our customers better understand their invoices.
-For two line items to wind up under a common heading, their Item Group needs to match exactly.
+For two line items to wind up under a common heading, their Item Group Description needs to match exactly.
 
 "Item Description" is a string that provides additional context for a specific line item.
 It can contain information about the specific instance of the product, or it can contain context for how the usage data was measured.
-It is not useful to repeat information in the "Item Description" that is already present in the "Item Group" - these two parameters should complement each other.
+It is not useful to repeat information in the "Item Description" that is already present in the "Item Group Description" - these two parameters should complement each other.
 
-The item group should be chosen such that it does not contain a direct reference to a particular product.
-This allows different products to be grouped together.
+The item group description should be chosen such that it does not contain a direct reference to a particular product.
+This allows line items for different products to be grouped together.
 
-The Item Group is used as a heading in the invoice, and thus should be human-friendly.
+The Item Group Description is used as a heading in the invoice, and thus should be human-friendly.
 
 Item Description should generally contain information to convey to the end user which specific product instance is being billed, _within the context of the grouping_.
 
-Taken together, the Item Group and Item Description should contain all the information a customer needs to understand which instance of a product is being billed in a particular line item.
+Taken together, the Item Group Description and Item Description should contain all the information a customer needs to understand which instance of a product is being billed in a particular line item.
 
 ==== Examples
 
@@ -145,10 +145,10 @@ Taken together, the Item Group and Item Description should contain all the infor
     "product_id": "ID_of_cloudscale_besteffort_vCPU",
     "instance_id": "c-my-awesome-cluster",
     "item_description": "All compute resources", <1>
-    "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster"
+    "item_group_description": "APPUiO Managed - Cluster: c-my-awesome-cluster"
 },
 ----
-<1> The `item_group` already contains all information necessary to identify which namespace this is about.
+<1> The `item_group_description` already contains all information necessary to identify which namespace this is about.
 So the description just provides some generic context.
 It could also be omitted in this case.
 
@@ -158,11 +158,11 @@ It could also be omitted in this case.
     "product_id": "ID_of_flex_vCPU",
     "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app",
     "item_description": "All Pods", <1>
-    "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
+    "item_group_description": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
     ...
 }
 ----
-<1> The `item_group` already contains all information necessary to identify which cluster this is about.
+<1> The `item_group_description` already contains all information necessary to identify which cluster this is about.
 So the description just provides some generic context.
 It could also be omitted in this case.
 
@@ -172,11 +172,11 @@ It could also be omitted in this case.
     "product_id": "ID_of_appcat_redis_besteffort",
     "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app/session-storage",
     "item_description": "session-storage", <1>
-    "item_group": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app", <2>
+    "item_group_description": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app", <2>
     ...
 }
 ----
-<1> The item group does not contain the instance name, so we instead put it in the description in order to convey the full information to the customer.
+<1> The item group description does not contain the instance name, so we instead put it in the description in order to convey the full information to the customer.
 <2> The resource name is not part of the group.
 This way, redis instances are grouped with other resources in the same namespace.
 
@@ -186,11 +186,11 @@ This way, redis instances are grouped with other resources in the same namespace
     "product_id": "ID_of_appcat_redis_besteffort",
     "instance_id": "c-my-awesome-cluster/my-awesome-app/session-storage",
     "item_description": "session-storage", <1>
-    "item_group": "APPUiO Managed - Cluster: c-my-awesome-cluster / Namespace: my-awesome-app", <2>
+    "item_group_description": "APPUiO Managed - Cluster: c-my-awesome-cluster / Namespace: my-awesome-app", <2>
     ...
 }
 ----
-<1> The item group does not contain the instance name, so we instead put it in the description in order to convey the full information to the customer.
+<1> The item group description does not contain the instance name, so we instead put it in the description in order to convey the full information to the customer.
 <2> The item group must distinguish between APPUiO Cloud and Managed, such that it gets correctly grouped with the other resources (in this case, managed cluster vCPU).
 
 [code:json]
@@ -199,10 +199,23 @@ This way, redis instances are grouped with other resources in the same namespace
     "product_id": "ID_of_appcat_postgres_besteffort",
     "instance_id": "external-db",
     "item_description": "external-db", <1>
-    "item_group": "VSHN AppCat", <2>
+    "item_group_description": "VSHN AppCat", <2>
     ...
 }
 ----
-<1> The item group does not contain information about the instance name, so we instead put it in the description in order to convey the full information to the customer.
+<1> The item group description does not contain information about the instance name, so we instead put it in the description in order to convey the full information to the customer.
 <2> This AppCat service does not belong to a specific namespace.
 We simply group all such services together under the "VSHN AppCat" header.
+
+[code:json]
+----
+{
+    "product_id": "ID_of_managed_server_standard",
+    "instance_id": "myserver.vshnmanaged.net",
+    "item_group_description": "Managed Server - Server: myserver.vshnmanaged.net", <1>
+    ...
+}
+----
+<1> The item group description contains all information the customer needs to identify what is being billed here.
+There is also no useful extra context to give.
+In this case, the `item_description` can be omitted.
