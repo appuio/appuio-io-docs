@@ -2,7 +2,7 @@
 
 [NOTICE]
 --
-This page is deprecated. The system described herein is superseded by the system described in xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[Data model and data flow for Resource Usage Reporting].
+This page is deprecated. The system described herein is superseded by the system described in https://docs.central.vshn.ch/metered-data-flow.html[Data model and data flow for Resource Usage Reporting].
 --
 
 [abstract]
