@@ -12,7 +12,7 @@ This page explains in detail how the general concept is applied for APPUiO Cloud
 
 The system for APPUiO Cloud usage reporting must provide usage data for customer resources in all APPUiO Cloud zones, at namespace granularity.
 
-Just like in https://kb.vshn.ch/oc4/references/architecture/metered-data-flow-appuio-managed.html[APPUiO Managed Usage Reporting], usage data is stored in a central Mimir instance and queried via the Prometheus Query API.
+Just like in https://kb.vshn.ch/oc4/references/architecture/metering-data-flow-appuio-managed.html[APPUiO Managed Usage Reporting], usage data is stored in a central Mimir instance and queried via the Prometheus Query API.
 A reporting tool implements the ETL process described in https://docs.central.vshn.ch/metered-billing-data-flow.html[Data model and data flow for Resource Usage Reporting].
 
 The reporting tool can share the same codebase as the tool used in APPUiO Managed Reporting; it simply needs to be configured differently.
@@ -81,7 +81,8 @@ Alternatively, this parameter could also be omitted.
 
 === ETL Process
 
-The ETL process for APPUiO Managed works exactly the same as for xref:appuio-cloud:ROOT:references/architecture/metering-data-flow-appuio-cloud.adoc[APPUiO Managed].
+The ETL process for APPUiO Managed works exactly the same as for https://kb.vshn.ch/oc4/references/architecture/metering-data-flow-appuio-managed.html[APPUiO Managed].
+
 ==== Examples
 
 [code:json]
