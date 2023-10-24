@@ -1,0 +1,118 @@
+= Resource Usage Reporting for APPUiO Cloud
+
+
+[abstract]
+====
+xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works for APPUiO Cloud.
+
+https://docs.central.vshn.ch/metered-billing-data-flow.html[Data model and data flow for Resource Usage Reporting] explains how usage data gets reported and billed in general.
+
+This page explains in detail how the general concept is applied for APPUiO Cloud.
+====
+
+The system for APPUiO Cloud usage reporting must provide usage data for customer resources in all APPUiO Cloud zones, at namespace granularity.
+
+Just like in https://kb.vshn.ch/oc4/references/architecture/metered-data-flow-appuio-managed.html[APPUiO Managed Usage Reporting], usage data is stored in a central Mimir instance and queried via the Prometheus Query API.
+A reporting tool implements the ETL process described in https://docs.central.vshn.ch/metered-billing-data-flow.html[Data model and data flow for Resource Usage Reporting].
+
+The reporting tool can share the same codebase as the tool used in APPUiO Managed Reporting; it simply needs to be configured differently.
+This page only describes the configuration differences.
+
+== Data Flow Overview
+
+The reporting interval for APPUiO Cloud resource usage is 1 hour.
+The PromQL queries executed against Mimir therefore need to sum up the resource usage accordingly.
+
+Any metadata that is required by the Metered Billing API needs to be present in Mimir, for instance, in the form of labels on timeseries.
+In particular, this is relevant for the Sales Order ID, which is needed for reporting.
+
+=== Example configuration
+
+[code:yaml]
+----
+parameters:
+  prometheus_metered_usage_reporting:
+    rules: <1>
+      appuio_cloud_rule_one:
+        products: <2>
+          - product_id: 'odoo_product_variant_id_string'
+            params: <3>
+              class: flex
+              zone: c-appuio-cloudscale-lpg2
+          - product_id: 'odoo_product_variant_id_string'
+            params:
+              class: plus
+              zone: c-appuio-cloudscale-lpg2
+          - product_id: 'odoo_product_variant_id_string'
+            params:
+              class: plus
+              zone: c-appuio-exoscale-ch-gva-2-0
+        instance_id_pattern: '%(zone)s-%(namespace)s' <4>
+        item_description_pattern: 'All Pods' <5>
+        item_group_description_pattern: 'APPUiO Cloud - Zone: %(zone)s / Namespace: %(namespace)s' <6>
+        unit_id: '300' <7>
+        query_pattern: '' <8>
+----
+
+<1> The reporting tool is configured with a number of reporting rules.
+Each rule generally represents one Prometheus query template.
+<2> A rule can correspond to multiple products or product variants (for example if these products all use a very similar query).
+<3> Parameters can be defined for each product or product variant.
+These parameters are used to instantiate the `query_pattern` for each product.
+<4> The `instance_id_pattern` is used to generate the `instance_id` for a given record.
+All template variables must be present as labels in the query result.
+<5> The `item_description_pattern` is used to generate the `item_description` for a given record.
+All template variables must be present as labels in the query result.
+<6> The `item_group_description_pattern` is used to generate the `item_group_description` for a given record.
+All template variables must be present as labels in the query result.
+<7> Odoo ID of the unit in which resource usage is measured for this rule.
+<8> PromQL query pattern.
+The query results must produce all the labels used in name patterns, as well as the `sales_order_id` label.
+The query pattern can include pattern variables defined in product params (such as %(sla)s).
+
+=== Billing API Parameters
+
+For APPUiO Cloud, the *Instance ID* is comprised of the APPUiO Cloud Zone as well as the customer namespace.
+The *item group description* contains the exact same information, since the instance identifier happens to also be a sensible grouping criterion.
+The *item description* does not need to provide dynamic information (since that information is all redundant with the item group description), and can thus be a static description of the context in which a metric is being measured.
+Note that it's not necessary to say what the metric is; that information is already contained in the product name.
+Alternatively, this parameter could also be omitted.
+
+
+=== ETL Process
+
+The ETL process for APPUiO Managed works exactly the same as for xref:appuio-cloud:ROOT:references/architecture/metering-data-flow-appuio-cloud.adoc[APPUiO Managed].
+==== Examples
+
+[code:json]
+----
+{
+    "product_id": "ID_of_flex_vCPU",
+    "instance_id": "c-appuio-cloudscale-lpg2/my-awesome-app",
+    "item_description": "All Pods", <1>
+    "item_group_description": "APPUiO Cloud - Zone: c-appuio-cloudscale-lpg2 / Namespace: my-awesome-app",
+    ...
+}
+----
+<1> The `item_group_description` already contains all information necessary to identify which namespace this is about.
+So the description just provides some generic context.
+It could also be omitted in this case.
+
+== Managing Sales Orders
+
+The Sales Order ID is an important parameter to associate products with where they should get billed.
+Each usage data record must be associated with an Odoo Sales Order.
+This section describes how Sales Orders are managed, and how the Sales Order ID can be retrieved.
+
+The Sales Order ID must be present as a label on each Prometheus query result.
+To enable this, metrics containing the Sales Order ID need to be present in Mimir.
+
+The APPUiO Cloud Control API ensures a Sales Order exists in Odoo for every organization.
+A reference to each organization's Sales Order ID is stored in the Organization object, similar to how a reference to the corresponding Billing Entity is maintained.
+
+There is exactly one Sales Order per organization.
+However, as multiple organizations can belong to the same Billing Entity, it is thus possible for multiple Sales Orders to belong to the same Billing Entity as well.
+
+The APPUiO Cloud Control API exposes a Prometheus metric `appuio_control_organization_info` with one constant timeseries for each organization.
+This metric contains one label with the organization name, and one label with the corresponding Sales Order ID.
+This metric is shipped to Mimir and can be used in queries to associate usage data with the correct Sales Order ID.

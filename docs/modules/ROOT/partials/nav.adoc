@@ -13,7 +13,8 @@
 ** xref:appuio-cloud:ROOT:references/architecture/namespace-ownership.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/metering.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/metrics-of-interest.adoc[]
-** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow.adoc[]
+** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow-appuio-cloud.adoc[Resource Usage Reporting]
+*** xref:appuio-cloud:ROOT:references/architecture/metering-data-flow-odoo8.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/invitations.adoc[]
 ** xref:appuio-cloud:ROOT:references/architecture/usage-profiles.adoc[]
 

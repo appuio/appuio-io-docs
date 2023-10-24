@@ -5,9 +5,8 @@
 {product} is invoiced based on effective resource usage.
 Creating invoices based on that usage requires the means to collect data about the used resources.
 
-{product} will not take the responsibility of managing all of an invoice lifecycle.
-Instead, an adapter will be responsible to create invoices in an ERP or accounting system.
-It is then the responsibility of that ERP/accounting system to handle the remainder of the invoice lifecycle.
+{product} will not take the responsibility of managing an invoice lifecycle.
+Instead, an ERP or accounting system will be responsible for creating invoices based on the reported usage data, and for handling the invoice lifecycle.
 --
 
 == System idea
@@ -22,12 +21,9 @@ Since the source of all the metrics is Prometheus, the most logical choice is to
 It provides a collection of tools to solve different use cases that Prometheus can not solve on its own.
 One of those cases is storing metrics on a different system for long term storage.
 
-A second source of input is a collection of metadata.
-That data allows to create the link between the metrics and their labels to its corresponding objects in the ERP/accounting system.
-It also provides different rate plans and where they apply.
-
 On the output side, we have an adapter to the ERP/accounting system.
-Its purpose is to query the metrics and the metadata and create the corresponding invoices from it.
-Those invoices then gets created within the ERP/accounting system.
+Its purpose is to query the metrics, transform the data, and send it to the ERP/accounting system.
+The ERP/accounting system uses the reported usage data to generate invoices.
+The adapter requires some static configuration, which allows it to map usage data to ERP-specific product definitions.
 
 image::system/metering-invoicing.drawio.svg[]

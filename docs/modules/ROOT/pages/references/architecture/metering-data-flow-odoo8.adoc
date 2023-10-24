@@ -1,10 +1,15 @@
-= Data model and data flow for Billing
+= [Deprecated] Data model and data flow for Billing
+
+[NOTICE]
+--
+This page is deprecated. The system described herein is superseded by the system described in https://docs.central.vshn.ch/metered-data-flow.html[Data model and data flow for Resource Usage Reporting].
+--
 
 [abstract]
---
+====
 xref:appuio-cloud:ROOT:references/architecture/metering.adoc[Metering of resource usage] explains how the data collection for billing relevant data works.
 This page explains how that data gets transformed so that it can be ingested into a billing/ERP system.
---
+====
 
 The core of this part of the system has three responsibilities.
 First, it must fetch the required data from the input system.
