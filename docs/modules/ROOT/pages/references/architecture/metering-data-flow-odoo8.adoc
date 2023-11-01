@@ -1,4 +1,5 @@
 = [Deprecated] Data model and data flow for Billing
+:page-aliases: references/architecture/metering-data-flow.adoc
 
 [NOTICE]
 --
