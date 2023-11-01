@@ -122,7 +122,7 @@ parameters:
 
 == Configure Appcat ObjectStorage provider
 
-Please refer to https://kb.vshn.ch/appuio-cloud/how-to/vshn-example/activate-appcat.html[the dedicated page^] to setup AppCat ObjectStorage
+Please refer to xref:appuio-cloud:ROOT:how-to/vshn-example/activate-storage-appcat.adoc[the dedicated page] to setup AppCat ObjectStorage
 
 == Add Cluster to Status Page
 
