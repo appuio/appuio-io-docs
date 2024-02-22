@@ -1,4 +1,7 @@
-= Custom Operator
+= Deprecated: Keycloak Organization Adapter
+
+[INFO]
+This document has been superseded by xref:appuio-cloud:ROOT:explanation/decisions/keycloak-kubernetes-api-integration.adoc[].
 
 == Problem
 
@@ -13,7 +16,7 @@ The Keycloak Organization Adapter maps the in-cluster resources to Keycloak grou
 * Map `Teams` to sub-groups in Keycloak
 ** Create sub-group if Team exits
 ** Manage sub-group members based on Team
-** Import existing sub-groups as Team ￼
+** Import existing sub-groups as Team
 * Map User resources to users in Keycloak
 ** Set preferences
 ** Import existing Keycloak user as `User`
