@@ -1,0 +1,35 @@
+= Offering Nighttime Maintenance
+
+== Problem
+
+Maintenance of APPUiO Cloud is currently done during daytime hours.
+Although we encourage and support our customers to deploy their applications in a highly available configuration,
+this has led to significant dissatisfaction among some customers.
+
+Many have expressed a preference for potentially disruptive node reboots to occur after office hours.
+This presents a challenge as we have applications on APPUiO Cloud that are dependencies for other clusters maintenance,
+necessitating the maintenance schedule to remain primarily as is to avoid impacting these interdependent systems.
+
+== Proposals
+
+Two potential solutions have been proposed to address customer dissatisfaction while also considering the operational requirements of APPUiO Cloud:
+
+
+=== Implementation of a New Node-Class for Nighttime Reboots
+This solution involves creating a new node-class for APPUiO Cloud that would be designated for reboots during the night.
+The machine config pool for these nodes would be paused during the day and unpaused at night to facilitate this maintenance schedule.
+This approach allows for a segment of the platform to adhere to the preferred maintenance window of our customers without disrupting the entire system.
+
+=== Maintenance at Night in a Second Zone
+The second proposal would designate an entire APPUiO Cloud zone to be maintained at night.
+This would not only accommodate the preferences of our customers for a less disruptive maintenance window but also has the benefit of distributing more workload to this second zone.
+
+== Decision
+
+After consideration of the proposals and their implications for both our operations and customer needs, we have decided to go forward with the first solution.
+
+This will allow for the implementation of the same node-class for the other APPUiO Cloud zones as well.
+
+== Rationale
+
+Implementing a new node-class provides a flexible solution that addresses our customers needs without disrupting the operational need for our other workload.
