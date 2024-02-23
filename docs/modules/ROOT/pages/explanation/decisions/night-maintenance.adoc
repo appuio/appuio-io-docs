@@ -24,7 +24,7 @@ Finally, this approach allows customers to switch between different maintenance 
 
 === Maintenance at night in some APPUiO Cloud zones
 
-WIth this approach, we'd selectively switch the maintenance window for some APPUiO Cloud zones to a time slot outside office hours.
+With this approach, we'd selectively switch the maintenance window for some APPUiO Cloud zones to a time slot outside office hours.
 This would not only accommodate the preferences of our customers for a less disruptive maintenance window but might also improve the spread of workload across APPUiO Cloud zones, as customers move their applications to the zone that has their preferred maintenance window.
 On the other hand, this approach would require customers to migrate their applications between zones when they want to take advantage of a different maintenance window.
 
