@@ -1,35 +1,40 @@
-= Offering Nighttime Maintenance
+= APPUiO Cloud outside office hours maintenance
 
 == Problem
 
 Maintenance of APPUiO Cloud is currently done during daytime hours.
-Although we encourage and support our customers to deploy their applications in a highly available configuration,
-this has led to significant dissatisfaction among some customers.
+Although we encourage and support our customers to deploy their applications in a highly available configuration, some of our customers are deploying applications that can't easily be configured in a highly available fashion.
 
-Many have expressed a preference for potentially disruptive node reboots to occur after office hours.
-This presents a challenge as we have applications on APPUiO Cloud that are dependencies for other clusters maintenance,
-necessitating the maintenance schedule to remain primarily as is to avoid impacting these interdependent systems.
+Due to that, multiple customers have expressed a preference for an APPUiO Cloud maintenance window outside office hours.
+On the other hand, since a lot of maintenance infrastructure is hosted on APPUiO Cloud, we can't easily move the APPUiO Cloud maintenance into the same window as most production clusters.
+Finally, we don't want to introduce additional outside office hours maintenance windows, to keep the number of evenings that our on-call engineers may need to handle maintenance issues as low as possible.
 
 == Proposals
 
-Two potential solutions have been proposed to address customer dissatisfaction while also considering the operational requirements of APPUiO Cloud:
+We've considered two options which provide opt-in outside office hours maintenance on APPUiO Cloud, without requiring that we move the complete maintenance to the primary maintenance window for production clusters.
 
 
-=== Implementation of a New Node-Class for Nighttime Reboots
-This solution involves creating a new node-class for APPUiO Cloud that would be designated for reboots during the night.
-The machine config pool for these nodes would be paused during the day and unpaused at night to facilitate this maintenance schedule.
-This approach allows for a segment of the platform to adhere to the preferred maintenance window of our customers without disrupting the entire system.
+=== Define a new node class for nighttime reboots
 
-=== Maintenance at Night in a Second Zone
-The second proposal would designate an entire APPUiO Cloud zone to be maintained at night.
-This would not only accommodate the preferences of our customers for a less disruptive maintenance window but also has the benefit of distributing more workload to this second zone.
+For this approach, we'd introduce an additional node-class which would be maintained outside office hours.
+To implement this, we'd enhance the https://github.com/appuio/openshift-upgrade-controller/[upgrade controller] to allow specifying custom maintenance windows for individual machine config pools.
+With this approach, we can offer outside office hours maintenance on all APPUiO Cloud zones without having to switch the maintenance window for complete zones.
+Additionally, customers can freely choose maintenance windows for each of their projects or even individual applications on the same zone.
+Finally, this approach allows customers to switch between different maintenance windows without having to migrate their applications between zones.
+
+=== Maintenance at night in some APPUiO Cloud zones
+
+WIth this approach, we'd selectively switch the maintenance window for some APPUiO Cloud zones to a time slot outside office hours.
+This would not only accommodate the preferences of our customers for a less disruptive maintenance window but might also improve the spread of workload across APPUiO Cloud zones, as customers move their applications to the zone that has their preferred maintenance window.
+On the other hand, this approach would require customers to migrate their applications between zones when they want to take advantage of a different maintenance window.
 
 == Decision
 
-After consideration of the proposals and their implications for both our operations and customer needs, we have decided to go forward with the first solution.
+We've decided to implement additional node groups for offering additional maintenance windows on APPUiO Cloud.
 
-This will allow for the implementation of the same node-class for the other APPUiO Cloud zones as well.
+This approach will allow us to implement additional maintenance windows on each APPUiO Cloud zone if there's demand.
 
 == Rationale
 
-Implementing a new node-class provides a flexible solution that addresses our customers needs without disrupting the operational need for our other workload.
+By implementing additional maintenance windows through a new node class we provide a flexible solution that allows customers to freely switch the maintenance window for their applications without having to migrate between zones.
+Additionally, we don't need to change the default maintenance window to implement this approach, and we can define a surcharge for outside office hours maintenance simply by adjusting the pricing for resources of the node class that's maintained outside office hours.
