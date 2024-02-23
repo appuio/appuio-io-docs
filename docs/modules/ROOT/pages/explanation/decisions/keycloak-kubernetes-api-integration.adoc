@@ -57,6 +57,8 @@ We keep the existing controller and improve it and resolve sync inconsistencies.
 
 Create a virtual resource for OrganizationMembers, Team, and User.
 
+image::idp-integration.svg[VSHN IDP integration,400]
+
 == Rationale
 
 We want to avoid the sync inconsistencies and the need to keep two sources of truth in sync.

@@ -48,8 +48,8 @@ The group membership information is then present as a claim in the OIDC token pr
 As long as the Identity Provider is not custom built, it is very unlikely to be able to interface with the {controlapi}.
 Providing this interface is the job of the Organization Adapter.
 
-This adapter **should** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator^] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`.
-
+The adapter **may** be implemented as a Kubernetes https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/[aggregated API server] that interfaces with the {controlapi} and the IdP.
+The adapter **may** be implemented as https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Kubernetes Operator^] that interfaces with the four {controlapi} resources related to user management: `Organizations` and `OrganizationMembers`, `Teams`, and `Users`.
 
 [NOTE]
 Some of the following requirements **may** be implemented by or through the IdP itself or by a third system.
@@ -68,12 +68,14 @@ For each `Organization` and the corresponding `OrganizationMembers` resource
 The adapter **should** provide the option to import existing groups from the IdP.
 If this feature is provided
 
+[NOTE]
+Imports might not be required if the resources are virtual and the IdP is the authoritative source.
+
 * The adapter **must** create `Organization` resources for groups in the IdP that represent organizations if a corresponding `Organization` does not exist.
 * The adapter **must** update the corresponding `OrganizationMembers` resource of a newly created `Organization` to represent the members of the group in the IdP.
 * The adapter **must not** edit existing `Organization` or `OrganizationMembers` resources as part of an import.
 * The adapter **should** provide means to set RBAC for imported organizations, so that one or more users can manage the `Organization` in the {controlapi}.
 * The adapter **may** mark imported organizations as externally managed.
-
 
 The adapter **may** provide the option to mark one or more `Organizations` as to be managed externally by the IdP.
 This means the `Organization` and `OrganizationMembers` resources are read-only and updated to the state in the external system.
@@ -113,12 +115,14 @@ For each `Team` resource
 The adapter **should** provide the option to import existing groups from the IdP.
 If this feature is provided
 
+[NOTE]
+Imports might not be required if the resources are virtual and the IdP is the authoritative source.
+
 * The adapter **must** create `Team` resources for groups in the IdP that represent teams if a corresponding `Team` does not exist.
 * The created `Team` **must** reference all the members of the group in the IdP.
 * The created `Team` **must** be in the `Namespace` of the organization containing the team.
 * The adapter **must not** edit existing `Team` resources as part of an import.
 * The adapter **may** mark imported teams as externally managed.
-
 
 The adapter **may** provide the option to mark one or more `Teams` as to be managed externally by the IdP.
 This means the `Team` resource is read-only and updated to the state in the external system.
@@ -132,14 +136,31 @@ If this feature is provided
 
 .Organization Adapter at VSHN
 ****
+VSHN started out with an operator but VSHN grew increasingly unhappy with the sync complexity of having two sources of truth.
+
+We are now in the process of replacing the operator with a Kubernetes aggregated API server.
+This allows us to reduce sync complexity and to provide a more consistent user experience.
+
+image::idp-integration.svg[VSHN IDP integration,400]
+
+The new adapter will live in the https://github.com/appuio/control-api[control-api^] repository and will be a part of the control-api deployment.
+Different IDPs can be supported by implementing a https://github.com/appuio/control-api/blob/e4164a17097e15a1ac91d9cce969d07c64861344/apiserver/billing/odoostorage/odoo/odoo.go#L10[Go interface] like for the ERP integration.
+
+The first resource that will be virtualized will be the `User` resource.
+We see the biggest sync skew there and it is the most important resource for the user experience.
+
 The VSHN-managed {product} instance uses the https://github.com/vshn/appuio-keycloak-adapter[APPUiO Keycloak Adapter^].
 
-The adapter is a Kubernetes Operator that creates and manages Keycloak groups and sub-groups that correlate to `Organization` and `Team` resources.
-A per {zone} deployed https://github.com/redhat-cop/group-sync-operator[Group Sync Operator^] then synchronizes group memberships from the Keycloak groups to OpenShift.
+We're currently using https://github.com/redhat-cop/group-sync-operator[Group Sync Operator^] to sync groups from Keycloak to OpenShift.
+With the implementation of UsageProfiles we now have good experience with multi event-source reconciliation and we'll let the APPUiO Cloud Agent sync the groups from the control-api to the zone.
+The addition of watching changes should improve the user experience by making most portal operations instant.
 
 The adapter also imports Keycloak users as `User` resources.
 Changes to the `User` resource's `spec` is added to the Keycloak user's attributes.
 These attributes are then synced to the {zone}s by the https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller^].
+
+We're currently using https://github.com/appuio/keycloak-attribute-sync-controller[Attribute Sync Controller^] to sync the default organization to the zones.
+We'll let the APPUiO Cloud Agent sync the default organization to the zones and implement watching changes in the control API to improve the user experience.
 
 The Keycloak adapter also supports periodic imports of new Keycloak groups as `Organizations`.
 ****
