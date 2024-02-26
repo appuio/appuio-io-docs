@@ -153,4 +153,5 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/no_rbac_creation.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/control-api-interaction-with-zones.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/control-api-odoo16-api.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-zone-group-sync.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/night-maintenance.adoc[]
