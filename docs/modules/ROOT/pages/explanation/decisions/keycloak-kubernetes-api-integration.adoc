@@ -1,0 +1,65 @@
+= Keycloak Kubernetes API Integration
+
+== Problem
+
+In order to allow users to manage access to their organizations we need an adapter between Keycloak and the Kubernetes API to manage users, groups, and teams in Keycloak.
+
+The first user management implementation was done using a controller und custom resource definitions (CRDs).
+This implementation effectively had two sources of truth: Keycloak and the Kubernetes API; and tried to keep them in sync.
+Over time those two sources of truth diverged and we had to deal with more and more sync inconsistencies.
+
+We had users try to use the Kubernetes API as an interface to their user management needs, but this was abandoned due to various inconsistencies.
+
+We now want to revisit this problem and come up with a new solution without the need to keep two sources of truth in sync.
+
+.Goals
+
+* Map `Organization` / `OrganizationMembers` resource to groups in Keycloak
+* Map `Teams` to sub-groups in Keycloak
+* Map User resources (their preferences) to users in Keycloak
+
+.Non-Goals
+
+* Operational management of Keycloak (for example to create and manage realms)
+
+== Proposals
+
+=== Option 1: Create a virtual resource for OrganizationMembers, Team, and User
+
+We create a virtual resource for OrganizationMembers, Team, and User that is backed by Keycloak.
+
+.Pro
+
+* We can avoid the sync inconsistencies
+* We can use the Kubernetes API as an interface to manage users in Keycloak
+
+.Con
+
+* Upfront investment to create a new implementation
+* Potential performance issues
+* API is down when Keycloak is down
+
+=== Option 2: Keep and improve controller
+
+We keep the existing controller and improve it and resolve sync inconsistencies.
+
+.Pro
+
+* We already have a working implementation
+* Keycloak can be unavailable and we can still manage users in Kubernetes
+
+.Con
+
+* Doubtful we can ever solve the sync inconsistencies
+* We might never move away from the two sources of truth
+
+== Decision
+
+Create a virtual resource for OrganizationMembers, Team, and User.
+
+image::idp-integration.svg[VSHN IDP integration,400]
+
+== Rationale
+
+We want to avoid the sync inconsistencies and the need to keep two sources of truth in sync.
+We're doubtful we can ever solve the sync inconsistencies with a controller.

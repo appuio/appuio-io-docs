@@ -158,7 +158,7 @@ status:
   - name: kate.demo
   - name: peter.muster
 ----
-<1> References to one or more xref:references/architecture/control-api-user.adoc[`User`] resource. 
+<1> References to one or more xref:references/architecture/control-api-user.adoc[`User`] resource.
     The `name` field must match `metadata.name` of an existing `User` resource.
-<2> This is resolved by the xref:explanation/system/details-adapters.adoc[adapter]. 
+<2> This is resolved by the xref:explanation/system/details-adapters.adoc[adapter].
     May only contain a subset of users if the adapter is unable to add some users.

@@ -1,0 +1,63 @@
+= Keycloak Zone Group sync
+
+== Problem
+
+Currently we use https://github.com/appuio/group-sync-operator[group-sync-operator] to sync groups from Keycloak to Kubernetes.
+We forked the upstream project to add support for nested groups.
+
+The controller is slow, not very reliable, and users often have to wait for the sync in the zone to complete.
+We have no way of showing the status of the sync to the user.
+Hidden wait times lead to user confusion and we had support cases because of that.
+
+.Goals
+
+* Instantly sync groups from Keycloak to the APPUiO zone
+* Provide a good initial experience for the user
+
+.Non-Goals
+
+* Provide additional OpenShift group management features
+
+== Proposals
+
+=== Option 1: Provide groups in OIDC token
+
+We build a custom Keycloak OIDC token mapper that adds the groups to the token.
+The mapper would join the groups with the selected separator, trim the "organization" root group, and add the groups to the token.
+
+.Pro
+
+* Every login sync the groups from Keycloak to the zone
+* The sync is in the request path and the user gets notified on errors
+
+.Con
+
+* User needs to re-login to sync the groups after they changed
+* Writing and managing a custom Keycloak OIDC token mapper
+
+=== Option 2: Agent on the zone watches control-api
+
+We build an agent that watches the control-api for changes and updates the groups in the zone.
+
+.Pro
+
+* Users do not have to re-login to sync the groups.
+* All boilerplate is done, we already implemented similar controllers in the zone agent.
+
+.Con
+
+* The errors do not happen in the request path and might be less visible to the user and us
+** Needs better instrumentation
+
+== Decision
+
+We add a controller to the agent on the zone to sync groups.
+
+== Rationale
+
+Requiring the user to re-login to sync the groups is not a good user experience.
+It is less work to implement and maintain than a custom Keycloak OIDC token mapper.
+
+== Resources
+
+- https://www.baeldung.com/keycloak-custom-protocol-mapper[Keycloak Custom Protocol Mapper]
