@@ -1,0 +1,133 @@
+= Scheduling, Execution and Monitoring of APPUiO Billing ETL process
+
+== Problem
+
+xref:appuio-cloud:ROOT:references/architecture/metering-data-flow-appuio-cloud.adoc[Resource Usage Reporting for APPUiO Cloud] details the ETL process used to ship resource usage data to an ERP system for the purpose of billing.
+To ensure continuous and correct reporting of resource usage, this ETL process needs to be executed regularly.
+
+.Goals
+
+* The ETL process is scheduled reliably at regular intervals.
+* The ETL process is invoked for each separate product that needs to be processed.
+* Failed ETL runs are retried.
+** If retrying does not result in success, the failure is made visible through monitoring.
+** Retrying a failed run, either automatically or manually, provides the same result independent of the time at which the run is retried.
+* It is easy to manually trigger the ETL process for arbitrary past timeframes.
+
+.Non-Goals
+
+* Optimizing the ETL process itself
+* Detecting missing usage data directly in the target ERP system
+
+== Proposals
+
+=== Option 1: Cronjobs per Product
+
+This describes the current implementation, as a baseline for comparison:
+
+A Project Syn Component produces a kube cronjob for each product that requires processing.
+The cronjobs run hourly.
+The generated jobs run the ETL process for a relative timeframe ("3 hours ago until now").
+Failed jobs are exposed to monitoring via the KubeJobFailed metric.
+Corresponding alerts are generated automatically by the component.
+
+Due to the jobs running every hour, but covering a 3-hour timeframe, brief transient errors are recovered automatically:
+if a single job run fails, but the next one succeeds, the successful job will have covered the timeframe of the failed job as well.
+
+
+.Pro
+
+* Straightforward implementation
+* Automatic recovery from transient errors if they last no longer than 2 hours
+
+.Con
+
+* Re-running a failed job does not produce expected results - it will process billing data for the current time, and not the time at which the job was supposed to run.
+* Even though the system can recover from transient errors, they still generate an alert in any case, and an investigation is required to determine whether manual intervention is necessary.
+* It is not easily possible to run the ETL process for an arbitrary timeframe.
+* Running on the order of 100 jobs each hour is taxing our infrastructure.
+
+=== Option 2: Spawner Cronjob
+
+A Project Syn Component produces a single cronjob and provides it with a list of products for which the ETL process needs to run (including associated parameters).
+The cronjob runs hourly.
+On each run, the cronjob generates a new job for each product which in turn runs the ETL process.
+These generated jobs run the ETL process for an absolute timeframe of 3 hours.
+
+The logic of the spawner cronjob can be executed locally by engineers to manually spawn ETL jobs.
+By providing different arguments, engineers are able to manually spawn the necessary jobs to process an arbitrary timeframe.
+
+Alerting can be handled in the same way as in Option 1; by way of the KubeJobFailed metric.
+
+.Pro
+
+* Straightforward implementation
+* Automatic recovery from transient errors if they last no longer than 2 hours
+* Jobs can be run for arbitrary timeframes with relative ease
+* Manually re-running a failed job produces the expected result, as the job covers a static timeframe
+
+.Con
+
+* Even though the system can recover from transient errors, they still generate an alert in any case, and an investigation is required to determine whether manual intervention is necessary.
+* Running on the order of 100 jobs each hour is taxing our infrastructure.
+
+=== Option 3: Spawner Cronjob + Consolidating ETL runs
+
+This option is an extension of Option 2, so a single cronjob exists to generate the ETL jobs hourly for a static timeframe.
+
+On top of that, the ETL application `appuio-reporting` is modified so it can process multiple products in a single invocation:
+Instead of providing the arguments for a single product, the application can now accept a configuration file (e.g. a json file) containing the arguments for multiple products.
+The ETL application then processes each product in order.
+
+The necessary configuration file can be provided by the Syn component as a config map.
+
+With this change, the ETL application is only required to run once per hour, instead of once per hour per product.
+In summary, we now have a CronJob, which generates a Spawner Job, which generates an ETL job.
+The detour via a spawner job is still necessary so the ETL job's arguments can be set to a static timeframe.
+
+.Pro
+
+* Automatic recovery from transient errors if they last no longer than 2 hours
+* Jobs can be run for arbitrary timeframes with relative ease
+* Manually re-running a failed job produces the expected result, as the job covers a static timeframe.
+* Only a constant number of jobs run hourly, which causes fewer issues with infrastructure resource quotas and less overhead.
+
+.Con
+
+* Even though the system can recover from transient errors, they still generate an alert in any case, and an investigation is required to determine whether manual intervention is necessary.
+* Since there is only a single job, if that one fails, it is much harder to determine which part of the ETL process actually caused the failure.
+
+=== Option 4: Custom Controller
+
+We write our own controller for scheduling ETL runs.
+The parameters for the various products that need to be processed can be stored in a custom Kubernetes resource.
+The controller can schedule an ETL job for each product once per hour, covering a static timeframe of just 1 hour.
+
+The controller can rerun failed jobs a set amount of times.
+It can expose a metric to track the status of the jobs for each product, permitting for more solid alerting rules.
+
+The controller can also expose some mechanism to manually trigger job runs for arbitrary timeframes, e.g. by deploying a custom resource containing the desired parameters.
+
+.Pro
+
+* Automatic recovery from transient errors through automatic retry
+* Jobs can be run for arbitrary timeframes with relative ease
+* Manually re-running a failed job produces the expected result, as the job covers a static timeframe.
+* Only non-transient errors cause alerts
+
+.Con
+
+* Higher engineering effort
+* Running on the order of 100 jobs each hour is taxing our infrastructure.
+
+== Decision
+
+We decided to write a spawner cronjob, but without consolidating the ETL runs (Option 2).
+
+== Rationale
+
+While the spawner cronjob solution is not the best in terms of covering the goals, it solves the requirements adequatly for relatively small effort.
+The advantages provided by a custom controller are not good enough to justify the effort required for that solution.
+
+While consolidating the ETL runs into a single job provides some advantages, that approach also has a big drawback in the form of lost transparency for errors, and lost flexibility when re-running jobs (since re-running the ETL process for any timeframe requires re-running it for all products).
+On top of that, consolidating the ETL runs is again somewhat more engineering effort, which is not worth the benefits.
