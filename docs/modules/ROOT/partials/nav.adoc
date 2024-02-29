@@ -155,3 +155,4 @@
 ** xref:appuio-cloud:ROOT:explanation/decisions/control-api-odoo16-api.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/keycloak-zone-group-sync.adoc[]
 ** xref:appuio-cloud:ROOT:explanation/decisions/night-maintenance.adoc[]
+** xref:appuio-cloud:ROOT:explanation/decisions/billing-scheduling-monitoring.adoc[]
