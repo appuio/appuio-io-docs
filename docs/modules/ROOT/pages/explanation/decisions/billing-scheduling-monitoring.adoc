@@ -25,7 +25,7 @@ To ensure continuous and correct reporting of resource usage, this ETL process n
 
 This describes the current implementation, as a baseline for comparison:
 
-A Project Syn Component produces a kube cronjob for each product that requires processing.
+A Project Syn component produces a Kubernetes cronjob for each product that requires processing.
 The cronjobs run hourly.
 The generated jobs run the ETL process for a relative timeframe ("3 hours ago until now").
 Failed jobs are exposed to monitoring via the KubeJobFailed metric.
@@ -49,7 +49,7 @@ if a single job run fails, but the next one succeeds, the successful job will ha
 
 === Option 2: Spawner Cronjob
 
-A Project Syn Component produces a single cronjob and provides it with a list of products for which the ETL process needs to run (including associated parameters).
+A Project Syn component produces a single cronjob and provides it with a list of products for which the ETL process needs to run (including associated parameters).
 The cronjob runs hourly.
 On each run, the cronjob generates a new job for each product which in turn runs the ETL process.
 These generated jobs run the ETL process for an absolute timeframe of 3 hours.
