@@ -13,7 +13,7 @@ The Administrator password is stored in a secret `keycloak-admin-user` in the na
 [source,bash]
 ----
 export KEYCLOAK_NS=appuio-keycloak <1>
-oc --as cluster-admin -n ${KEYCLOAK_NS} get secret keycloak-admin-user \
+oc --as=system:admin -n ${KEYCLOAK_NS} get secret keycloak-admin-user \
   -o jsonpath='{.data.KEYCLOAK_PASSWORD}' | base64 -d; echo
 ----
 <1> Select the Keycloak namespace
