@@ -85,8 +85,8 @@ The buckets are fetched from exoscale S3 storage and matched with the buckets fr
 +
 [source,bash]
 ----
-oc -n <a-namespace> create serviceaccount exoscale-metrics-collector --as cluster-admin
-oc create clusterrole exoscale-metrics-collector --verb=get,list,watch --resource=namespaces,buckets.exoscale.crossplane.io --as cluster-admin
+oc -n <a-namespace> create serviceaccount exoscale-metrics-collector --as=system:admin
+oc create clusterrole exoscale-metrics-collector --verb=get,list,watch --resource=namespaces,buckets.exoscale.crossplane.io --as=system:admin
 oc create clusterrolebinding exoscale-metrics-collector --clusterrole=exoscale-metrics-collector --serviceaccount=<a-namespace>:exoscale-metrics-collector
 ----
 
@@ -94,8 +94,8 @@ oc create clusterrolebinding exoscale-metrics-collector --clusterrole=exoscale-m
 +
 [source,bash]
 ----
-tokenname=$(oc -n <a-namespace> get serviceaccount exoscale-metrics-collector -o jsonpath='{.secrets[0].name}' --as cluster-admin)
-oc -n <a-namespace> get secret ${tokenname} -o jsonpath='{.data.token}' --as cluster-admin | base64 --decode
+tokenname=$(oc -n <a-namespace> get serviceaccount exoscale-metrics-collector -o jsonpath='{.secrets[0].name}' --as=system:admin)
+oc -n <a-namespace> get secret ${tokenname} -o jsonpath='{.data.token}' --as=system:admin | base64 --decode
 ----
 
 . Login to Vault.

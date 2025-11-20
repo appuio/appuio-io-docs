@@ -84,7 +84,7 @@ These steps configure Keycloak on a global level and have to be done once per {p
 +
 [source,bash]
 ----
-oc --as cluster-admin -n appuio-keycloak-test get secret keycloak-admin-user -o jsonpath='{.data.KEYCLOAK_PASSWORD}' | base64 -d; echo
+oc --as=system:admin -n appuio-keycloak-test get secret keycloak-admin-user -o jsonpath='{.data.KEYCLOAK_PASSWORD}' | base64 -d; echo
 ----
 
 . Login to Keycloak as user `admin` with the password printed before
